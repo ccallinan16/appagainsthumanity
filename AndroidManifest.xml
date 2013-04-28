@@ -22,6 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity"
+            android:label="@string/title_activity_create_game"
+            android:parentActivityName="at.touring.testapplication.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="at.touring.testapplication.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
