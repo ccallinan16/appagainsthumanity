@@ -1,0 +1,20 @@
+main activity:
+  Content:
+    Liste der aktiven Spiele
+    Letzter Eintrag: "+ create Game"
+  e.g.
+       ----------------------- ----
+      |  GAMETYPE 1           | IC | STYLE: dependend on action to take
+      |  round: 2  awesome: 1 | ON |        WHITE/BLACK
+       ----------------------- ----
+       ----------------------- ----
+      |  GAMETYPE 2           | IC | STYLE: dependend on action to take
+      |  round: 5  awesome: 2 | ON | 	    WHITE/BLACK
+       ----------------------- ----
+       ---------------------- ----
+      |  create game         | +  |  STYLE: black card
+       ---------------------- ---- 
+
+  Options: (menu-button wird gedrückt)
+    Set Username (Standard entry = google-kontoname? wenn irgendwie zugänglich)
+    
