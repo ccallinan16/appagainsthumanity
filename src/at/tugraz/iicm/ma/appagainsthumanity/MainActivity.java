@@ -1,8 +1,13 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,6 +23,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		//retrieve existing games
+		SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+		Set<String> gameSet = sharedPref.getStringSet(getString(R.string.main_key_game_list), new HashSet<String>());
+		
 		String[] stringarray = {"test1", "test2", "test3"};
 		gameListView = (ListView) findViewById(R.id.game_list_view);
 		

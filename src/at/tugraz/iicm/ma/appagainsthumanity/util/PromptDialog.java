@@ -1,5 +1,9 @@
 package at.tugraz.iicm.ma.appagainsthumanity.util;
 
+/*
+ * refer to: http://www.jjoe64.com/2011/06/prompt-dialog-for-android.html
+ */
+
 	import android.app.AlertDialog;  
 	import android.R;
     import android.content.Context;  
@@ -28,6 +32,26 @@ package at.tugraz.iicm.ma.appagainsthumanity.util;
       
       setPositiveButton(R.string.ok, this);  
       setNegativeButton(R.string.cancel, this);  
+     }  
+     
+     /** 
+      * @param context 
+      * @param title resource id 
+      * @param message resource id 
+      * @param text default entry
+      */  
+     public PromptDialog(Context context, int title, int message, String entry) {  
+		 super(context);  
+	     setTitle(title);  
+	     setMessage(message);  
+	     
+	     input = new EditText(context);  
+	     input.setText(entry);
+	     setView(input);  
+	     
+	     setPositiveButton(R.string.ok, this);  
+	     setNegativeButton(R.string.cancel, this);  
+      
      }  
       
      /** 
