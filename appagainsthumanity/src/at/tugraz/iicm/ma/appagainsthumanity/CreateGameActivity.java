@@ -19,7 +19,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.util.PromptDialog;
 public class CreateGameActivity extends Activity {
 
 	private ListView inviteListView;
-	private ArrayAdapter<String> inviteArrayAdapter;
+	private ArrayAdapter<String> inviteArrayAdapter ;
 	private ArrayList<String> invitedPlayers;
 	
 	@Override
