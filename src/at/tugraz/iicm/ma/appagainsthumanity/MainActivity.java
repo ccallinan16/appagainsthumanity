@@ -1,31 +1,65 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import at.tugraz.iicm.ma.appagainsthumanity.util.DBContract;
+import at.tugraz.iicm.ma.appagainsthumanity.util.DBHelper;
 
 public class MainActivity extends Activity {
 
 	private ListView gameListView;
 	private ArrayAdapter<String> gameArrayAdapter;
+	private DBHelper dbHelper;
+	private String username;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		//retrieve existing games
-		SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-		Set<String> gameSet = sharedPref.getStringSet(getString(R.string.main_key_game_list), new HashSet<String>());
+		//get username
+		username = "testuser";
+		
+		
+		// Instanciate database helper
+		dbHelper = new DBHelper(this.getApplicationContext());
+		
+		// Gets the data repository in write mode
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+		// Define a projection that specifies which columns from the database
+		// you will actually use after this query.
+		String[] projection = {
+		    DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID,
+		    DBContract.Game.TABLE_NAME + "." + DBContract.Game.COLUMN_NAME_UPDATED
+		};
+
+		// How you want the results sorted in the resulting Cursor
+		String sortOrder =
+		    DBContract.Game.COLUMN_NAME_UPDATED + " DESC";
+
+		Cursor c = db.query(
+			DBContract.Game.TABLE_NAME +
+			" INNER JOIN " + DBContract.Participation.TABLE_NAME + 
+			" ON " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_GAME_ID + " = " + DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID +        
+			" INNER JOIN " + DBContract.User.TABLE_NAME + " ON " + 
+			DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " = " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_USER_ID,
+			// The table to query
+		    projection,                               // The columns to return
+		    DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME + " = ?",  // The columns for the WHERE clause
+		    new String[]{username},                   // The values for the WHERE clause
+		    null,                                     // don't group the rows
+		    null,                                     // don't filter by row groups
+		    sortOrder                                 // The sort order
+		    );
+		
 		
 		String[] stringarray = {"test1", "test2", "test3"};
 		gameListView = (ListView) findViewById(R.id.game_list_view);
