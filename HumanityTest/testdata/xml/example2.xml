@@ -1,0 +1,14 @@
+<allCards>
+   <whitecards class="java.util.ArrayList">
+      <card id="1">
+         <text>Text01</text>
+      </card>
+      <card id="2">
+         <text>Text02</text>
+      </card>
+      <card id="3">
+         <text>Text03</text>
+      </card>
+   </whitecards>
+   <blackcards class="java.util.ArrayList"/>
+</allCards>
