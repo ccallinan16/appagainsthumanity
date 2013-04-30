@@ -15,10 +15,10 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     
     public void onCreate(SQLiteDatabase db) {
-    	for (String query : DBContract.SQL_CREATE_ENTRIES) {
+    	for (String query : DBContract.SQL_CREATE_ENTRIES) 
     		db.execSQL(query);
-    		System.out.println("executing query " + query);
-    	}
+    	for (String query : DBContract.SQL_DEFAULT_ENTRIES) 
+    		db.execSQL(query);
     }
     
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -34,6 +34,4 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     
     
-
-
 }

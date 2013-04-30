@@ -1,6 +1,8 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
 import android.os.Bundle;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,6 +27,12 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		//get username
+		AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+		Account[] list = manager.getAccounts();
+		
+		System.out.println( list[0].name + " " + list[0].type + " " + list[0].toString());
+		
+		
 		username = "testuser";
 		
 		
