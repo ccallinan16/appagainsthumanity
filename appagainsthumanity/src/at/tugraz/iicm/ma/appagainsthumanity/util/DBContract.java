@@ -150,6 +150,12 @@ public abstract class DBContract {
 	    //Table WhiteCard
 	    "DROP TABLE IF EXISTS " + DBContract.BlackCard.TABLE_NAME};
 	
+	public static final String[] SQL_DEFAULT_ENTRIES = new String[]{
+		//Table User
+	    "INSERT INTO " + DBContract.User.TABLE_NAME + " VALUES ( PLAYED_CARDS )"
+	};
+	
+	
 	//private constructor - don't construct this!
 	private DBContract() {}
 }
