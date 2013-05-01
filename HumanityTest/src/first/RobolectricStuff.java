@@ -8,13 +8,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import test.util.PathTestRunner;
-
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
-
-import com.xtremelabs.robolectric.RobolectricTestRunner;
  
 @RunWith(PathTestRunner.class)
 public class RobolectricStuff {

@@ -12,6 +12,8 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 
@@ -49,7 +51,7 @@ public class XMLReader {
 		try {
 		      XPathExpression xPathExpression = xPath.compile("/allCards/"+type.toString()+"cards/card["+id+"]/text");
 		     String str = (String) xPathExpression.evaluate(xmlDocument, XPathConstants.STRING);
-		     if ((str.trim().equals("")))
+		     if (("").equals(str.trim()))
 		    	 return null;
 		     return str;
 		} catch (XPathExpressionException ex) {
