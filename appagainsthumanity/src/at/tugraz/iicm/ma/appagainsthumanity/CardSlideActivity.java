@@ -1,6 +1,8 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
 
+import java.util.List;
+
 import mocks.MockDealer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
