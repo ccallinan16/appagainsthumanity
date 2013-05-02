@@ -10,6 +10,12 @@ package at.tugraz.iicm.ma.appagainsthumanity;
 public final class R {
     public static final class attr {
     }
+    public static final class color {
+        public static final int holo_purple=0x7f050002;
+        public static final int opaque_red=0x7f050000;
+        public static final int solid_red=0x7f050003;
+        public static final int translucent_red=0x7f050001;
+    }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
 
@@ -17,35 +23,59 @@ public final class R {
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f040000;
-        public static final int activity_vertical_margin=0x7f040001;
+        public static final int activity_horizontal_margin=0x7f060000;
+        public static final int activity_vertical_margin=0x7f060001;
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080002;
-        public static final int game_list_view=0x7f080001;
-        public static final int invites_list_view=0x7f080000;
+        public static final int LinearLayout1=0x7f0a0003;
+        public static final int action_settings=0x7f0a0009;
+        public static final int cardText=0x7f0a0008;
+        public static final int frame_black_card=0x7f0a0004;
+        public static final int galleryBtn=0x7f0a0002;
+        public static final int game_list_view=0x7f0a0001;
+        public static final int invites_list_view=0x7f0a0000;
+        public static final int mygallery=0x7f0a0007;
+        public static final int textView=0x7f0a0006;
+        public static final int viewpager_white_cards=0x7f0a0005;
     }
     public static final class layout {
-        public static final int activity_create_game=0x7f030000;
-        public static final int activity_main=0x7f030001;
+        public static final int activity_card_slide=0x7f030000;
+        public static final int activity_create_game=0x7f030001;
+        public static final int activity_main=0x7f030002;
+        public static final int activity_my_gallery=0x7f030003;
+        public static final int activity_screen_slide=0x7f030004;
+        public static final int fragment_screen_slide_page=0x7f030005;
+        public static final int gallery_cards=0x7f030006;
+        public static final int single_card_view=0x7f030007;
     }
     public static final class menu {
-        public static final int main=0x7f070000;
+        public static final int card_slide=0x7f090000;
+        public static final int gallery=0x7f090001;
+        public static final int main=0x7f090002;
+        public static final int my_gallery=0x7f090003;
+    }
+    public static final class raw {
+        public static final int all_cards=0x7f040000;
     }
     public static final class string {
-        public static final int action_settings=0x7f050001;
-        public static final int app_name=0x7f050000;
-        public static final int create_game_button_create_game=0x7f050005;
-        public static final int create_game_title_create_game=0x7f050004;
-        public static final int main_button_create_game=0x7f050002;
-        public static final int main_key_game_list=0x7f050003;
-        public static final int prompt_edit_invite_comment=0x7f050009;
-        public static final int prompt_edit_invite_title=0x7f050008;
-        public static final int prompt_new_invite_comment=0x7f050007;
-        public static final int prompt_new_invite_title=0x7f050006;
+        public static final int action_settings=0x7f070001;
+        public static final int app_name=0x7f070000;
+        public static final int create_game_button_create_game=0x7f070005;
+        public static final int create_game_title_create_game=0x7f070004;
+        public static final int hello_world=0x7f07000b;
+        public static final int main_button_create_game=0x7f070002;
+        public static final int main_button_gallery=0x7f07000c;
+        public static final int main_key_game_list=0x7f070003;
+        public static final int prompt_edit_invite_comment=0x7f070009;
+        public static final int prompt_edit_invite_title=0x7f070008;
+        public static final int prompt_new_invite_comment=0x7f070007;
+        public static final int prompt_new_invite_title=0x7f070006;
+        public static final int title_activity_card_slide=0x7f07000e;
+        public static final int title_activity_gallery=0x7f07000a;
+        public static final int title_activity_my_gallery=0x7f07000d;
     }
     public static final class style {
         /** 
@@ -69,10 +99,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f060000;
+        public static final int AppBaseTheme=0x7f080000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f060001;
+        public static final int AppTheme=0x7f080001;
     }
 }
