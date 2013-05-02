@@ -17,4 +17,11 @@
     <string name="title_activity_my_gallery">MyGallery</string>
     <string name="title_activity_card_slide">CardSlideActivity</string>
 
+    
+    
+    
+    <string name="key_selectable">SELECTABLE</string>
+    <string name="key_num_black">BLACKS</string>
+    <string name="key_num_white">WHITES</string>
+    
 </resources>

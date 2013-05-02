@@ -15,14 +15,14 @@ public class MockDealer {
 	XMLReader reader;
 	MockDB db;
 	
-	public MockDealer(int numCards,Context context) {
+	public MockDealer(Context context) {
     	reader = new XMLReader(context);
-    	db = new MockDB(numCards);
+    	db = new MockDB();
 	}
 	
-	public MockDealer(int numCards,String xmlfilepath) {
+	public MockDealer(String xmlfilepath) {
     	reader = new XMLReader(xmlfilepath);
-    	db = new MockDB(numCards);
+    	db = new MockDB();
 	}
 
 	public List<Card> dealCards(CardType type, int num) {

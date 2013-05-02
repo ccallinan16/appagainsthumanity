@@ -1,13 +1,6 @@
 package test.slow;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mocks.MockDB;
 import mocks.MockDealer;
 
 import org.junit.After;
@@ -17,11 +10,11 @@ import org.junit.runner.RunWith;
 
 import test.util.PathTestRunner;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.widget.FrameLayout;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
+import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardView;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
  
 @RunWith(PathTestRunner.class)
@@ -40,15 +33,28 @@ public class S_CardViewTest {
     }
      
     @Test
-    public void testBundleForCardSlider()
+    public void testBundleForCzar()
     {
+    	int numBlackCards = 10;
+    	int numWhiteCards = 0;
+    	
     	Bundle bundle = new Bundle();
-    	bundle.putBoolean("SELECTABLE", true);
-    	bundle.putBoolean("TOP_SINGLE", true);
-    	bundle.putBoolean("BOTTOM_SINGLE",false);
+    	bundle.putBoolean(
+    			csa.getResources().getString(R.string.key_selectable), true);
+    	bundle.putInt(
+    			csa.getResources().getString(R.string.key_num_black), numBlackCards);
+    	bundle.putInt(
+    			csa.getResources().getString(R.string.key_num_white), numWhiteCards);
     	
     	csa.onCreate(bundle);
-    	    	
+    	
+    	//we need a view for the cardSlider, so ViewPage? 
+    	
+    	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
+    	assertEquals(numBlackCards,pager.getAdapter().getCount());
+    	
+    	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
+    	assertEquals(0,frame.getChildCount());
     }
     
     
@@ -57,7 +63,7 @@ public class S_CardViewTest {
     {
 
     	int numCards = 9;
-    	MockDealer dealer = new MockDealer(numCards,csa);
+    	MockDealer dealer = new MockDealer(csa);
             	
     	csa.onCreate(null);
     	csa.pageAdapter.setFragments(

@@ -40,7 +40,7 @@ public class F_DealerTest {
     @Test
     public void testMockDealerTop()
     {
-    	MockDealer dealer = new MockDealer(5, "testdata/xml/allCards.xml");
+    	MockDealer dealer = new MockDealer("testdata/xml/allCards.xml");
     	    	
     	List<Card> cards = dealer.dealCards(CardType.WHITE,5);
     	assertTrue(cards.size()==5);
@@ -63,7 +63,7 @@ public class F_DealerTest {
     			"some 03 text. ____ .", 
     			"some 04 text. ____ .", };
 
-    	MockDB db = new MockDB(cards.length);
+    	MockDB db = new MockDB();
     	
     	int numCards = 4;
     	List<Integer> cardNumbers = db.assignCards(numCards);

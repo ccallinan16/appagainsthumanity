@@ -43,7 +43,7 @@ public class S_RobolectricStuff {
 
 		
     	int numCards = 5;
-    	MockDealer dealer = new MockDealer(numCards,csa);
+    	MockDealer dealer = new MockDealer(csa);
         
     	csa.pageAdapter.setFragments(
     			SingleCardView.getFragmentFromCards(dealer.dealCards(CardType.WHITE, numCards), 30f)

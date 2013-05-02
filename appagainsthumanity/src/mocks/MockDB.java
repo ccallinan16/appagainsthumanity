@@ -8,10 +8,10 @@ import java.util.Set;
 
 public class MockDB {
 
-	int size;
+	int size = 50;
 	
-	public MockDB(int size) {
-		this.size = size;
+	public MockDB() {
+
 	}
 
 	/**

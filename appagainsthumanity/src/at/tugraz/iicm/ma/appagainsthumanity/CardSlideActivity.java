@@ -21,28 +21,55 @@ public class CardSlideActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      
-	  MockDealer dealer = new MockDealer(5,this);
-
       setContentView(R.layout.activity_screen_slide);
+
+      //TODO
+	  MockDealer dealer = new MockDealer(this);
+
+	  int numBlackCards = 1;
+	  int numWhiteCards = 5;
+	  
+	  if (savedInstanceState != null)
+	  {
+	      /*boolean selectable = savedInstanceState.getBoolean(
+	    		  getResources().getString(R.string.key_selectable));
+	      */
+		  
+	      numBlackCards = savedInstanceState.getInt(
+	    		  getResources().getString(R.string.key_num_black));
+	      numWhiteCards = savedInstanceState.getInt(
+	    		  getResources().getString(R.string.key_num_white));
+	  }  
+
+	  List<Card> cards = null;
+	  
+	  if (numBlackCards > 1 && numWhiteCards == 0)
+		  cards = dealer.dealCards(CardType.BLACK, numBlackCards);
+		  
+	  if (cards == null)
+		  cards = dealer.dealCards(CardType.WHITE, 5);	  
+	  
       pageAdapter = new CardFragmentAdapter(getSupportFragmentManager(), 
-    		  SingleCardView.getFragmentFromCards(
-    				  dealer.dealCards(CardType.WHITE, 5), 50f)
+    		  SingleCardView.getFragmentFromCards(cards, 50f)
     		  );  
       
-      ViewPager pager = (ViewPager)findViewById(R.id.viewpager_white_cards);
+      ViewPager pager = (ViewPager)findViewById(R.id.cs_card_slider);
       
       //TODO: exception in Unittests, comment back in for nice effects
       //pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
       pager.setAdapter(pageAdapter);
           
+      //no singleCardView is added to the cs display frame.
+      if (numBlackCards > 1)
+    	  return;   
+      
   		SingleCardView scv = SingleCardView.newInstance(
   				new Card("This is ________ our black card.",0,CardType.BLACK),30f);
   		
   		getSupportFragmentManager()
   			.beginTransaction()
-  			.add(R.id.frame_black_card, scv)
+  			.add(R.id.cs_display_frame, scv)
   			.commit();
     }      
 }

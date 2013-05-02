@@ -44,7 +44,7 @@ public class S_DealerXMLTest {
 	public void testMockDBResourceXML() {
 			
     	int numCards = 10;
-    	MockDealer dealer = new MockDealer(50,csa);
+    	MockDealer dealer = new MockDealer(csa);
         
     	List<Card> cards = dealer.dealCards(CardType.WHITE,numCards);
     	assertTrue(cards.size()==numCards);
