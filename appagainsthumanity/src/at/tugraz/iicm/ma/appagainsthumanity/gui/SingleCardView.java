@@ -3,7 +3,6 @@ package at.tugraz.iicm.ma.appagainsthumanity.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

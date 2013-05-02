@@ -1,5 +1,6 @@
-package at.tugraz.iicm.ma.appagainsthumanity.util;
+package at.tugraz.iicm.ma.appagainsthumanity.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -7,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "AppAgainstHumanity.db";
 
     public DBHelper(Context context) {
@@ -17,8 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
     	for (String query : DBContract.SQL_CREATE_ENTRIES) 
     		db.execSQL(query);
-    	for (String query : DBContract.SQL_DEFAULT_ENTRIES) 
-    		db.execSQL(query);
+    	addDefaultEntries(db);
     }
     
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -33,5 +33,21 @@ public class DBHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
     
-
+    private void addDefaultEntries(SQLiteDatabase db) {
+    	ContentValues values = new ContentValues();
+    	values.put(DBContract.User.COLUMN_NAME_USERNAME, "PLAYED_CARDS");
+    	db.insert(DBContract.User.TABLE_NAME, null, values);
+    }
+    
+    public void reinitialize(SQLiteDatabase db) {
+    	for (String query : DBContract.SQL_DELETE_ENTRIES)
+    		db.execSQL(query);
+    	for (String query : DBContract.SQL_CREATE_ENTRIES) 
+    		db.execSQL(query);
+    	addDefaultEntries(db);
+    }
+    
+    
+    
+    
 }

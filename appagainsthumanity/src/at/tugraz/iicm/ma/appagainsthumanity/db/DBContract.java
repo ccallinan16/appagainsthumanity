@@ -1,4 +1,4 @@
-package at.tugraz.iicm.ma.appagainsthumanity.util;
+package at.tugraz.iicm.ma.appagainsthumanity.db;
 
 import android.provider.BaseColumns;
 
@@ -10,7 +10,10 @@ public abstract class DBContract {
 	public static abstract class Game implements BaseColumns {
 	    public static final String TABLE_NAME = "game";
 	    public static final String COLUMN_NAME_GAMETYPE = "gametype";
-	    public static final String COLUMN_NAME_CAP =	"cap";
+	    public static final String COLUMN_NAME_LIMIT_ROUNDS =	"limitrounds";
+	    public static final String COLUMN_NAME_ROUND_CAP =	"roundcap";
+	    public static final String COLUMN_NAME_LIMIT_SCORE =	"limitscore";
+	    public static final String COLUMN_NAME_SCORE_CAP =	"scorecap";
 	    public static final String COLUMN_NAME_UPDATED = "updated";
 	}
 	
@@ -19,6 +22,7 @@ public abstract class DBContract {
 	    public static final String TABLE_NAME = "participation";
 	    public static final String COLUMN_NAME_GAME_ID = "game_id";
 	    public static final String COLUMN_NAME_USER_ID = "user_id";
+	    public static final String COLUMN_NAME_SCORE = "score";
 	}	
 	
 	//table describing users
@@ -68,7 +72,7 @@ public abstract class DBContract {
 	private static final String TYPE_TEXT = " TEXT";
 	private static final String TYPE_INTEGER = " INTEGER";
 	private static final String TYPE_BOOLEAN = " BOOLEAN";
-	private static final String TYPE_DATE =	 " DATE";
+	private static final String TYPE_DATETIME =	 " DATETIME DEFAULT CURRENT_TIMESTAMP";
 	private static final String TYPE_PRIMARY_KEY = " INTEGER PRIMARY KEY";
 	private static final String COMMA_SEP = ",";
 	
@@ -77,16 +81,19 @@ public abstract class DBContract {
 	    //Table Game
 		"CREATE TABLE " + DBContract.Game.TABLE_NAME + " (" +
 	    DBContract.Game._ID + 					TYPE_PRIMARY_KEY + 	COMMA_SEP + 
-		DBContract.Game.COLUMN_NAME_GAMETYPE + 	TYPE_BOOLEAN +  	COMMA_SEP +
-		DBContract.Game.COLUMN_NAME_CAP + 	TYPE_INTEGER + 		COMMA_SEP + 
-		DBContract.Game.COLUMN_NAME_UPDATED + 	TYPE_DATE + 
+		DBContract.Game.COLUMN_NAME_LIMIT_ROUNDS + 	TYPE_BOOLEAN +  	COMMA_SEP +
+		DBContract.Game.COLUMN_NAME_ROUND_CAP + 	TYPE_INTEGER + 		COMMA_SEP + 
+		DBContract.Game.COLUMN_NAME_LIMIT_SCORE + 	TYPE_BOOLEAN +  	COMMA_SEP +
+		DBContract.Game.COLUMN_NAME_SCORE_CAP + 	TYPE_INTEGER + 		COMMA_SEP + 
+		DBContract.Game.COLUMN_NAME_UPDATED + 	TYPE_DATETIME + 
 	    " )",
 	    
 	    //Table Participation
 	    "CREATE TABLE " + DBContract.Participation.TABLE_NAME + " (" +
 	    DBContract.Participation._ID + 					TYPE_PRIMARY_KEY + 	COMMA_SEP +
 	    DBContract.Participation.COLUMN_NAME_GAME_ID + 	TYPE_INTEGER + 		COMMA_SEP +
-	    DBContract.Participation.COLUMN_NAME_USER_ID + 	TYPE_INTEGER +
+	    DBContract.Participation.COLUMN_NAME_USER_ID + 	TYPE_INTEGER +		COMMA_SEP +
+	    DBContract.Participation.COLUMN_NAME_SCORE + 	TYPE_INTEGER + " DEFAULT 0" + 
 	    " )",
 	    
 	    //Table user
@@ -129,10 +136,11 @@ public abstract class DBContract {
 	    //Table black_card
 	    "CREATE TABLE " + DBContract.BlackCard.TABLE_NAME + " (" +
 	    DBContract.BlackCard._ID + TYPE_PRIMARY_KEY +	    
-	    " )"};
+	    " )"
+	    };
 	
 
-	public static final String[] SQL_DELETE_ENTRIES = new String[]{
+	public static final String[] SQL_DELETE_ENTRIES = new String[] {
 		//Table Game
 	    "DROP TABLE IF EXISTS " + DBContract.Game.TABLE_NAME,
 	    //Table Participation
@@ -148,13 +156,8 @@ public abstract class DBContract {
 	    //Table WhiteCard
 	    "DROP TABLE IF EXISTS " + DBContract.WhiteCard.TABLE_NAME,
 	    //Table WhiteCard
-	    "DROP TABLE IF EXISTS " + DBContract.BlackCard.TABLE_NAME};
-	
-	public static final String[] SQL_DEFAULT_ENTRIES = new String[]{
-		//Table User
-	    "INSERT INTO " + DBContract.User.TABLE_NAME + " VALUES ( PLAYED_CARDS )"
+	    "DROP TABLE IF EXISTS " + DBContract.BlackCard.TABLE_NAME
 	};
-	
 	
 	//private constructor - don't construct this!
 	private DBContract() {}
