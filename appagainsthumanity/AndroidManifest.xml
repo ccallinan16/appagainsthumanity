@@ -30,6 +30,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="at.touring.testapplication.MainActivity" />
         </activity>
+        <activity
+            android:name="at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardActivity"
+            android:label="@string/title_activity_gallery" >
+        </activity>
+        <activity
+            android:name="at.tugraz.iicm.ma.appagainsthumanity.gui.MyGallery"
+            android:label="@string/title_activity_my_gallery" >
+        </activity>
+        <activity
+            android:name="at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity"
+            android:label="@string/title_activity_card_slide" >
+        </activity>
     </application>
 
 </manifest>

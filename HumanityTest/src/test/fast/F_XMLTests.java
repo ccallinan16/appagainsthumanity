@@ -1,19 +1,18 @@
-package first;
+package test.fast;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import test.util.PathTestRunner;
-
+import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.CreateCardXML;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
-public class XMLTests {
+public class F_XMLTests {
 
 	String subPath;
 	
@@ -25,9 +24,22 @@ public class XMLTests {
 	@Test
 	public void testQuery() {
 		
-		int id = 1;
+		int id = 0;
 		XMLReader reader = new XMLReader(subPath+"example.xml");
 		assertEquals("Hello",reader.getText(CardType.WHITE,id));
+	}
+		
+	@Test
+	public void testQueryOnAllCards() {
+		
+		int id = 34;
+		XMLReader reader = new XMLReader(subPath+"allCards.xml");
+		try {
+			System.out.println(reader.getText(CardType.WHITE,id));
+		} catch (Exception e)
+		{
+			fail();
+		}
 	}
 	
 	@Test
@@ -47,7 +59,7 @@ public class XMLTests {
         XMLCreator.createXMLFromString(FILENAME,array,null);
 		
 		XMLReader reader = new XMLReader(FILENAME);
-		assertEquals(array[2],reader.getText(CardType.WHITE,3));
+		assertEquals(array[2],reader.getText(CardType.WHITE,2));
 	}
 	
 	@Test
@@ -60,8 +72,8 @@ public class XMLTests {
         XMLCreator.createXMLFromString(FILENAME,white,black);
 		
 		XMLReader reader = new XMLReader(FILENAME);
-		assertEquals(white[2],reader.getText(CardType.WHITE,3));
-		assertEquals(black[1],reader.getText(CardType.BLACK,2));		
+		assertEquals(white[2],reader.getText(CardType.WHITE,2));
+		assertEquals(black[1],reader.getText(CardType.BLACK,1));		
 	}
 	
 	@Test

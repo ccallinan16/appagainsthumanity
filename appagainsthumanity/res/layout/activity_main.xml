@@ -22,4 +22,11 @@
         
         android:onClick="createGame"/>
 
+    <Button
+        android:id="@+id/galleryBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/main_button_gallery"
+        android:onClick="showGallery" />
+
 </LinearLayout>

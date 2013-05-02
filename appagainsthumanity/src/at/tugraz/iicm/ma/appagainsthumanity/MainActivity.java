@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+@SuppressLint("NewApi")
 public class MainActivity extends Activity {
 
 	private ListView gameListView;
@@ -50,4 +52,17 @@ public class MainActivity extends Activity {
     	startActivity(intent);
     }
 
+    public void showGallery(View view) {
+    	
+    	Bundle bundle = new Bundle();
+    	bundle.putBoolean("SELECTABLE", true);
+    	bundle.putBoolean("TOP_SINGLE", true);
+    	bundle.putBoolean("BOTTOM_SINGLE",false);
+
+    	Intent intent = new Intent(this, CardSlideActivity.class);
+    	
+    	intent.putExtras(bundle);
+    	
+    	startActivity(intent);
+    }
 }

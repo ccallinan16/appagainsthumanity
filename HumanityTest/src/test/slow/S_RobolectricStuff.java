@@ -1,6 +1,9 @@
-package first;
+package test.slow;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import mocks.MockDealer;
 
 import org.junit.After;
 import org.junit.Before;
@@ -10,11 +13,15 @@ import org.junit.runner.RunWith;
 import test.util.PathTestRunner;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardView;
+import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
+import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
  
 @RunWith(PathTestRunner.class)
-public class RobolectricStuff {
+public class S_RobolectricStuff {
  
 	CreateGameActivity ma;
 	
@@ -28,6 +35,42 @@ public class RobolectricStuff {
     public void tearDown() throws Exception {
     }
  
+	@Test
+	public void testMockDBResourceXML() {
+		
+		CardSlideActivity csa = new CardSlideActivity();
+		csa.onCreate(null);
+
+		
+    	int numCards = 5;
+    	MockDealer dealer = new MockDealer(numCards,csa);
+        
+    	csa.pageAdapter.setFragments(
+    			SingleCardView.getFragmentFromCards(dealer.dealCards(CardType.WHITE, numCards), 30f)
+    			);
+    	
+    	assertEquals(numCards,csa.pageAdapter.getCount());
+	}
+
+    
+	@Test
+	public void testQueryOnResourceXML() {
+		
+		int id = 34;
+		
+		CardSlideActivity csa = new CardSlideActivity();
+		csa.onCreate(null);
+		
+		XMLReader reader = new XMLReader(csa);
+		try {
+			System.out.println(reader.getText(CardType.WHITE,id));
+		} catch (Exception e)
+		{
+			fail();
+		}
+	}
+
+    
     
     @Test
     public void testGameListDefaultElemTest() {
