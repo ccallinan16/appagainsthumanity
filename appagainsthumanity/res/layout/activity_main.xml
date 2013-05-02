@@ -9,18 +9,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
     
+    <TextView android:id="@+id/text"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_vertical"
+	    android:text="@string/main_text_create_game"
+	    android:clickable="true"
+	    android:onClick="createGame"/>
+     
     <ListView android:id="@+id/game_list_view"
         android:layout_height="0dp"
         android:layout_width="match_parent"
         android:layout_weight="1">
     </ListView>
-    
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/main_button_create_game"
-        
-        android:onClick="createGame"/>
 
     <Button
         android:id="@+id/galleryBtn"
@@ -28,5 +29,22 @@
         android:layout_height="wrap_content"
         android:text="@string/main_button_gallery"
         android:onClick="showGallery" />
+    
+        <LinearLayout 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
+		
+        <Spinner
+		    android:id="@+id/presets_spinner"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" />
+        
+        <Button
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/main_button_set" 
+        	android:onClick="setPreset"/>
+	</LinearLayout>
 
 </LinearLayout>

@@ -3,17 +3,22 @@
 
     <string name="app_name">App Against Humanity</string>
     <string name="action_settings">Settings</string>
-    <string name="main_button_create_game">Create game</string>
+    
+    <string name="main_text_create_game">Create game</string>
+    <string name="main_button_set">Set</string>
+    <string name="main_button_gallery">Gallery</string>
     <string name="main_key_game_list">GAME_LIST</string>
+    
     <string name="create_game_title_create_game">Create game</string>
     <string name="create_game_button_create_game">Create game</string>
+    
     <string name="prompt_new_invite_title">Invite player</string>
     <string name="prompt_new_invite_comment">Player-ID</string>
     <string name="prompt_edit_invite_title">Invite player</string>
     <string name="prompt_edit_invite_comment">Player-ID</string>
+    
     <string name="title_activity_gallery">GalleryActivity</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="main_button_gallery">Gallery</string>
+    <string name="hello_world">Hello world!</string>    
     <string name="title_activity_my_gallery">MyGallery</string>
     <string name="title_activity_card_slide">CardSlideActivity</string>
 
