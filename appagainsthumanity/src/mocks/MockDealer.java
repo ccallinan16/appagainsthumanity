@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardView;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
@@ -36,7 +34,7 @@ public class MockDealer {
     		if (tmp == null)
     			tmp = "couldn't read from xml";
     		
-    		cards.add(new Card(tmp,index,type));
+    		cards.add(Card.makeCard(index,tmp,type));
     	}
 		return cards;
 	}

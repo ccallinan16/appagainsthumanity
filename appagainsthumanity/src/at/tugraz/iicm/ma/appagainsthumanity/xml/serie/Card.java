@@ -3,6 +3,8 @@ package at.tugraz.iicm.ma.appagainsthumanity.xml.serie;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 
+import at.tugraz.iicm.ma.appagainsthumanity.CardsInPlay;
+
 public class Card {
 
    @Element
@@ -12,42 +14,29 @@ public class Card {
    private int id;
    
    private CardType type;
-   
-   /**
-    * 
-    * @param string
-    * @param i
-    */
-	public Card(String string, int i) {
-		this.text = string;
-		this.id = i;
-	}
-  
-	/**
-	 * 
-	 * @param text2
-	 */
-	public Card(String text2) {
-		this.text = text2;
-		this.id = 0;
-	}
 
+   private boolean highlight = false;
+   
+   
+   public static Card makeCard(Integer id, String text, CardType type)
+   {
+	   Card card = new Card(id,text,type);
+	   CardsInPlay.instance.addCard(card);
+	   return card;
+   }
+   
 	/**
 	 * 
-	 * @param text
 	 * @param id
+	 * @param text
 	 * @param type
 	 */
-	public Card(String text, Integer id, CardType type) {
+	private Card(Integer id, String text, CardType type) {
 		this.text = text;
 		this.id = id;
 		this.type = type;
 	}
 
-	public Card(Integer id, CardType type) {
-		this.id = id;
-		this.type = type;
-	}
 	
 	public String getText() {
 		return text;
@@ -69,6 +58,19 @@ public class Card {
 		public String toString() {
 		return "(" + id + ") " +type + " \"" + text + "\""; 
 	}
+
+	public void setHighlighted(boolean b) {
+		highlight = b;
+	}
+	
+	public boolean isHighlighted() {
+		return highlight;
+	}
+
+	public void setText(String string) {
+		this.text = string;
+	}
+
 	
 }
 

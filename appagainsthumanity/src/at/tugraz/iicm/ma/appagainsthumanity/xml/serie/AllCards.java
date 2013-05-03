@@ -25,9 +25,9 @@ public class AllCards {
 	public void addCard(CardType type, String text) throws CardTypeException
 	{
 		if (type.equals(CardType.WHITE))
-			whitecards.add(new Card(text,whitecards.size()+1));
+			whitecards.add(Card.makeCard(whitecards.size()+1,text,CardType.WHITE));
 		else if (type.equals(CardType.BLACK))
-			blackcards.add(new Card(text,blackcards.size()+1));
+			blackcards.add(Card.makeCard(blackcards.size()+1,text,CardType.BLACK));
 		else throw new CardTypeException(type);
 		
 	}

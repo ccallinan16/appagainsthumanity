@@ -1,7 +1,6 @@
 package test.fast;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -11,10 +10,7 @@ import mocks.MockDealer;
 import org.junit.Before;
 import org.junit.Test;
 
-import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.CreateCardXML;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLCreator;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
+import at.tugraz.iicm.ma.appagainsthumanity.CardsInPlay;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
@@ -25,12 +21,12 @@ public class F_DealerTest {
 	@Before
 	public void setUp() throws Exception {
 	}
-
+	
 	@Test
 	public void testCardToString()
 	{
-		Card card = new Card("Hello World",1,CardType.WHITE);
-		Card card2 = new Card("Good Day.",5,CardType.BLACK);
+		Card card = Card.makeCard(1,"Hello World",CardType.WHITE);
+		Card card2 = Card.makeCard(5,"Good Day.",CardType.BLACK);
 
 		assertEquals("(1) white \"Hello World\"",card.toString());
 		assertEquals("(5) black \"Good Day.\"",card2.toString());

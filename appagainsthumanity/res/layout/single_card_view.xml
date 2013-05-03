@@ -8,15 +8,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SingleCardActivity" >
                   
-    <TextView
+    <CheckedTextView
         android:id="@+id/cardText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:layout_alignParentTop="true"
-        android:text="sample text (very small)"
         android:maxLines="10"
-        android:textIsSelectable="true"
+        android:textIsSelectable="false"
         android:textColor="@android:color/black" />
 </RelativeLayout>
