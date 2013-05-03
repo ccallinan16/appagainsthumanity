@@ -1,31 +1,71 @@
 package at.tugraz.iicm.ma.appagainsthumanity.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.CardsInPlay;
+import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
+import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
+import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class CardFragmentAdapter extends FragmentPagerAdapter {
-	  private List<Fragment> fragments;
-
-	  public CardFragmentAdapter(FragmentManager fm, List<Fragment> fragments) {
-	    super(fm);
-	    this.fragments = fragments;
-	  }
+	  private List<Integer> cardIDs;
+	  private FragmentManager fm;
+	  private CardType type;
+	  private boolean selectable;
+	  
+	  public CardFragmentAdapter(FragmentManager fm, List<Card> fragments,boolean selectable) {
+		    super(fm);
+		    this.fm = fm;
+		    cardIDs = new ArrayList<Integer>();
+		    type = fragments.get(0).getType();
+		    this.selectable = selectable;
+		    setCards(fragments);
+		  }
 	  
 	  @Override 
-	  public Fragment getItem(int position) {
-	    return this.fragments.get(position);
+	  public Fragment getItem(int position) {		  
+		  return SingleCardFragment.newInstance(
+				  CardsInPlay.instance.getCard(cardIDs.get(position),type), 40f,selectable);
 	  }
 
 	  @Override
-	  public int getCount() {
-	    return this.fragments.size();
+	public int getItemPosition(Object object) {
+
+		  //return super.getItemPosition(object);
+		  return POSITION_NONE;
+	}
+	  
+	  public int getCardID(int position)
+	  {
+		  return cardIDs.get(position);
 	  }
 	  
-	  public void setFragments(List<Fragment> fragments) {
-		this.fragments = fragments;
+
+	  @Override
+	  public int getCount() {
+	    return this.cardIDs.size();
 	  }
+	  
+	  public void setCards(List<Card> cards) {
+		  this.cardIDs.clear();
+		  
+		  for (Card c : cards)
+		  {
+			  this.cardIDs.add(c.getId());
+		  }
+	  }
+	  
+	  public FragmentManager getFm() {
+		return fm;
 	}
+
+	public CardType getCardType() {
+		return type;
+	}
+}
 

@@ -17,6 +17,12 @@
     <string name="prompt_edit_invite_title">Invite player</string>
     <string name="prompt_edit_invite_comment">Player-ID</string>
     
+    
+    <string name="confirmation_dialog">confirm to select current card</string>
+		<string name="ok">OK</string>
+		<string name="cancel">Cancel</string>
+
+    
     <string name="title_activity_gallery">GalleryActivity</string>
     <string name="hello_world">Hello world!</string>    
     <string name="title_activity_my_gallery">MyGallery</string>
@@ -24,9 +30,5 @@
 
     
     
-    
-    <string name="key_selectable">SELECTABLE</string>
-    <string name="key_num_black">BLACKS</string>
-    <string name="key_num_white">WHITES</string>
-    
+      
 </resources>

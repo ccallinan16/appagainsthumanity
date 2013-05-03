@@ -1,12 +1,12 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
-import android.os.Bundle;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
 public class MainActivity extends Activity {
 
@@ -106,14 +107,10 @@ public class MainActivity extends Activity {
 
     public void showGallery(View view) {
     	
-    	Bundle bundle = new Bundle();
-    	bundle.putBoolean("SELECTABLE", true);
-    	bundle.putBoolean("TOP_SINGLE", true);
-    	bundle.putBoolean("BOTTOM_SINGLE",false);
 
     	Intent intent = new Intent(this, CardSlideActivity.class);
     	
-    	intent.putExtras(bundle);
+    	intent.putExtras(BundleCreator.getShowResultsView());
     	
     	startActivity(intent);
     }

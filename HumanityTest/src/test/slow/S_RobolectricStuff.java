@@ -11,12 +11,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import test.util.PathTestRunner;
+import android.support.v4.view.ViewPager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
-import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardView;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
  
@@ -44,12 +46,10 @@ public class S_RobolectricStuff {
 		
     	int numCards = 5;
     	MockDealer dealer = new MockDealer(csa);
-        
-    	csa.pageAdapter.setFragments(
-    			SingleCardView.getFragmentFromCards(dealer.dealCards(CardType.WHITE, numCards), 30f)
-    			);
-    	
-    	assertEquals(numCards,csa.pageAdapter.getCount());
+    	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
+    	((CardFragmentAdapter) pager.getAdapter()).setCards(dealer.dealCards(CardType.WHITE, numCards));
+   	
+    	assertEquals(numCards,pager.getAdapter().getCount());
 	}
 
     

@@ -9,12 +9,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import test.util.PathTestRunner;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.FrameLayout;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
-import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardView;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.gui.SelectableCardFragment;
+import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
  
 @RunWith(PathTestRunner.class)
@@ -25,6 +28,9 @@ public class S_CardViewTest {
     @Before
     public void setUp() throws Exception {
     	csa = new CardSlideActivity();
+    	Intent i = new Intent();
+    	csa.setIntent(i);
+
     }
  
     @After
@@ -33,20 +39,15 @@ public class S_CardViewTest {
     }
      
     @Test
-    public void testBundleForCzar()
+    public void testBundleForCzarView()
     {
     	int numBlackCards = 10;
     	int numWhiteCards = 0;
     	
-    	Bundle bundle = new Bundle();
-    	bundle.putBoolean(
-    			csa.getResources().getString(R.string.key_selectable), true);
-    	bundle.putInt(
-    			csa.getResources().getString(R.string.key_num_black), numBlackCards);
-    	bundle.putInt(
-    			csa.getResources().getString(R.string.key_num_white), numWhiteCards);
-    	
-    	csa.onCreate(bundle);
+    	Bundle b = BundleCreator.createBundle(true,numBlackCards,numWhiteCards);
+
+    	csa.getIntent().putExtras(b);
+    	csa.onCreate(null);
     	
     	//we need a view for the cardSlider, so ViewPage? 
     	
@@ -55,6 +56,97 @@ public class S_CardViewTest {
     	
     	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
     	assertEquals(0,frame.getChildCount());
+    }
+    
+    @Test
+    public void testCreateSwipableBlackList()
+    {
+   	
+    	Bundle b = BundleCreator.getCzarView();
+
+    	csa.getIntent().putExtras(b);
+    	csa.onCreate(null);
+
+    	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
+    	CardFragmentAdapter cfa = (CardFragmentAdapter) pager.getAdapter();
+    	assertEquals(cfa.getItem(0).getClass(),SelectableCardFragment.class);
+    	
+    	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
+    	assertEquals(0,frame.getChildCount());
+    }
+    
+    @Test
+    public void testBundleForCzarViewWithPresets()
+    {
+    	int numBlackCards = 10;
+    	int numWhiteCards = 0;
+    	
+    	Bundle b = BundleCreator.getCzarView();
+    	
+    	csa.getIntent().putExtras(b);
+    	csa.onCreate(null);
+
+    	//we need a view for the cardSlider, so ViewPage? 
+    	
+    	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
+    	assertEquals(numBlackCards,pager.getAdapter().getCount());
+    	
+    	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
+    	assertEquals(0,frame.getChildCount());
+    }
+    
+    @Test
+    public void testBundleForPlayerChooser()
+    {
+    	int numBlackCards = 1;
+    	int numWhiteCards = 7;
+    	
+    	Bundle b = BundleCreator.createBundle(true,numBlackCards,numWhiteCards);
+    	csa.getIntent().putExtras(b);
+    	csa.onCreate(null);
+    	
+    	//we need a view for the cardSlider, so ViewPage? 
+    	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
+    	assertEquals(1,frame.getChildCount());
+
+    	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
+    	assertEquals(numWhiteCards,pager.getAdapter().getCount());
+    }
+    
+    @Test
+    public void testBundleForPlayerDisplay()
+    {
+    	int numBlackCards = 1;
+    	int numWhiteCards = 1;
+    	
+    	Bundle b = BundleCreator.createBundle(false,numBlackCards,numWhiteCards);
+    	csa.getIntent().putExtras(b);
+    	csa.onCreate(null);
+    	
+    	//we need a view for the cardSlider, so ViewPage? 
+    	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
+    	assertEquals(1,frame.getChildCount());
+
+    	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
+    	assertEquals(numWhiteCards,pager.getAdapter().getCount());
+    }
+    
+    @Test
+    public void testBundleForShowResults()
+    {
+    	int numBlackCards = 1;
+    	int numWhiteCards = 10;
+    	
+    	Bundle b = BundleCreator.createBundle(false,numBlackCards,numWhiteCards);
+    	csa.getIntent().putExtras(b);
+    	csa.onCreate(null);
+    	
+    	//we need a view for the cardSlider, so ViewPage? 
+    	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
+    	assertEquals(1,frame.getChildCount());
+
+    	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
+    	assertEquals(numWhiteCards,pager.getAdapter().getCount());
     }
     
     
@@ -66,13 +158,11 @@ public class S_CardViewTest {
     	MockDealer dealer = new MockDealer(csa);
             	
     	csa.onCreate(null);
-    	csa.pageAdapter.setFragments(
-    			SingleCardView.getFragmentFromCards(
-    					dealer.dealCards(CardType.WHITE, numCards), 30f
-    					)
-    			);
+    	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
+    	((CardFragmentAdapter) pager.getAdapter()).setCards(dealer.dealCards(CardType.WHITE, numCards));
+
     	
-    	assertEquals(numCards,csa.pageAdapter.getCount());
+    	assertEquals(numCards,pager.getAdapter().getCount());
     }
 
 
