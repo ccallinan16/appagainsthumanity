@@ -22,8 +22,9 @@
     <string name="title_activity_my_gallery">MyGallery</string>
     <string name="title_activity_card_slide">CardSlideActivity</string>
 
-    
-    
+    <string name="gamelist_round">Round</string>
+    <string name="gamelist_score">Score</string>
+    <string name="gamelist_numplayers">NumPlayers</string>
     
     <string name="key_selectable">SELECTABLE</string>
     <string name="key_num_black">BLACKS</string>
