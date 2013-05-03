@@ -19,7 +19,8 @@
     
     
     <string name="confirmation_dialog">confirm to select current card</string>
-		<string name="ok">OK</string>
+		<string name="btn_ok">OK</string>
+		<string name="btn_send">Send</string>
 		<string name="cancel">Cancel</string>
 
     
