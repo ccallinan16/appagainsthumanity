@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import at.tugraz.iicm.ma.appagainsthumanity.R;
 
 public class DBProxy {
 
@@ -27,11 +28,13 @@ public class DBProxy {
 	 */
 	
 	private DBHelper dbHelper;
+	private Context context;
 	private SQLiteDatabase readableDatabase;
 	private SQLiteDatabase writableDatabase;
 	
 	
 	public DBProxy(Context context) {
+		this.context = context;
 		this.dbHelper = new DBHelper(context);
 		this.readableDatabase = null;
 		this.writableDatabase = null;
@@ -179,16 +182,19 @@ public class DBProxy {
 		long game_1, game_2, game_3, game_4;
 		long turn_1, turn_2, turn_3, turn_4;		
 		
+		//retrieve username
+		String username = context.getSharedPreferences(context.getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getString(context.getString(R.string.sharedpreferences_key_username), "");
+		
 		switch(preset) {
 		case NO_GAMES:
 			//1 user, no games
-			addUser("pkoch37@gmail.com");
+			addUser(username);
 			break;
 			
 		case CHOOSE_BLACK:
 			//3 users, 1 game, 2 rounds, user has to choose black card
 			//table user: add local user
-				user_1 = addUser("pkoch37@gmail.com");
+				user_1 = addUser(username);
 				user_2 = addUser("user2@dummy.com");
 				user_3 = addUser("user3@dummy.com");
 			//table game: add game
@@ -209,7 +215,7 @@ public class DBProxy {
 		case CHOOSE_WHITE:
 			//3 users, 1 game, 2 rounds, user has to choose black card
 			//table user: add local user
-				user_1 = addUser("pkoch37@gmail.com");
+				user_1 = addUser(username);
 				user_2 = addUser("user2@dummy.com");
 				user_3 = addUser("user3@dummy.com");
 			//table game: add game

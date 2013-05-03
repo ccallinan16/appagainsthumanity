@@ -1,11 +1,7 @@
 package at.tugraz.iicm.ma.appagainsthumanity.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 
 public class GamelistAdapter extends CursorAdapter {
@@ -62,21 +57,6 @@ public class GamelistAdapter extends CursorAdapter {
 			image.setOnClickListener(winning);
 		} else 
 			image.setImageDrawable(context.getResources().getDrawable(R.drawable.time));
-		
-		
-		
-		//c.get
-	//	cursor.getString(columnIndex)
-		
-		//		TextView mobileNo=(TextView)view.findViewById(R.id.mobileNolistitem);
-//        mobileNo.setText(cursor.getString(cursor.getColumnIndex(TextMeDBAdapter.KEY_MOBILENO)));
-//
-//        TextView frequency=(TextView)view.findViewById(R.id.frequencylistitem);
-//        frequency.setText(cursor.getString(cursor.getColumnIndex(TextMeDBAdapter.KEY_FREQUENCY)));
-//
-//        TextView rowid=(TextView)view.findViewById(R.id.rowidlistitem);
-//        rowid.setText(cursor.getString(cursor.getColumnIndex(TextMeDBAdapter.KEY_ID)));
-
 	}
 
 	@Override

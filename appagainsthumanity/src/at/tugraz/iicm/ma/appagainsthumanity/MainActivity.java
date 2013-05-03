@@ -4,9 +4,10 @@ import android.os.Bundle;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +20,8 @@ import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 
 public class MainActivity extends Activity {
 
+	public static final String EXTRA_USERNAME = "USERNAME";
+	
 	private ListView gameListView;
 	private GamelistAdapter gamelistAdapter;
 	private DBProxy dbProxy;
@@ -36,6 +39,12 @@ public class MainActivity extends Activity {
 		AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
 		Account[] list = manager.getAccounts();
 		username = list[0].name;
+		
+		//supply username to shared preferences for other activities
+		SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).edit();
+		editor.putString(getString(R.string.sharedpreferences_key_username), username);
+		editor.commit();
+		System.out.println("blub " + getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getString(getString(R.string.sharedpreferences_key_username), ""));
 		
 		//populate database presets
 		Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);

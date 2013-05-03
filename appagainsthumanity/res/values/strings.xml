@@ -10,7 +10,8 @@
     <string name="main_key_game_list">GAME_LIST</string>
     
     <string name="create_game_title_create_game">Create game</string>
-    <string name="create_game_button_create_game">Create game</string>
+    <string name="create_game_text_add_player">add player</string>
+    <string name="create_game_button_confirm">Confirm</string>
     
     <string name="prompt_new_invite_title">Invite player</string>
     <string name="prompt_new_invite_comment">Player-ID</string>
@@ -30,4 +31,6 @@
     <string name="key_num_black">BLACKS</string>
     <string name="key_num_white">WHITES</string>
     
+    <string name = "sharedpreferences_filename">sharedpref</string>
+    <string name = "sharedpreferences_key_username">username</string>
 </resources>
