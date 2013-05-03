@@ -7,15 +7,51 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/gradient_bg"
     tools:context=".MainActivity" >
-    
-    <TextView android:id="@+id/text"
-	    android:layout_width="match_parent"
+   
+    <RelativeLayout
+	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:gravity="center_vertical"
-	    android:text="@string/main_text_create_game"
-	    android:clickable="true"
-	    android:onClick="createGame"/>
+	    android:background="@drawable/list_selector"
+	    android:orientation="horizontal"
+	    android:padding="5dip" 
+	    android:onClick="createGame">
+	    <LinearLayout 
+	        android:id="@+id/thumbnail" 
+	        android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content" 
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginRight="5dip" 
+	        android:padding="3dip">
+	        <ImageView 
+	            android:id="@+id/list_image" 
+	            android:contentDescription="@string/app_name" 
+	            android:layout_width="60dip" 
+	            android:layout_height="60dip" 
+	            android:src="@drawable/plus" />
+	    </LinearLayout>	
+    	<ImageView
+	        android:id="@+id/imageView1"
+	        android:contentDescription="@string/app_name"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_centerVertical="true"
+	        android:src="@drawable/arrow" />
+    	<TextView
+	        android:id="@+id/text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@+id/list_image"
+	        android:layout_marginLeft="75dip"
+	        android:layout_centerVertical="true"
+	        android:text="@string/main_text_create_game"
+	        android:textColor="#ffffff"
+	        android:textSize="25sp"
+	        android:textStyle="bold"
+	        android:typeface="sans" />
+	    </RelativeLayout>
      
     <ListView android:id="@+id/game_list_view"
         android:layout_height="0dp"

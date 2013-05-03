@@ -9,19 +9,24 @@ import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.GamelistAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
 public class MainActivity extends Activity {
 
 	private ListView gameListView;
-	private ArrayAdapter<String> gameArrayAdapter;
+	private GamelistAdapter gamelistAdapter;
 	private DBProxy dbProxy;
 	private String username;
+	
+	//database
+	private Cursor gamelistCursor;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,62 +38,59 @@ public class MainActivity extends Activity {
 		Account[] list = manager.getAccounts();
 		username = list[0].name;
 		
-		// Instanciate database proxy
-		dbProxy = new DBProxy(this.getApplicationContext());
-		
-		//retrieve game list
-		Cursor c = dbProxy.readGameList(username);
-		displayListView(c);
-		
-		//populate game list
-		String[] stringarray = {"test1", "test2", "test3"};
-		gameListView = (ListView) findViewById(R.id.game_list_view);
-		gameArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, stringarray);
-		gameListView.setAdapter(gameArrayAdapter);
-		
 		//populate database presets
 		Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, DBProxy.PRESETS);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
+		
+		//bind gameListView
+		gameListView = (ListView) findViewById(R.id.game_list_view);
 	}
-
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		// Instanciate database proxy
+		dbProxy = new DBProxy(this.getApplicationContext());
+				
+		//retrieve game list
+		gamelistCursor = dbProxy.readGameList(username);
+		displayListView(gamelistCursor);
+	}
+	
 	private void displayListView(Cursor c) {
 		// The desired columns to be bound
-		dbProxy.dumpTables();
-		System.out.println("row count: " + c.getCount());
-		
-		System.out.println(DatabaseUtils.dumpCursorToString(c));
-		/*
-		  String[] columns = new String[] {
-		    DBContract.Game._ID,
-		    DBContract.Game.COLUMN_NAME_UPDATED,
-		  };
-		 
-		  // the XML defined views which the data will be bound to
-		  int[] to = new int[] {
-		    R.id.code,
-		    R.id.name,
-		    R.id.continent,
-		    R.id.region,
-		  };
-		 
-		  // create the adapter using the cursor pointing to the desired data
-		  //as well as the layout information
-		  dataAdapter = new SimpleCursorAdapter(
-		    this, R.layout.country_info,
-		    cursor,
-		    columns,
-		    to,
-		    0);
-		 
-		  ListView listView = (ListView) findViewById(R.id.listView1);
-		  // Assign adapter to ListView
-		  listView.setAdapter(dataAdapter);
-		  */
-		
+//		dbProxy.dumpTables();
+//		System.out.println("row count: " + c.getCount());
+//		System.out.println(DatabaseUtils.dumpCursorToString(c));
+		if (gamelistAdapter == null)
+			gamelistAdapter = new GamelistAdapter(getApplicationContext(), c, chooseBlackCardListener, chooseWhiteCardListener, chooseWinningCardListener);
+		else
+			gamelistAdapter.changeCursor(c);
+		gameListView.setAdapter(gamelistAdapter);
 	}
+	
+    @Override
+    protected void onStop() {
+    	try {
+    		super.onStop();
+    		if (this.gamelistCursor != null){
+    			this.gamelistCursor.close();
+    			this.gamelistCursor = null;
+    		}
+
+    		if (this.dbProxy != null) {
+    			this.dbProxy.onStop();
+    			this.dbProxy = null;
+    		}
+    	} catch (Exception error) {
+        /** Error Handler Code **/
+    	}// end try/catch (Exception error)
+    }
+
+
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,4 +128,43 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(MainActivity.this, MainActivity.class);
         startActivity(intent);
     }
+    
+    public OnClickListener chooseBlackCardListener = new OnClickListener() {
+    	@Override
+		public void onClick(View arg0) {
+	    	Bundle bundle = new Bundle();
+	    	bundle.putBoolean("SELECTABLE", true);
+	    	bundle.putBoolean("TOP_SINGLE", true);
+	    	bundle.putBoolean("BOTTOM_SINGLE",false);
+	    	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
+	    	intent.putExtras(bundle);
+			startActivity(intent);
+		}
+    };
+    
+    public OnClickListener chooseWhiteCardListener = new OnClickListener() {
+    	@Override
+		public void onClick(View arg0) {
+	    	Bundle bundle = new Bundle();
+	    	bundle.putBoolean("SELECTABLE", true);
+	    	bundle.putBoolean("TOP_SINGLE", true);
+	    	bundle.putBoolean("BOTTOM_SINGLE",false);
+	    	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
+	    	intent.putExtras(bundle);
+			startActivity(intent);
+		}
+    };
+    
+    public OnClickListener chooseWinningCardListener = new OnClickListener() {
+    	@Override
+		public void onClick(View arg0) {
+	    	Bundle bundle = new Bundle();
+	    	bundle.putBoolean("SELECTABLE", true);
+	    	bundle.putBoolean("TOP_SINGLE", true);
+	    	bundle.putBoolean("BOTTOM_SINGLE",false);
+	    	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
+	    	intent.putExtras(bundle);
+			startActivity(intent);
+		}
+    };
 }
