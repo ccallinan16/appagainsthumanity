@@ -27,7 +27,7 @@ public class CreateGameActivity extends Activity {
 		setContentView(R.layout.activity_create_game);
 		
 		//initialize empty arrayadapter
-		inviteArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2);
+		inviteArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 		
 		//initialize listView
 		inviteListView = (ListView) findViewById(R.id.players_list_view);
@@ -74,6 +74,7 @@ public class CreateGameActivity extends Activity {
 
 	
 	public void editPlayer(int position, String id) {
+		deletePlayer(position);
 		inviteArrayAdapter.insert(id, position);
 	}
 	

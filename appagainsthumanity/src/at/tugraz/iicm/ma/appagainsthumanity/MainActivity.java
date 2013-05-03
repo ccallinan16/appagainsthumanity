@@ -141,40 +141,28 @@ public class MainActivity extends Activity {
     
     public OnClickListener chooseBlackCardListener = new OnClickListener() {
     	@Override
-		public void onClick(View arg0) {
-	    	Bundle bundle = new Bundle();
-	    	bundle.putBoolean("SELECTABLE", true);
-	    	bundle.putBoolean("TOP_SINGLE", true);
-	    	bundle.putBoolean("BOTTOM_SINGLE",false);
-	    	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
-	    	intent.putExtras(bundle);
-			startActivity(intent);
+		public void onClick(View view) {
+        	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
+        	intent.putExtras(BundleCreator.getCzarView());
+        	startActivity(intent);
 		}
     };
     
     public OnClickListener chooseWhiteCardListener = new OnClickListener() {
     	@Override
-		public void onClick(View arg0) {
-	    	Bundle bundle = new Bundle();
-	    	bundle.putBoolean("SELECTABLE", true);
-	    	bundle.putBoolean("TOP_SINGLE", true);
-	    	bundle.putBoolean("BOTTOM_SINGLE",false);
-	    	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
-	    	intent.putExtras(bundle);
-			startActivity(intent);
+		public void onClick(View view) {
+        	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
+        	intent.putExtras(BundleCreator.getPlayerSelectionView());
+        	startActivity(intent);
 		}
     };
     
     public OnClickListener chooseWinningCardListener = new OnClickListener() {
     	@Override
-		public void onClick(View arg0) {
-	    	Bundle bundle = new Bundle();
-	    	bundle.putBoolean("SELECTABLE", true);
-	    	bundle.putBoolean("TOP_SINGLE", true);
-	    	bundle.putBoolean("BOTTOM_SINGLE",false);
-	    	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
-	    	intent.putExtras(bundle);
-			startActivity(intent);
+		public void onClick(View view) {
+        	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
+        	intent.putExtras(BundleCreator.getPlayerSelectionView());
+        	startActivity(intent);
 		}
     };
 }
