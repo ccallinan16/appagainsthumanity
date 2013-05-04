@@ -1,20 +1,28 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
-import java.util.ArrayList;
-
-import android.os.Bundle;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.support.v4.app.NavUtils;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.os.Build;
-import at.tugraz.iicm.ma.appagainsthumanity.util.PromptDialog;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.util.AutocompletePromptDialog;
+
+import at.tugraz.iicm.ma.appagainsthumanity.R;
 
 public class CreateGameActivity extends Activity {
 
@@ -61,6 +69,7 @@ public class CreateGameActivity extends Activity {
 		setupActionBar();
 	}
 	
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onStart() {
@@ -74,10 +83,10 @@ public class CreateGameActivity extends Activity {
 		DatabaseUtils.dumpCursor(userCursor);
 		
 		this.userAdapter = new SimpleCursorAdapter(this, 
-		        android.R.layout.simple_list_item_1, 
+		        R.layout.simple_list_item_1, 
 		        userCursor,
 		        new String[] { DBContract.User.COLUMN_NAME_USERNAME }, 
-		        new int[] { android.R.id.text1 });
+		        new int[] {R.id.text1 });
 		
 		//initialize prompt-onClickListener 
 		inviteListView.setOnItemClickListener(new OnItemClickListener() {
