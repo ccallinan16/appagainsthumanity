@@ -1,6 +1,5 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
-import mocks.MockDealer;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -8,31 +7,41 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
-import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
+import android.widget.AdapterView.OnItemClickListener;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.GamelistAdapter;
-import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
 public class MainActivity extends Activity {
 
-	public static final String EXTRA_USERNAME = "USERNAME";
+	/*
+	 * CONSTANTS
+	 */
+	public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
+	public static final String EXTRA_GAMEID = "EXTRA_GAMEID";
 	
+	/*
+	 * PRIVATE MEMBER VARIABLES
+	 */
 	private ListView gameListView;
 	private GamelistAdapter gamelistAdapter;
 	private DBProxy dbProxy;
 	private String username;
-	
-	//database
 	private Cursor gamelistCursor;
+	
+	/*
+	 * LIFECYCLE METHODS
+	 */
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +57,6 @@ public class MainActivity extends Activity {
 		SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).edit();
 		editor.putString(getString(R.string.sharedpreferences_key_username), username);
 		editor.commit();
-		System.out.println("blub " + getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getString(getString(R.string.sharedpreferences_key_username), ""));
 		
 		//populate database presets
 		Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
@@ -72,18 +80,6 @@ public class MainActivity extends Activity {
 		displayListView(gamelistCursor);
 	}
 	
-	private void displayListView(Cursor c) {
-		// The desired columns to be bound
-//		dbProxy.dumpTables();
-//		System.out.println("row count: " + c.getCount());
-//		System.out.println(DatabaseUtils.dumpCursorToString(c));
-		if (gamelistAdapter == null)
-			gamelistAdapter = new GamelistAdapter(getApplicationContext(), c, chooseBlackCardListener, chooseWhiteCardListener, chooseWinningCardListener);
-		else
-			gamelistAdapter.changeCursor(c);
-		gameListView.setAdapter(gamelistAdapter);
-	}
-	
     @Override
     protected void onStop() {
     	try {
@@ -102,26 +98,38 @@ public class MainActivity extends Activity {
     	}// end try/catch (Exception error)
     }
 
-
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	/*
+	 * UTILITY METHODS
+	 */
+    
+	private void displayListView(Cursor c) {
+		// The desired columns to be bound
+//		dbProxy.dumpTables();
+//		System.out.println("row count: " + c.getCount());
+//		System.out.println(DatabaseUtils.dumpCursorToString(c));
+		if (gamelistAdapter == null)
+			gamelistAdapter = new GamelistAdapter(getApplicationContext(), c, chooseBlackCardListener, chooseWhiteCardListener, chooseWinningCardListener);
+		else
+			gamelistAdapter.changeCursor(c);
+		gameListView.setAdapter(gamelistAdapter);
+		//add onClick listener 
+		gameListView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+				//click on existing entry -> edit
+				Intent intent = new Intent(MainActivity.this, GameOverviewActivity.class);
+				intent.putExtra(EXTRA_GAMEID, id);
+				startActivity(intent);
+			}
+		});
 	}
-	
+    
     public void createGame(View view) {
     	Intent intent = new Intent(this, CreateGameActivity.class);
-//    	EditText editText = (EditText) findViewById(R.id.edit_message);
-//    	String message = editText.getText().toString();
-//    	intent.putExtra(EXTRA_MESSAGE, message);
     	startActivity(intent);
     }
 
     public void showGallery(View view) {
-    	
-
     	Intent intent = new Intent(this, CardSlideActivity.class);
     	
 		CardCollection.instance.setupContextTESTING(
@@ -144,6 +152,10 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(MainActivity.this, MainActivity.class);
         startActivity(intent);
     }
+    
+    /*
+     * CALLBACKS
+     */
     
     public OnClickListener chooseBlackCardListener = new OnClickListener() {
     	@Override

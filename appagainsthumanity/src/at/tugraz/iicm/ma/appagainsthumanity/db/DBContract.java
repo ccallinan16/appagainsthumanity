@@ -10,9 +10,7 @@ public abstract class DBContract {
 	public static abstract class Game implements BaseColumns {
 	    public static final String TABLE_NAME = "game";
 	    public static final String COLUMN_NAME_GAMETYPE = "gametype";
-	    public static final String COLUMN_NAME_LIMIT_ROUNDS =	"limitrounds";
 	    public static final String COLUMN_NAME_ROUND_CAP =	"roundcap";
-	    public static final String COLUMN_NAME_LIMIT_SCORE =	"limitscore";
 	    public static final String COLUMN_NAME_SCORE_CAP =	"scorecap";
 	    public static final String COLUMN_NAME_UPDATED = "updated";
 	}
@@ -70,6 +68,7 @@ public abstract class DBContract {
 	//default queries
 	
 	private static final String TYPE_TEXT = " TEXT";
+	private static final String CONSTRAINT_UNIQUE = " UNIQUE";
 	private static final String TYPE_INTEGER = " INTEGER";
 	private static final String TYPE_BOOLEAN = " BOOLEAN";
 	private static final String TYPE_DATETIME =	 " DATETIME DEFAULT CURRENT_TIMESTAMP";
@@ -81,9 +80,7 @@ public abstract class DBContract {
 	    //Table Game
 		"CREATE TABLE " + DBContract.Game.TABLE_NAME + " (" +
 	    DBContract.Game._ID + 					TYPE_PRIMARY_KEY + 	COMMA_SEP + 
-		DBContract.Game.COLUMN_NAME_LIMIT_ROUNDS + 	TYPE_BOOLEAN +  	COMMA_SEP +
 		DBContract.Game.COLUMN_NAME_ROUND_CAP + 	TYPE_INTEGER + 		COMMA_SEP + 
-		DBContract.Game.COLUMN_NAME_LIMIT_SCORE + 	TYPE_BOOLEAN +  	COMMA_SEP +
 		DBContract.Game.COLUMN_NAME_SCORE_CAP + 	TYPE_INTEGER + 		COMMA_SEP + 
 		DBContract.Game.COLUMN_NAME_UPDATED + 	TYPE_DATETIME + 
 	    " )",
@@ -99,7 +96,7 @@ public abstract class DBContract {
 	    //Table user
 	    "CREATE TABLE " + DBContract.User.TABLE_NAME + " (" +
 	    DBContract.User._ID + 					TYPE_PRIMARY_KEY + 	COMMA_SEP +
-	    DBContract.User.COLUMN_NAME_USERNAME + 	TYPE_TEXT +
+	    DBContract.User.COLUMN_NAME_USERNAME + 	TYPE_TEXT + CONSTRAINT_UNIQUE + 
 	    " )",
 	    
 	    //Table turn

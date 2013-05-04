@@ -53,10 +53,14 @@
     </ListView>
     
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
         android:text="@string/create_game_button_confirm"
-        
-        android:onClick="createGame"/>
+        android:background="@drawable/gradient_bg_hover"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:onClick="confirmEntries"/>
 
 </LinearLayout>

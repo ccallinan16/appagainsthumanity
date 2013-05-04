@@ -34,24 +34,24 @@ public class GamelistAdapter extends CursorAdapter {
 	public void bindView(View view, final Context context, Cursor c) {
 		//TextView round
 		TextView round = (TextView)view.findViewById(R.id.tvRound);
-		round.setText("round: " + c.getString(1) + (c.getInt(3) == 1 ? " / " + c.getString(2) : ""));
+		round.setText("round: " + c.getString(1) + (c.getInt(2) > 0 ? " / " + c.getString(2) : ""));
 		//TextView score
 		TextView score = (TextView)view.findViewById(R.id.tvScore);
-		score.setText("score: " + c.getString(4) + (c.getInt(6) == 1 ? " / " + c.getString(5) : ""));
+		score.setText("score: " + c.getString(3) + (c.getInt(4) > 0 ? " / " + c.getString(4) : ""));
 		//TextView numplayers
 		TextView numplayers = (TextView)view.findViewById(R.id.tvNumplayers);
-		numplayers.setText(c.getString(7) + " players");
+		numplayers.setText(c.getString(5) + " players");
 		//ImageView thumbnail
 		ImageView image = (ImageView)view.findViewById(R.id.list_image);
 		//case: choose black card
-		if (c.getLong(8) == c.getLong(9) && c.getLong(10) == 0) {
+		if (c.getLong(6) == c.getLong(7) && c.getLong(8) == 0) {
 			image.setImageDrawable(context.getResources().getDrawable(R.drawable.card_black));
 			image.setOnClickListener(black);
-		} else if (c.getLong(8) != c.getLong(9) && c.getInt(11) < c.getInt(7)) {
+		} else if (c.getLong(6) != c.getLong(7) && c.getInt(9) < (c.getInt(5) - 1)) {
 			//choose white card
 			image.setImageDrawable(context.getResources().getDrawable(R.drawable.card_white));
 			image.setOnClickListener(white);
-		} else if (c.getLong(8) == c.getLong(9) && c.getInt(11) == c.getInt(7)) {
+		} else if (c.getLong(6) == c.getLong(7) && c.getInt(9) == (c.getInt(5) - 1)) {
 			//choose winning card
 			image.setImageDrawable(context.getResources().getDrawable(R.drawable.star));
 			image.setOnClickListener(winning);
