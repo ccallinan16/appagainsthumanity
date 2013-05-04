@@ -7,7 +7,9 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"></uses-permission>
+
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" >
+    </uses-permission>
 
     <application
         android:allowBackup="true"
@@ -42,6 +44,22 @@
         <activity
             android:name="at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity"
             android:label="@string/title_activity_card_slide" >
+        </activity>
+        <activity
+            android:name="at.tugraz.iicm.ma.appagainsthumanity.GameOptionsActivity"
+            android:label="@string/title_activity_game_options"
+            android:parentActivityName="at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity" />
+        </activity>
+        <activity
+            android:name="at.tugraz.iicm.ma.appagainsthumanity.GameOverviewActivity"
+            android:label="@string/title_activity_game_overview"
+            android:parentActivityName="at.tugraz.iicm.ma.appagainsthumanity.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="at.tugraz.iicm.ma.appagainsthumanity.MainActivity" />
         </activity>
     </application>
 

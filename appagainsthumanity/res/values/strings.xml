@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">App Against Humanity</string>
     <string name="action_settings">Settings</string>
-    
     <string name="main_text_create_game">Create game</string>
     <string name="main_button_set">Set</string>
     <string name="main_button_gallery">Gallery</string>
     <string name="main_key_game_list">GAME_LIST</string>
-    
     <string name="create_game_title_create_game">Create game</string>
     <string name="create_game_text_add_player">add player</string>
     <string name="create_game_button_confirm">Confirm</string>
-    
+    <string name="create_game_toast_invalidentry">ERROR: invalid entry</string>
+    <string name="create_game_toast_notenoughplayers">ERROR: not enough players</string>
+    <string name="game_options_text_scorecap">Score cap</string>
+    <string name="game_options_hint_scorecap">0: no lim</string>
+    <string name="game_options_text_roundcap">Round cap</string>
+    <string name="game_options_hint_roundcap">0: no lim</string>
+    <string name="game_options_toast_invalidselection">ERROR: invalid selection</string>
     <string name="prompt_new_invite_title">Invite player</string>
     <string name="prompt_new_invite_comment">Player-ID</string>
     <string name="prompt_edit_invite_title">Invite player</string>
     <string name="prompt_edit_invite_comment">Player-ID</string>
-    
-    
     <string name="confirmation_dialog">confirm to select current card</string>
-		<string name="btn_ok">OK</string>
-		<string name="btn_send">Send</string>
-		<string name="cancel">Cancel</string>
-
-    
+    <string name="btn_ok">OK</string>
+    <string name="btn_send">Send</string>
+    <string name="cancel">Cancel</string>
     <string name="title_activity_gallery">GalleryActivity</string>
-    <string name="hello_world">Hello world!</string>    
+    <string name="hello_world">Hello world!</string>
     <string name="title_activity_my_gallery">MyGallery</string>
     <string name="title_activity_card_slide">CardSlideActivity</string>
-
     <string name="gamelist_round">Round</string>
     <string name="gamelist_score">Score</string>
     <string name="gamelist_numplayers">NumPlayers</string>
-    <string name = "sharedpreferences_filename">sharedpref</string>
-    <string name = "sharedpreferences_key_username">username</string>
+    <string name="sharedpreferences_filename">sharedpref</string>
+    <string name="sharedpreferences_key_username">username</string>
+    <string name="title_activity_game_options">GameOptions</string>
+    <string name="title_activity_game_overview">GameOverviewActivity</string>
+
 </resources>
