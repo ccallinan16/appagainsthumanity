@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.CreateCardXML;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
@@ -20,7 +19,29 @@ public class F_XMLTests {
 	public void setUp() throws Exception {
 		subPath = "testdata/xml/";		
 	}
+	
+	@Test
+	public void createXMLDocument() {
+		String[] black = CreateCardXML.readArrayFromFile("testdata/xml/cards_black.txt");
+		String[] white = CreateCardXML.readArrayFromFile("testdata/xml/cards_white.txt");
+		
+		XMLCreator.createXMLFromString("testdata/xml/raw/all_cards.xml", white, black);	
+	}
 
+	@Test
+	public void testQueryOnAllCards() {
+		
+		int id = 34;
+		XMLReader reader = new XMLReader(subPath+"raw/all_cards.xml");
+		try {
+			reader.getText(CardType.WHITE,id);
+		} catch (Exception e)
+		{
+			fail();
+		}
+	}
+
+	
 	@Test
 	public void testQuery() {
 		
@@ -29,18 +50,6 @@ public class F_XMLTests {
 		assertEquals("Hello",reader.getText(CardType.WHITE,id));
 	}
 		
-	@Test
-	public void testQueryOnAllCards() {
-		
-		int id = 34;
-		XMLReader reader = new XMLReader(subPath+"allCards.xml");
-		try {
-			System.out.println(reader.getText(CardType.WHITE,id));
-		} catch (Exception e)
-		{
-			fail();
-		}
-	}
 	
 	@Test
 	public void testQueryOutOfBounds() {
@@ -49,6 +58,16 @@ public class F_XMLTests {
 		XMLReader reader = new XMLReader(subPath+"example.xml");
 		assertEquals(null,reader.getText(CardType.WHITE,id));		
 	}
+	
+	@Test
+	public void testReadFileIntoStringArray()
+	{
+		String[] array = CreateCardXML.readArrayFromFile(subPath+"example.xml");
+		
+		assertEquals(array[0],"<cardCollection>");
+		assertTrue(array[1].contains("<white>"));
+	}
+	
 	
 	@Test
 	public void testCreateFromString() {
@@ -76,13 +95,6 @@ public class F_XMLTests {
 		assertEquals(black[1],reader.getText(CardType.BLACK,1));		
 	}
 	
-	@Test
-	public void testReadFileIntoStringArray()
-	{
-		String[] array = CreateCardXML.readArrayFromFile(subPath+"example.xml");
-		
-		assertEquals(array[0],"<allCards>");
-		assertTrue(array[1].contains("<whitecards>"));
-	}
+
 	
 }

@@ -1,5 +1,6 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
+import mocks.MockDealer;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -7,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -16,7 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.GamelistAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
@@ -122,7 +124,11 @@ public class MainActivity extends Activity {
 
     	Intent intent = new Intent(this, CardSlideActivity.class);
     	
-    	intent.putExtras(BundleCreator.getShowResultsView());
+		CardCollection.instance.setupContextTESTING(
+				ViewContext.SELECT_WHITE, 
+				new MockDealer(view.getContext()));
+
+    	intent.putExtras(BundleCreator.getSelectWhite());
     	
     	startActivity(intent);
     }
@@ -143,7 +149,7 @@ public class MainActivity extends Activity {
     	@Override
 		public void onClick(View view) {
         	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
-        	intent.putExtras(BundleCreator.getCzarView());
+        	intent.putExtras(BundleCreator.getSelectBlack());
         	startActivity(intent);
 		}
     };
@@ -152,7 +158,7 @@ public class MainActivity extends Activity {
     	@Override
 		public void onClick(View view) {
         	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
-        	intent.putExtras(BundleCreator.getPlayerSelectionView());
+        	intent.putExtras(BundleCreator.getSelectWhite());
         	startActivity(intent);
 		}
     };
@@ -161,7 +167,7 @@ public class MainActivity extends Activity {
     	@Override
 		public void onClick(View view) {
         	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
-        	intent.putExtras(BundleCreator.getPlayerSelectionView());
+        	intent.putExtras(BundleCreator.getSelectWhite());
         	startActivity(intent);
 		}
     };

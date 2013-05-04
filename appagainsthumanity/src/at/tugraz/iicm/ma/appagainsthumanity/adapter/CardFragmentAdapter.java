@@ -6,8 +6,6 @@ import java.util.List;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import at.tugraz.iicm.ma.appagainsthumanity.CardsInPlay;
-import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
@@ -22,7 +20,10 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 		    super(fm);
 		    this.fm = fm;
 		    cardIDs = new ArrayList<Integer>();
-		    type = fragments.get(0).getType();
+		    if (fragments != null && !fragments.isEmpty())
+		    {
+		    	type = fragments.get(0).getType();
+		    }
 		    this.selectable = selectable;
 		    setCards(fragments);
 		  }
@@ -30,7 +31,10 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 	  @Override 
 	  public Fragment getItem(int position) {		  
 		  return SingleCardFragment.newInstance(
-				  CardsInPlay.instance.getCard(cardIDs.get(position),type), 40f,selectable);
+				  cardIDs.get(position),
+				  type, 
+				  60f,
+				  selectable);
 	  }
 
 	  @Override
@@ -52,6 +56,7 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 	  }
 	  
 	  public void setCards(List<Card> cards) {
+		  		  
 		  this.cardIDs.clear();
 		  
 		  for (Card c : cards)

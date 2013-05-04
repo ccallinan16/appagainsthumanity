@@ -2,7 +2,6 @@ package test.slow;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
 import mocks.MockDealer;
 
 import org.junit.After;
@@ -11,14 +10,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import test.util.PathTestRunner;
+import test.util.TestBundleCreator;
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
-import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
  
@@ -41,11 +39,15 @@ public class S_RobolectricStuff {
 	public void testMockDBResourceXML() {
 		
 		CardSlideActivity csa = new CardSlideActivity();
+		Intent i = new Intent();
+		i.putExtras(TestBundleCreator.getSelectWhiteBundle());
+		csa.setIntent(i);
 		csa.onCreate(null);
 
 		
     	int numCards = 5;
     	MockDealer dealer = new MockDealer(csa);
+    	
     	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
     	((CardFragmentAdapter) pager.getAdapter()).setCards(dealer.dealCards(CardType.WHITE, numCards));
    	
@@ -63,34 +65,12 @@ public class S_RobolectricStuff {
 		
 		XMLReader reader = new XMLReader(csa);
 		try {
-			System.out.println(reader.getText(CardType.WHITE,id));
+			reader.getText(CardType.WHITE,id);
 		} catch (Exception e)
 		{
 			fail();
 		}
 	}
-
-    
-    
-    @Test
-    public void testGameListDefaultElemTest() {
-   	
-    	ListView list = (ListView) ma.findViewById(R.id.invites_list_view);
-    	assertEquals(1,list.getChildCount());
-    }
-   
-    
-    @Test
-    public void testGameListAdded() {
-    	ma.addPlayer("Gerald");
-    	
-    	ListView list = (ListView) ma.findViewById(R.id.invites_list_view);
-    	
-    	assertEquals(2,list.getChildCount());
-    	ArrayAdapter<String> elems = (ArrayAdapter<String>) list.getAdapter();
-    	assertEquals(elems.getItem(0),"Gerald");
-    }
-    
     
     @Test
     public void testButtonPopup() {

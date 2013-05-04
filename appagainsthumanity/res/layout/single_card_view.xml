@@ -1,5 +1,6 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/FrameLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -7,15 +8,24 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SingleCardActivity" >
-                  
-    <CheckedTextView
-        android:id="@+id/cardText"
+
+    <ScrollView
+        android:id="@+id/my_scroll_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
-        android:layout_alignParentTop="true"
-        android:maxLines="10"
-        android:textIsSelectable="false"
-        android:textColor="@android:color/black" />
-</RelativeLayout>
+         >
+
+            <CheckedTextView
+                android:id="@+id/cardText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:freezesText="true"
+                android:maxLines="10"
+                android:textColor="@android:color/black"
+                android:textIsSelectable="false" />
+
+    </ScrollView>
+
+</FrameLayout>

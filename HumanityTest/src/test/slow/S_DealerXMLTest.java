@@ -4,10 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import mocks.MockDB;
 import mocks.MockDealer;
 
 import org.junit.After;
@@ -16,14 +14,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import test.util.PathTestRunner;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import test.util.TestBundleCreator;
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
-import at.tugraz.iicm.ma.appagainsthumanity.CardsInPlay;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
-import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
@@ -36,6 +33,9 @@ public class S_DealerXMLTest {
     @Before
     public void setUp() throws Exception {
     	csa = new CardSlideActivity();
+    	Intent i = new Intent();
+    	i.putExtras(TestBundleCreator.getSelectBlackBundle());
+    	csa.setIntent(i);
     	csa.onCreate(null);
     }
  
@@ -44,39 +44,16 @@ public class S_DealerXMLTest {
     	
     }
          
-    
-    @Test
-    public void testWithCardsInPlay()
-    {
-    	int numCards = 10;
-    	MockDealer dealer = new MockDealer(csa);
-        
-    	List<Card> cards = dealer.dealCards(CardType.WHITE,numCards);
-    	
-    	CardsInPlay.instance.replaceCardSet(CardType.WHITE, cards);
-    	
-    	for (Card c : cards)
-    	{
-    		assertEquals(c.getId(),
-    				CardsInPlay.instance.getCard(c.getId(),CardType.WHITE).getId());
-    		assertEquals(c.getText(),
-    				CardsInPlay.instance.getCard(c.getId(),CardType.WHITE).getText());
-
-    	}
-    	
-    }
-    
+       
     @Test
     public void testWithCardsInPlaySingle()
     {
     	String message = "black card text____.";
 
-    	Card c = Card.makeCard(1,message,CardType.BLACK);
-    	
-    	CardsInPlay.instance.addCard(c);
-    	
-    	assertEquals(c.getText(),CardsInPlay.instance.getCard(1,CardType.BLACK).getText());
-    	assertEquals(1,CardsInPlay.instance.getCard(1,CardType.BLACK).getId());
+    	Card c = CardCollection.instance.makeCard(1,message,CardType.BLACK);
+    	    	
+    	assertEquals(c.getText(),CardCollection.instance.getCard(1,CardType.BLACK).getText());
+    	assertEquals(1,CardCollection.instance.getCard(1,CardType.BLACK).getId());
     }
 
     
@@ -90,13 +67,13 @@ public class S_DealerXMLTest {
     	assertTrue(cards.size()==numCards);
     	for (Card c : cards)
     	{
-    		System.out.println(c);
         	assertEquals(CardType.WHITE,c.getType());
         	assertTrue(c.getText()!="");
         	assertTrue(c.getText()!="couldn't read from xml");
     	}
     	
     	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
+    	
     	((CardFragmentAdapter) pager.getAdapter()).setCards(cards);
     	
     	assertEquals(numCards,pager.getAdapter().getCount());
@@ -110,7 +87,8 @@ public class S_DealerXMLTest {
 		
 		XMLReader reader = new XMLReader(csa);
 		try {
-			System.out.println(reader.getText(CardType.WHITE,id));
+			String str = reader.getText(CardType.WHITE,id);
+			assertTrue(str != null);
 		} catch (Exception e)
 		{
 			fail();

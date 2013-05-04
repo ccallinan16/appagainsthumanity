@@ -1,19 +1,17 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
-import java.util.ArrayList;
-
-import android.os.Bundle;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.support.v4.app.NavUtils;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.os.Build;
 import at.tugraz.iicm.ma.appagainsthumanity.util.PromptDialog;
 
 public class CreateGameActivity extends Activity {
@@ -35,7 +33,6 @@ public class CreateGameActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position,	long id) {
 				//click on existing entry -> edit
-				System.out.println("item selected: " + position);
 				
 				PromptDialog dlg = new PromptDialog(CreateGameActivity.this, R.string.prompt_new_invite_title, R.string.prompt_new_invite_comment, inviteArrayAdapter.getItem(position) ) {
 					@Override

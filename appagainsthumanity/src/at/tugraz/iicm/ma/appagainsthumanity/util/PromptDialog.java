@@ -4,17 +4,15 @@ package at.tugraz.iicm.ma.appagainsthumanity.util;
  * refer to: http://www.jjoe64.com/2011/06/prompt-dialog-for-android.html
  */
 
-	import android.app.AlertDialog;  
-	import android.R;
-    import android.content.Context;  
-    import android.content.DialogInterface;  
-    import android.content.DialogInterface.OnClickListener;  
-    import android.widget.EditText;  
+import android.content.Context;
+import android.content.DialogInterface;
+import android.widget.EditText;
+import at.tugraz.iicm.ma.appagainsthumanity.R;
       
     /** 
      * helper for Prompt-Dialog creation 
      */  
-    public abstract class PromptDialog extends AlertDialog.Builder implements OnClickListener {  
+    public abstract class PromptDialog extends MessageDialog {  
      private final EditText input;  
       
      /** 
@@ -23,15 +21,11 @@ package at.tugraz.iicm.ma.appagainsthumanity.util;
       * @param message resource id 
       */  
      public PromptDialog(Context context, int title, int message) {  
-      super(context);  
-      setTitle(title);  
-      setMessage(message);  
+      super(context,title,message);  
       
       input = new EditText(context);  
       setView(input);  
       
-      setPositiveButton(R.string.ok, this);  
-      setNegativeButton(R.string.cancel, this);  
      }  
      
      /** 
@@ -41,26 +35,24 @@ package at.tugraz.iicm.ma.appagainsthumanity.util;
       * @param text default entry
       */  
      public PromptDialog(Context context, int title, int message, String entry) {  
-		 super(context);  
-	     setTitle(title);  
-	     setMessage(message);  
+		 super(context,title,message);  
 	     
 	     input = new EditText(context);  
 	     input.setText(entry);
-	     setView(input);  
-	     
-	     setPositiveButton(R.string.ok, this);  
+	     setView(input);        
 	     setNegativeButton(R.string.cancel, this);  
-      
+
+	           
      }  
       
+
      /** 
       * will be called when "cancel" pressed. 
       * closes the dialog. 
       * can be overridden. 
       * @param dialog 
       */  
-     public void onCancelClicked(DialogInterface dialog) {  
+     void onCancelClicked(DialogInterface dialog) {  
       dialog.dismiss();  
      }  
       

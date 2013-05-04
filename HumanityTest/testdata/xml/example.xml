@@ -1,7 +1,10 @@
-<allCards>
-	<whitecards>
-	  <card id="1">
-	     <text>Hello</text>
-	  </card>
-	</whitecards>
-</allCards>
+<cardCollection>
+   <white>
+      <entry>
+         <integer>1</integer>
+          <card id="1">
+            <text>Hello</text>
+          </card>
+      </entry>
+    </white>
+</cardCollection>

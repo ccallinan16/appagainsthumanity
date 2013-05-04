@@ -12,10 +12,10 @@ public class CreateCardXML {
 
 	public static void main(String[] args) throws Exception {
 	
-		String[] black = readArrayFromFile("cards_black.txt");
-		String[] white = readArrayFromFile("cards_white.txt");
+		String[] black = readArrayFromFile("documents/cards_black.txt");
+		String[] white = readArrayFromFile("documents/cards_white.txt");
 		
-		XMLCreator.createXMLFromString("allCards.xml", white, black);
+		XMLCreator.createXMLFromString("documents/allCards.xml", white, black);
 		
 	}
 

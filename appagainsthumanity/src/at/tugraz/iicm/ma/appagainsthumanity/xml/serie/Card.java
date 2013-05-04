@@ -3,8 +3,6 @@ package at.tugraz.iicm.ma.appagainsthumanity.xml.serie;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 
-import at.tugraz.iicm.ma.appagainsthumanity.CardsInPlay;
-
 public class Card {
 
    @Element
@@ -21,7 +19,6 @@ public class Card {
    public static Card makeCard(Integer id, String text, CardType type)
    {
 	   Card card = new Card(id,text,type);
-	   CardsInPlay.instance.addCard(card);
 	   return card;
    }
    

@@ -1,95 +1,172 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
 
-import java.util.List;
-
 import mocks.MockDealer;
-import android.graphics.Color;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
-import at.tugraz.iicm.ma.appagainsthumanity.util.PromptDialog;
+import at.tugraz.iicm.ma.appagainsthumanity.util.MessageDialog;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class CardSlideActivity extends FragmentActivity {
-	        
+	
+	private ViewContext context = ViewContext.UNKNOWN;
+	public int topCardId = -1;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_screen_slide);
-
+            
+      System.out.println("cardSlideactivity");
+      
+      //we cannot create a view without a context.
+	  if (getIntent() == null || getIntent().getExtras() == null)
+		  return; 
+	  	  
+	  
+	  context = ViewContext.getContextFromString(
+				  		  getIntent().getExtras()
+				  		  .getString(BundleCreator.CONTEXT));
+	  
       //TODO
 	  MockDealer dealer = new MockDealer(this);
+      CardCollection.instance.setupContext(context,dealer);
+  
 	  
-	  int numBlackCards = 1;
-	  int numWhiteCards = 5;
-	  boolean selectable = true;
-	  
-	  if (getIntent() != null && getIntent().getExtras() != null)
-	  {		  
-	      numBlackCards = getIntent().getExtras().getInt(BundleCreator.NUM_BLACK);
-	      numWhiteCards = getIntent().getExtras().getInt(BundleCreator.NUM_WHITE);
-	      selectable =    getIntent().getExtras().getBoolean(BundleCreator.SELECTABLE);
-	  }
-	  
-	  List<Card> cards = null;
-	  
-	  if (numBlackCards == 1 && numWhiteCards > 0)
-		  cards = (List<Card>) CardsInPlay.instance.getCards(
-				  CardType.WHITE, numWhiteCards, dealer);
-	  
-	  else if (numBlackCards > 1 && numWhiteCards == 0)
-		  cards = (List<Card>) CardsInPlay.instance.getCards(
-				  CardType.BLACK, numBlackCards, dealer);
-
-	  
-	  if (cards == null)
-		  cards = (List<Card>) CardsInPlay.instance.getCards(
-				  CardType.WHITE, numWhiteCards, dealer);  
-	  
-      CardFragmentAdapter pageAdapter = new CardFragmentAdapter(
-    		  getSupportFragmentManager(), 
-    		  cards,
-    		  selectable
-    		  );  
+      //setup the ViewPager (to flip through cards) as well as the Top card
+      initSlider();
       
-      ViewPager pager = (ViewPager) findViewById(R.id.cs_card_slider);
+      Button button = (Button) findViewById(R.id.btn_ok);
+      button.setOnClickListener(new View.OnClickListener() {
+          public void onClick(View v) {
+        	  
+        	int id = CardCollection.instance.getSelectedID();
+        	        	
+        	if (id == -1)
+        		showAlertDialog(v);
+        	
+        	else
+        		createAndStartNewActivity(v,id);
+        	
+
+          }
+
+		private void showAlertDialog(View v) {
+			
+			
+			MessageDialog dialog = new MessageDialog(v.getContext(),R.string.pop_title_select,R.string.pop_text_select) {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					//don't do anything.
+				}
+			};
+			dialog.show();
+		}
+
+		private void createAndStartNewActivity(View v,int id) {
+        	Intent intent = new Intent(v.getContext(),CardSlideActivity.class);
+	       	
+        	switch(context)
+        	{
+        	case SELECT_WHITE:
+        		if (id == -1) return;
+  	        	intent.putExtras(BundleCreator.getConfirmWhite());
+  	        	break;
+        	case SELECT_BLACK:
+        		if (id == -1) return;
+        		intent.putExtras(BundleCreator.getConfirmBlack());
+        		break;
+        		
+        		default:
+        			intent = new Intent(v.getContext(),MainActivity.class);
+
+        	}
+        	
+        	startActivity(intent);
+			
+		}
+      });
+      
+    }     
+    	
+	private void initSlider()
+	{
+	      System.out.println("cardSlideactivity slider");
+
+	      //TODO
+		  MockDealer dealer = new MockDealer(this);
+		
+		  boolean selectable = false;
+		  
+		  if (context == ViewContext.SELECT_BLACK || 
+			  context == ViewContext.SELECT_WHITE)
+			  selectable = true;
+		  
+	      CardFragmentAdapter pageAdapter = new CardFragmentAdapter(
+	    		  getSupportFragmentManager(), 
+	    		  CardCollection.instance.getCardsForPager(context),
+	    		  selectable
+	    		  );
+	      
+	      ViewPager pager = (ViewPager) findViewById(R.id.cs_card_slider);
 	
-     
-      //TODO: exception in Unittests, comment back in for nice effects
-      //pager.setPageTransformer(true, new ZoomOutPageTransformer());
+	 	      
+	      //TODO: exception in Unittests, comment back in for nice effects
+	      //pager.setPageTransformer(true, new ZoomOutPageTransformer());
+	      pager.setAdapter(pageAdapter);
+	
+	    	  initTop(dealer);
+	
+	}
+	
+	
+	private void initTop(MockDealer dealer)
+	{
+		boolean draw = false;
+		
+	      if (	  context == ViewContext.CONFIRM_PAIR ||
+	    		  context == ViewContext.SELECT_WHITE ||
+	    		  context == ViewContext.SHOW_RESULT)
+	    	  draw = true;
+		
+		Card black = CardCollection.instance.getBlackCard();
+		
+		if (black == null || !draw)
+		{
+			FrameLayout v = (FrameLayout) findViewById(R.id.cs_display_frame);
+			v.setVisibility(View.GONE);
+			return;
+		}
+		
+		topCardId = black.getId();
+		
+		SingleCardFragment scv = SingleCardFragment.newInstance(
+				black.getId(),black.getType(),30f,false);
 
-      pager.setAdapter(pageAdapter);
-          
-      if (numBlackCards == 1)
-      {
-    	  cards = (List<Card>) CardsInPlay.instance.getCards(
-				  CardType.BLACK, numBlackCards, dealer);
+		getSupportFragmentManager()
+		.beginTransaction()
+		.add(R.id.cs_display_frame, scv)
+		.commit();
+	}
 
-    		SingleCardFragment scv = SingleCardFragment.newInstance(
-      				cards.get(0),35f,false);
-      		
-    		
-      		getSupportFragmentManager()
-      			.beginTransaction()
-      			.add(R.id.cs_display_frame, scv)
-      			.commit();
-      		
-      } 
-      
-    }      
+	public Object getViewContext() {
+			return context;
+	}
+    
 }
-
 
 	
 class ZoomOutPageTransformer implements ViewPager.PageTransformer {

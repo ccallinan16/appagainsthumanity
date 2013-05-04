@@ -5,9 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckedTextView;
-import at.tugraz.iicm.ma.appagainsthumanity.CardsInPlay;
+import android.view.View.OnClickListener;
+import android.widget.TextView;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
@@ -17,20 +18,20 @@ public class SingleCardFragment extends Fragment {
 	 protected static final String TEXTSIZE = "TEXT_SIZE";
  	
 	 protected CardType TYPE;
-	 
-	 
-	public static SingleCardFragment newInstance(Card card, float textSize, boolean selectable) {
+	     
+	public static SingleCardFragment newInstance(int cardID, CardType type, float textSize, boolean selectable) {
 		
-	   SingleCardFragment f = (selectable)?new SelectableCardFragment():new SingleCardFragment();
-	   f.TYPE = card.getType();
-	   Bundle bdl = new Bundle();
-	   bdl.putInt(ID, card.getId());
-	   bdl.putFloat(TEXTSIZE, textSize);
-	   f.setArguments(bdl);
-	   
-	   return f;
-	}    
-    
+		   SingleCardFragment f = (selectable)?new SelectableCardFragment():new SingleCardFragment();
+		   f.TYPE = type;
+		   Bundle bdl = new Bundle();
+		   bdl.putInt(ID, cardID);
+		   bdl.putFloat(TEXTSIZE, textSize);
+		   f.setArguments(bdl);
+		   
+		   return f;
+		}    
+
+	
 	 @Override
 	 public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			 Bundle savedInstanceState) {
@@ -38,14 +39,14 @@ public class SingleCardFragment extends Fragment {
 		 int cardId = getArguments().getInt(ID);
 		 View v = inflater.inflate(R.layout.single_card_view, container, false);
 
-		 Card card = CardsInPlay.instance.getCard(cardId, TYPE);
+		 Card card = CardCollection.instance.getCard(cardId, TYPE);
 
 		 if (card == null)
 			 System.err.println("card id: " + cardId);
 
 		 float textSize = getArguments().getFloat(TEXTSIZE);
 
-		 CheckedTextView messageTextView = (CheckedTextView)v.findViewById(R.id.cardText);
+		 TextView messageTextView = (TextView)v.findViewById(R.id.cardText);
 		 messageTextView.setText(card.getText());
 		 messageTextView.setTextSize(textSize); 
 		 messageTextView.setTextColor(card.getType().getTextColor());
