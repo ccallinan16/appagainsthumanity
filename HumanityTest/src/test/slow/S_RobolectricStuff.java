@@ -41,6 +41,9 @@ public class S_RobolectricStuff {
 	public void testMockDBResourceXML() {
 		
 		CardSlideActivity csa = new CardSlideActivity();
+		Intent i = new Intent();
+		i.putExtras(TestBundleCreator.getSelectWhiteBundle());
+		csa.setIntent(i);
 		csa.onCreate(null);
 
 		
@@ -63,37 +66,13 @@ public class S_RobolectricStuff {
 		
 		XMLReader reader = new XMLReader(csa);
 		try {
-			System.out.println(reader.getText(CardType.WHITE,id));
+			reader.getText(CardType.WHITE,id);
 		} catch (Exception e)
 		{
 			fail();
 		}
 	}
 
-    
-    
-    @Test
-    public void testGameListDefaultElemTest() {
-   //TODO: uncomment and fix
-    	
-    	ListView list = (ListView) ma.findViewById(R.id.players_list_view);
-    	assertEquals(0,list.getChildCount());
-    }
-   
-    
-    @Test
-    public void testGameListAdded() {
-    	//TODO: uncomment and fix	
-    	
-//    	ma.addPlayer("Gerald");
-//    	
-//    	ListView list = (ListView) ma.findViewById(R.id.invites_list_view);
-//    	
-//    	assertEquals(2,list.getChildCount());
-//    	ArrayAdapter<String> elems = (ArrayAdapter<String>) list.getAdapter();
-//    	assertEquals(elems.getItem(0),"Gerald");
-    }
-    
     
     @Test
     public void testButtonPopup() {

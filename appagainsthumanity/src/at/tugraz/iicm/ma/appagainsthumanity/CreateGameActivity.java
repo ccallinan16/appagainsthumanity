@@ -1,7 +1,11 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
-import android.os.Bundle;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -168,6 +172,8 @@ public class CreateGameActivity extends Activity {
 		};
 		dlg.show();
 	}
+	
+
 	
 	public void editPlayer(int position, String id) {
 		if (isValidEntry(id)) {
