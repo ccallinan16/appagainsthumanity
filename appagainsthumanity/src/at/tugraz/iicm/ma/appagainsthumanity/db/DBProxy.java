@@ -219,6 +219,32 @@ public class DBProxy {
 		    );
 	}
 	
+	public Cursor readPlayerList(long game_id) {
+		// Define a projection that specifies which columns from the database
+		// you will actually use after this query.
+		String[] projection = {
+			DBContract.Participation.TABLE_NAME + "." + DBContract.Participation._ID,
+			DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME,
+			DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_SCORE
+		};
+
+		// How you want the results sorted in the resulting Cursor
+		String sortOrder = DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_SCORE + " DESC";
+
+		return getReadableDatabase().query(
+			DBContract.Participation.TABLE_NAME +
+			" INNER JOIN " + DBContract.User.TABLE_NAME + 
+			" ON " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_USER_ID + " = " + DBContract.User.TABLE_NAME + "." + DBContract.User._ID,
+			// The table to query
+		    projection,                               // The columns to return
+		    DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_GAME_ID + " = ? ",
+		    new String[]{String.valueOf(game_id)},    // The values for the WHERE clause
+		    null, // don't group the rows
+		    null,                                     // don't filter by row groups
+		    sortOrder                                 // The sort order
+		    );
+	}
+	
 	/*
 	 * INSERT QUERIES
 	 */
@@ -257,9 +283,9 @@ public class DBProxy {
 			//table game: add game
 				game_1 = addGame(5, 0);
 			//table participation
-				addParticipation(game_1, user_1);
-				addParticipation(game_1, user_2);
-				addParticipation(game_1, user_3);
+				addParticipation(game_1, user_1, 0);
+				addParticipation(game_1, user_2, 0);
+				addParticipation(game_1, user_3, 1);
 			//table turn
 				turn_1 = addTurn(game_1, 1, user_1, 1);
 				turn_2 = addTurn(game_1, 2, user_1, null);
@@ -278,9 +304,9 @@ public class DBProxy {
 			//table game: add game
 				game_1 = addGame(5, 0);
 			//table participation
-				addParticipation(game_1, user_1);
-				addParticipation(game_1, user_2);
-				addParticipation(game_1, user_3);
+				addParticipation(game_1, user_1, 0);
+				addParticipation(game_1, user_2, 1);
+				addParticipation(game_1, user_3, 0);
 			//table turn
 				turn_1 = addTurn(game_1, 1, user_1, 1);
 				turn_2 = addTurn(game_1, 2, user_2, 2);
@@ -308,10 +334,11 @@ public class DBProxy {
 		return getWritableDatabase().insertWithOnConflict(DBContract.Game.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 	}
 	
-	public long addParticipation(long game_id, long user_id) {
+	public long addParticipation(long game_id, long user_id, int score) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.Participation.COLUMN_NAME_GAME_ID, game_id);
 		values.put(DBContract.Participation.COLUMN_NAME_USER_ID, user_id);
+		values.put(DBContract.Participation.COLUMN_NAME_SCORE, score);
 		return getWritableDatabase().insertWithOnConflict(DBContract.Participation.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 	}
 	

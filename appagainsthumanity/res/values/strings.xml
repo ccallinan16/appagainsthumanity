@@ -17,6 +17,9 @@
     <string name="game_options_text_roundcap">Round cap</string>
     <string name="game_options_hint_roundcap">0: no lim</string>
     <string name="game_options_toast_invalidselection">ERROR: invalid selection</string>
+    <string name="game_overview_text_turns">Rounds</string>
+    <string name="game_overview_text_players">Players</string>
+    <string name="game_overview_text_options">Options</string>
     <string name="prompt_new_invite_title">Invite player</string>
     <string name="prompt_new_invite_comment">Player-ID</string>
     <string name="prompt_edit_invite_title">Invite player</string>
@@ -36,5 +39,6 @@
     <string name="sharedpreferences_key_username">username</string>
     <string name="title_activity_game_options">GameOptions</string>
     <string name="title_activity_game_overview">GameOverviewActivity</string>
+    <string name="listitem_turnlist_text_turn">Round</string>
 
 </resources>

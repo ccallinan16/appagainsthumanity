@@ -84,11 +84,11 @@ public class GameOverviewActivity extends FragmentActivity implements TabHost.On
 	    mTabHost = (TabHost)findViewById(android.R.id.tabhost);
 	    mTabHost.setup();
 	    TabInfo tabInfo = null;
-	    addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab1").setIndicator("Turns", getApplicationContext().getResources().getDrawable(R.drawable.icon_turns_tab)), ( tabInfo = new TabInfo("Tab1", TurnsFragment.class, args)));
+	    addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab1").setIndicator(getString(R.string.game_overview_text_turns), getApplicationContext().getResources().getDrawable(R.drawable.icon_turns_tab)), ( tabInfo = new TabInfo("Tab1", TurnsFragment.class, args)));
 	    this.mapTabInfo.put(tabInfo.tag, tabInfo);
-	    addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab2").setIndicator("Players", getApplicationContext().getResources().getDrawable(R.drawable.icon_players_tab)), ( tabInfo = new TabInfo("Tab2", PlayersFragment.class, args)));
+	    addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab2").setIndicator(getString(R.string.game_overview_text_players), getApplicationContext().getResources().getDrawable(R.drawable.icon_players_tab)), ( tabInfo = new TabInfo("Tab2", PlayersFragment.class, args)));
 	    this.mapTabInfo.put(tabInfo.tag, tabInfo);
-	    addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab3").setIndicator("Options", getApplicationContext().getResources().getDrawable(R.drawable.icon_options_tab)), ( tabInfo = new TabInfo("Tab3", OptionsFragment.class, args)));
+	    addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab3").setIndicator(getString(R.string.game_overview_text_options), getApplicationContext().getResources().getDrawable(R.drawable.icon_options_tab)), ( tabInfo = new TabInfo("Tab3", OptionsFragment.class, args)));
 	    this.mapTabInfo.put(tabInfo.tag, tabInfo);
 	    // Default to first tab
 	    this.onTabChanged("Tab1");
