@@ -39,10 +39,10 @@ public class BundleCreator {
 	
 	public static Bundle getSelectWhite()
 	{
-
+/*
 		assert(CardCollection.instance.getBlackCard() != null);
 		assert(CardCollection.instance.getCardCount(CardType.BLACK) > 0);
-		//assert(CardCollection.instance.getCardCount(CardType.WHITE) == 0);
+*/		//assert(CardCollection.instance.getCardCount(CardType.WHITE) == 0);
 		
 		return createBundle(ViewContext.SELECT_WHITE);
 	}

@@ -28,21 +28,30 @@ public class MainActivity extends Activity {
 	
 	private ListView gameListView;
 	private GamelistAdapter gamelistAdapter;
-	private DBProxy dbProxy;
+	public DBProxy dbProxy;
 	private String username;
 	
 	//database
 	private Cursor gamelistCursor;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		//get username
 		AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
-		Account[] list = manager.getAccounts();
-		username = list[0].name;
+		if (manager == null)
+			username = "eli";
+		else
+		{
+			Account[] list = manager.getAccounts();
+			
+			if (list == null || list.length == 0)
+				username = "eli";
+			else
+				username = list[0].name;
+		}
 		
 		//supply username to shared preferences for other activities
 		SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).edit();
@@ -62,11 +71,12 @@ public class MainActivity extends Activity {
 	}
 	
 	@Override
-	protected void onStart() {
+	public void onStart() {
 		super.onStart();
 		// Instanciate database proxy
 		dbProxy = new DBProxy(this.getApplicationContext());
 				
+//		dbProxy.dumpTables();
 		//retrieve game list
 		gamelistCursor = dbProxy.readGameList(username);
 		displayListView(gamelistCursor);
@@ -133,10 +143,10 @@ public class MainActivity extends Activity {
     	startActivity(intent);
     }
     
-    public void setPreset(View view) {
+    public void setPreset(int num) {
     	Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
     	dbProxy.setPreset(spinner.getSelectedItemPosition());
-    	
+
     	Toast toast = Toast.makeText(getApplicationContext(), spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT);
     	toast.show();
     	
@@ -148,6 +158,7 @@ public class MainActivity extends Activity {
     public OnClickListener chooseBlackCardListener = new OnClickListener() {
     	@Override
 		public void onClick(View view) {
+    		
         	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
         	intent.putExtras(BundleCreator.getSelectBlack());
         	startActivity(intent);

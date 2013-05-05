@@ -1,6 +1,8 @@
 package at.tugraz.iicm.ma.appagainsthumanity.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +11,10 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
+import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
 public class GamelistAdapter extends CursorAdapter {
 
@@ -62,6 +67,20 @@ public class GamelistAdapter extends CursorAdapter {
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		return inflater.inflate(R.layout.listitem_gamelist,  parent, false);
+	}
+	
+	public boolean simulateClick(ViewContext context)
+	{
+		switch(context)
+		{
+		case SELECT_BLACK:
+			black.onClick(null);
+			break;
+		case SELECT_WHITE:
+			white.onClick(null);
+			break;			
+		}
+		return false;
 	}
 	
 //	public View getView(int position, View convertView, ViewGroup parent) {

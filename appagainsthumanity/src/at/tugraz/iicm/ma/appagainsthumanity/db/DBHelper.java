@@ -3,6 +3,7 @@ package at.tugraz.iicm.ma.appagainsthumanity.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -10,14 +11,31 @@ public class DBHelper extends SQLiteOpenHelper {
 	// If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "AppAgainstHumanity.db";
-
+    public static final String TEST_DB_NAME = 
+    		"/home/egetzner/appagainsthumanity/HumanityTest/testdata/test.db";
+    
+    
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
     
-    public void onCreate(SQLiteDatabase db) {
-    	for (String query : DBContract.SQL_CREATE_ENTRIES) 
-    		db.execSQL(query);
+    public DBHelper(Context c, String string, CursorFactory object,
+			int currentDbVersion) {
+        super(c, TEST_DB_NAME, object, currentDbVersion);
+	}
+
+    @Override
+	public void onCreate(SQLiteDatabase db) {
+    	
+    	try{
+        	for (String query : DBContract.SQL_CREATE_ENTRIES) 
+        		db.execSQL(query);
+    	} catch (Exception e)
+    	{
+    		//e.printStackTrace();
+    		//reinitialize(db);
+    	}
+    	
     	addDefaultEntries(db);
     }
     

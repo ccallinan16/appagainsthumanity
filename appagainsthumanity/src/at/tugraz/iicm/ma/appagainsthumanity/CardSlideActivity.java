@@ -2,22 +2,24 @@ package at.tugraz.iicm.ma.appagainsthumanity;
 
 
 import mocks.MockDealer;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.util.MessageDialog;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
+import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class CardSlideActivity extends FragmentActivity {
 	
@@ -28,9 +30,7 @@ public class CardSlideActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_screen_slide);
-            
-      System.out.println("cardSlideactivity");
-      
+                  
       //we cannot create a view without a context.
 	  if (getIntent() == null || getIntent().getExtras() == null)
 		  return; 
@@ -48,8 +48,29 @@ public class CardSlideActivity extends FragmentActivity {
       //setup the ViewPager (to flip through cards) as well as the Top card
       initSlider();
       
-      Button button = (Button) findViewById(R.id.btn_ok);
-      button.setOnClickListener(new View.OnClickListener() {
+      
+      
+      Button okButton = (Button) findViewById(R.id.okButton);
+      
+      switch (context)
+      {
+      case CONFIRM_PAIR:
+      case CONFIRM_SINGLE:
+    	  okButton.setText(R.string.menu_send);
+      }
+      
+      Button cancelBtn = (Button) findViewById(R.id.cancelButton);
+
+      cancelBtn.setOnClickListener(new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			//do not add any entries to db
+			createAndStartMainActivity(v);
+		}
+	});
+      
+      okButton.setOnClickListener(new View.OnClickListener() {
           public void onClick(View v) {
         	  
         	int id = CardCollection.instance.getSelectedID();
@@ -89,7 +110,9 @@ public class CardSlideActivity extends FragmentActivity {
         		if (id == -1) return;
         		intent.putExtras(BundleCreator.getConfirmBlack());
         		break;
-        		
+        	case CONFIRM_SINGLE:
+        	case CONFIRM_PAIR:
+        		setSelectedInDB(v.getContext(),id);
         		default:
         			intent = new Intent(v.getContext(),MainActivity.class);
 
@@ -98,14 +121,26 @@ public class CardSlideActivity extends FragmentActivity {
         	startActivity(intent);
 			
 		}
+
+		private void setSelectedInDB(Context c, int id) {
+			DBProxy db = new DBProxy(c);
+			//TODO: get turn_id!!
+    		if(context.equals(ViewContext.CONFIRM_SINGLE))
+    			db.setBlackCardID(1, id);
+    		else
+    			db.setWhiteCardID(2, id);
+		}
       });
       
     }     
     	
+	protected void createAndStartMainActivity(View v) {
+		Intent intent = new Intent(v.getContext(),MainActivity.class);
+    	startActivity(intent);
+	}
+
 	private void initSlider()
 	{
-	      System.out.println("cardSlideactivity slider");
-
 	      //TODO
 		  MockDealer dealer = new MockDealer(this);
 		

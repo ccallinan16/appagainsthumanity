@@ -25,13 +25,6 @@ public class TestBundleCreator {
 
 	public static Bundle getSelectWhiteTESTING(int numWhiteCards)
 	{
-		//do what needs to be done to make assertions not fail
-	/*	AllCards.instance.clearAll();
-		AllCards.instance.fillWithCards(CardType.WHITE,numWhiteCards,dealer);
-
-		AllCards.instance.setBlackCard(
-				AllCards.instance.makeCard(10, "BC text", CardType.BLACK));
-		*/
 		dealer.setNumWhiteCards(numWhiteCards);
 		CardCollection.instance.setupContextTESTING(ViewContext.SELECT_WHITE, dealer);
 
@@ -65,11 +58,17 @@ public class TestBundleCreator {
 			//do nothing
 		}
 		
-		return createBundle(context);
+		Bundle bundle = new Bundle();
+		bundle.putString(BundleCreator.CONTEXT, context.toString());
+
+		return bundle;
 	}
 
-	public static Bundle createBundle(ViewContext context) {
-		
+	public static Bundle createBundle(ViewContext context, boolean createTestingCards) {
+
+		if (createTestingCards)
+			CardCollection.instance.setupContextTESTING(context, dealer);
+
 		Bundle bundle = new Bundle();
 		bundle.putString(BundleCreator.CONTEXT, context.toString());
 		

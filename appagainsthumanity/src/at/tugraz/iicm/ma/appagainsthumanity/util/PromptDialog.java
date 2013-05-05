@@ -40,7 +40,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.R;
 	     input = new EditText(context);  
 	     input.setText(entry);
 	     setView(input);        
-	     setNegativeButton(R.string.cancel, this);  
+	     setNegativeButton(R.string.menu_cancel, this);  
 
 	           
      }  

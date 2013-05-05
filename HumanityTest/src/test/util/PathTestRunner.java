@@ -13,4 +13,9 @@ public class PathTestRunner extends RobolectricTestRunner{
     public PathTestRunner(Class testClass) throws InitializationError {
         super(testClass, new RobolectricConfig(new File(PROJECT_PATH)));
     }
+
+	public PathTestRunner(Class testClass, RobolectricConfig robolectricConfig,
+			SQLiteMap sqLiteMap) throws InitializationError {
+        super(testClass, new RobolectricConfig(new File(PROJECT_PATH)),sqLiteMap);
+	}
 }
