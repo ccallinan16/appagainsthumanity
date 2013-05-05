@@ -131,13 +131,10 @@ public class CardCollection {
 		//overwrite the usual dealer
 		this.dealer = ctxDealer;
 		
-		Card black = makeCard(10, "some very long very very long very long card test, " +
-				"that is also a black card text, cmon" +
-				"you want a longer text than this to test scrolling," +
+		Card black = makeCard(77, "some very long very very long very long card test, " +
 				"which sucks, because long texts are boring.", CardType.BLACK);
-		Card white = makeCard(2, "white card text", CardType.WHITE);
+		Card white = makeCard(66, "white card text", CardType.WHITE);
 
-		
 		  switch(context)
 		  {
 		  case SELECT_BLACK:

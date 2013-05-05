@@ -124,8 +124,10 @@ public class DBProxy {
 		    DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID,
 		    "MAX(t1." + DBContract.Turn.COLUMN_NAME_ROUNDNUMBER + " ) as roundnumber",
 		    DBContract.Game.COLUMN_NAME_ROUND_CAP,
+		    DBContract.Game.COLUMN_NAME_LIMIT_ROUNDS,
 		    DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_SCORE,
 		    DBContract.Game.COLUMN_NAME_SCORE_CAP,
+		    DBContract.Game.COLUMN_NAME_LIMIT_SCORE,
 		    "COUNT(DISTINCT participation2." + DBContract.Participation.COLUMN_NAME_USER_ID + " ) AS numplayers",
 		    DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " AS user_id",
 		    "t1." + DBContract.Turn.COLUMN_NAME_USER_ID + " AS czar_user_id",
@@ -160,98 +162,13 @@ public class DBProxy {
 		    "t1.roundnumber = MAX(t1.roundnumber)",                                    // don't filter by row groups
 		    sortOrder                                 // The sort order
 		    );
+		
 	}
-	
-	public Cursor readKnownOtherUsers(String username) {
-		String[] projection = {
-			DBContract.User.TABLE_NAME + "." + DBContract.User._ID,
-		    DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME
-		};
-
-		// How you want the results sorted in the resulting Cursor
-		String sortOrder = DBContract.User.COLUMN_NAME_USERNAME + " ASC";
-
-		return getReadableDatabase().query(
-			DBContract.User.TABLE_NAME,		// The table to query
-		    projection,                     // The columns to return
-		    DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME + " != ? AND +" +
-		    DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " > 1",	// The WHERE clause
-		    new String[]{username},         // The values for the WHERE clause
-		    null,                           // don't group the rows
-		    null,                           // don't filter by row groups
-		    sortOrder                       // The sort order
-		    );
-	}
-	
-	public Cursor readTurnlist(long game_id) {
-		// Define a projection that specifies which columns from the database
-		// you will actually use after this query.
-		String[] projection = {
-		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID,
-		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_ROUNDNUMBER,
-		    "COUNT(DISTINCT " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_USER_ID + " ) AS numplayers",
-		    DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME,
-		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID,
-		    "COUNT(DISTINCT "+DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard._ID + ") AS numwhitechosen"
-		};
-
-		// How you want the results sorted in the resulting Cursor
-		String sortOrder = DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_ROUNDNUMBER + " DESC";
-
-		return getReadableDatabase().query(
-			DBContract.Game.TABLE_NAME +
-			" INNER JOIN " + DBContract.Participation.TABLE_NAME + 
-			" ON " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_GAME_ID + " = " + DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID +        
-			" INNER JOIN " + DBContract.Turn.TABLE_NAME + 
-			" ON " + DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID + " = " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_GAME_ID + 
-			" INNER JOIN " + DBContract.User.TABLE_NAME + 
-			" ON " + DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " = " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_USER_ID + 
-			" LEFT JOIN " + DBContract.PlayedWhiteCard.TABLE_NAME + 
-			" ON " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID + " = " + DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID,
-			
-			// The table to query
-		    projection,                               // The columns to return
-		    DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID + " = ? ",
-		    new String[]{String.valueOf(game_id)},    // The values for the WHERE clause
-		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID, // don't group the rows
-		    null,                                     // don't filter by row groups
-		    sortOrder                                 // The sort order
-		    );
-	}
-	
-	public Cursor readPlayerList(long game_id) {
-		// Define a projection that specifies which columns from the database
-		// you will actually use after this query.
-		String[] projection = {
-			DBContract.Participation.TABLE_NAME + "." + DBContract.Participation._ID,
-			DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME,
-			DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_SCORE
-		};
-
-		// How you want the results sorted in the resulting Cursor
-		String sortOrder = DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_SCORE + " DESC";
-
-		return getReadableDatabase().query(
-			DBContract.Participation.TABLE_NAME +
-			" INNER JOIN " + DBContract.User.TABLE_NAME + 
-			" ON " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_USER_ID + " = " + DBContract.User.TABLE_NAME + "." + DBContract.User._ID,
-			// The table to query
-		    projection,                               // The columns to return
-		    DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_GAME_ID + " = ? ",
-		    new String[]{String.valueOf(game_id)},    // The values for the WHERE clause
-		    null, // don't group the rows
-		    null,                                     // don't filter by row groups
-		    sortOrder                                 // The sort order
-		    );
-	}
-	
-	/*
-	 * INSERT QUERIES
-	 */
 	
 	
 	/*
 	 * UPDATE QUERIES
+	 * 
 	 */
 	
 	

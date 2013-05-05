@@ -28,9 +28,9 @@
     
     
     <string name="confirmation_dialog">confirm to select current card</string>
-		<string name="btn_ok">OK</string>
-		<string name="btn_send">Send</string>
-		<string name="cancel">Cancel</string>
+		<string name="menu_ok">OK</string>
+		<string name="menu_send">Send</string>
+		<string name="menu_cancel">Cancel</string>
     
     <string name="pop_title_select">Select a card</string>
 		<string name="pop_text_select">Please make a selection by tapping on a card</string>

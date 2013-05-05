@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 	 */
 	private ListView gameListView;
 	private GamelistAdapter gamelistAdapter;
-	private DBProxy dbProxy;
+	public DBProxy dbProxy;
 	private String username;
 	
 	//database
@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
 	}
 	
 	@Override
-	protected void onStart() {
+	public void onStart() {
 		super.onStart();
 		// Instanciate database proxy
 		dbProxy = new DBProxy(this.getApplicationContext());
