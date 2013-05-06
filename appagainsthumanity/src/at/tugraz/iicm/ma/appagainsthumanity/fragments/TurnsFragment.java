@@ -92,21 +92,21 @@ public class TurnsFragment extends Fragment {
 				if (turnListCursor.getString(3).equals(username) && turnListCursor.getLong(4) == 0) {
 					//choose black card
 					Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-		        	intent.putExtras(BundleCreator.getCzarView());
+		        	intent.putExtras(BundleCreator.getSelectBlack());
 		        	startActivity(intent);
 				} else if (!turnListCursor.getString(3).equals(username) && turnListCursor.getInt(5) < (turnListCursor.getInt(2) - 1)) {
 					//choose white card
 					Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-		        	intent.putExtras(BundleCreator.getPlayerSelectionView());
+		        	intent.putExtras(BundleCreator.getSelectWhite());
 		        	startActivity(intent);
 				} else if (turnListCursor.getString(3).equals(username) && turnListCursor.getInt(5) == (turnListCursor.getInt(2) - 1)) {
 					//choose winning card
 					Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-		        	intent.putExtras(BundleCreator.getPlayerSelectionView());
+		        	intent.putExtras(BundleCreator.getSelectWhite());
 		        	startActivity(intent);
 				} else {
 					Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-		        	intent.putExtras(BundleCreator.getShowResultsView());
+		        	intent.putExtras(BundleCreator.getShowResults());
 		        	startActivity(intent);
 				}
 				

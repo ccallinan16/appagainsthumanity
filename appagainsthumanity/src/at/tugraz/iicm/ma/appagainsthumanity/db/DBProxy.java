@@ -228,10 +228,8 @@ public class DBProxy {
 		    DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID,
 		    "MAX(t1." + DBContract.Turn.COLUMN_NAME_ROUNDNUMBER + " ) as roundnumber",
 		    DBContract.Game.COLUMN_NAME_ROUND_CAP,
-		    DBContract.Game.COLUMN_NAME_LIMIT_ROUNDS,
 		    DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_SCORE,
 		    DBContract.Game.COLUMN_NAME_SCORE_CAP,
-		    DBContract.Game.COLUMN_NAME_LIMIT_SCORE,
 		    "COUNT(DISTINCT participation2." + DBContract.Participation.COLUMN_NAME_USER_ID + " ) AS numplayers",
 		    DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " AS user_id",
 		    "t1." + DBContract.Turn.COLUMN_NAME_USER_ID + " AS czar_user_id",
@@ -482,9 +480,7 @@ public class DBProxy {
 	
 	protected long addGame(boolean limitRounds, int roundCap, boolean limitScore, int scoreCap) {
 		ContentValues values = new ContentValues();
-		values.put(DBContract.Game.COLUMN_NAME_LIMIT_ROUNDS, limitRounds);
 		values.put(DBContract.Game.COLUMN_NAME_ROUND_CAP, roundCap);
-		values.put(DBContract.Game.COLUMN_NAME_LIMIT_SCORE, limitScore);
 		values.put(DBContract.Game.COLUMN_NAME_SCORE_CAP, scoreCap);
 		return getWritableDatabase().insert(DBContract.Game.TABLE_NAME, null, values);
 	}
@@ -520,5 +516,39 @@ public class DBProxy {
 		return getWritableDatabase().insert(DBContract.PlayedWhiteCard.TABLE_NAME, null, values);
 	}
 
+	public void addDealtWhiteCards(long turn_id, Integer num) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updatePlayedWhiteCard(long turn_id, int chosen_card) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int getUserID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public void setWhiteCardID(long turn_id, int userID, int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Cursor readPlayerList(long game_id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Cursor readTurnlist(long game_id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Cursor readKnownOtherUsers(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
