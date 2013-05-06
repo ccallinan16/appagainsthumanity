@@ -39,6 +39,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		System.out.println("oncreate");
+		
 		//get username
 		AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
 		if (manager == null)
@@ -53,11 +55,7 @@ public class MainActivity extends Activity {
 				username = list[0].name;
 		}
 		
-		//supply username to shared preferences for other activities
-		SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).edit();
-		editor.putString(getString(R.string.sharedpreferences_key_username), username);
-		editor.commit();
-		System.out.println("blub " + getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getString(getString(R.string.sharedpreferences_key_username), ""));
+		setUsername(username);
 		
 		//populate database presets
 		Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
@@ -70,9 +68,23 @@ public class MainActivity extends Activity {
 		gameListView = (ListView) findViewById(R.id.game_list_view);
 	}
 	
+	public void setUsername(String name)
+	{
+		//supply username to shared preferences for other activities
+		SharedPreferences.Editor editor = getApplicationContext()
+				.getSharedPreferences(
+						getString(R.string.sharedpreferences_filename), 
+						Context.MODE_PRIVATE).edit();
+		editor.putString(getString(R.string.sharedpreferences_key_username), name);
+		editor.commit();
+	}
+	
 	@Override
 	public void onStart() {
 		super.onStart();
+		
+		System.out.println("onstart");
+
 		// Instanciate database proxy
 		dbProxy = new DBProxy(this.getApplicationContext());
 				

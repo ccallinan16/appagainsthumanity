@@ -90,11 +90,15 @@ public class DBProxy {
 	
 	public void printTables() {
 			
-		System.out.println("--------");
+		System.out.println("----------------");
 		//table game
 
 		printTableWithOnlyInts(DBContract.Turn.TABLE_NAME);
-		printTableWithOnlyInts(DBContract.Participation.TABLE_NAME);
+		System.out.println("\n----------------");
+
+		printTableWithOnlyInts(DBContract.DealtWhiteCard.TABLE_NAME);
+		System.out.println("\n----------------");
+
 		printPlayedWhiteCards();
 		
 	}
@@ -302,16 +306,12 @@ public class DBProxy {
 
 	   	    
 	    int numRows = 0;
-	    
-	    System.out.println("checkEntry exists");
-	    
+	    	    
 	    if (cursor != null)
 	    {
 		    cursor.moveToFirst();
 		    numRows = cursor.getCount();
 		    
-		    System.out.println("checkEntry exists, rows: " + numRows);
-
 		    cursor.close();    
 	    }    
 	    return (numRows > 0);
@@ -333,12 +333,12 @@ public class DBProxy {
 	    return (affected > 0);
 	}
 	
-	public boolean setWhiteCardID(int turnid, int cardIndex) {
+	public boolean setWhiteCardID(long turn_id, long user_id, int cardIndex) {
 	    SQLiteDatabase db = this.getWritableDatabase();
 
 	    ContentValues values = new ContentValues();
-	    values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID, turnid);
-	    values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID, 1);
+	    values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID, turn_id);
+	    values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID, user_id);
 	    values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID, cardIndex);
 	 
 	    // Inserting Row
@@ -367,6 +367,53 @@ public class DBProxy {
 	    return cardId;
 	}
 
+	public int getUserID()
+	{
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    
+	    //this should only happen in testenvironments
+	    if (getUsername().isEmpty())
+	    	return -1;
+	    
+	    Cursor cursor = db.query(DBContract.User.TABLE_NAME, 
+	    		new String[] { DBContract.User._ID }, 
+	    		DBContract.User.COLUMN_NAME_USERNAME + "=?" , 
+	    		new String[] { getUsername() } , 
+	    		null, null, null);
+	        
+	    int userID = -1;
+	    
+	    if (cursor != null)
+	    {
+		    cursor.moveToFirst();
+		    userID = cursor.getInt(0);
+		    cursor.close();    
+	    }
+	    return userID;
+
+	}
+	
+	public int getGameIDFromTurn(long turn_id)
+	{
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    
+	    Cursor cursor = db.query(DBContract.Turn.TABLE_NAME, 
+	    		new String[] { DBContract.Turn.COLUMN_NAME_GAME_ID }, 
+	    		DBContract.Turn._ID + "=?" , 
+	    		new String[] { String.valueOf(turn_id) } , 
+	    		null, null, null);
+	        
+	    int gameID = -1;
+	    
+	    if (cursor != null)
+	    {
+		    cursor.moveToFirst();
+		    gameID = cursor.getInt(0);
+		    cursor.close();    
+	    }
+	    return gameID;
+
+	}
 
 	
 	public int getLastTurnID()
@@ -519,6 +566,37 @@ public class DBProxy {
 			values.putNull(DBContract.PlayedWhiteCard.COLUMN_NAME_WON);
 		return getWritableDatabase().insert(DBContract.PlayedWhiteCard.TABLE_NAME, null, values);
 	}
+	
+	public void updatePlayedWhiteCard(long turn_id, int chosen_card) {
+		ContentValues values = new ContentValues();
+		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_WON, true);
+		
+		//TODO: everything else is still null... change?
+		
+		getWritableDatabase().update(
+				DBContract.PlayedWhiteCard.TABLE_NAME, values,
+				DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID +"=? AND "+
+				DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID + "=?",
+				new String[] {String.valueOf(turn_id),String.valueOf(chosen_card)});
+
+	}
+
+	
+
+	public long addDealtWhiteCards(long turn_id, Integer num) {
+		
+		//we get userID from shared prefs, as we are only calling 
+		//that function for ourselves
+		
+		ContentValues values = new ContentValues();
+		values.put(DBContract.DealtWhiteCard.COLUMN_NAME_GAME_ID, getGameIDFromTurn(turn_id));
+		values.put(DBContract.DealtWhiteCard.COLUMN_NAME_PLAYER_ID, getUserID());
+		values.put(DBContract.DealtWhiteCard.COLUMN_NAME_WHITE_CARD_ID, num);
+
+		return getWritableDatabase().insert(DBContract.DealtWhiteCard.TABLE_NAME, null, values);
+		
+	}
+
 
 
 }

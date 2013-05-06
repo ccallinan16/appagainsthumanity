@@ -14,7 +14,9 @@ import test.util.SelectionAndContextHelper;
 import test.util.TestBundleCreator;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
@@ -84,9 +86,10 @@ public class CardSlideActivityTransitionsTest {
     	Assert.assertThat(newActivity, new StartedMatcher(i));
 
     	newActivity = new MainActivity();
+
     	i = SelectionAndContextHelper.switchFromDisplayToMain(
     			csa, newActivity, ViewContext.CONFIRM_PAIR,true);
-    	Assert.assertThat(newActivity, new StartedMatcher(i));    	
+    	Assert.assertThat(newActivity, new StartedMatcher(i)); 	
     }
     
     @Test
