@@ -48,15 +48,28 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		//get username
-		AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
-		Account[] list = manager.getAccounts();
-		username = list[0].name;
+		//retrieve username flag
+		boolean flagUsernameExists = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getBoolean(getString(R.string.sharedpreferences_key_username_defined), false);
 		
-		//supply username to shared preferences for other activities
-		SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).edit();
-		editor.putString(getString(R.string.sharedpreferences_key_username), username);
-		editor.commit();
+		if (!flagUsernameExists) {
+			//get username
+			AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+			Account[] list = manager.getAccounts();
+			if (list.length == 0) {
+				//TODO: handle non-existing google account
+				username="emulatedUser@gmail.com";
+			} else
+				username = list[0].name;
+			
+			//supply username to shared preferences for other activities
+			SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).edit();
+			editor.putString(getString(R.string.sharedpreferences_key_username), username);
+			//set flag
+			editor.putBoolean(getString(R.string.sharedpreferences_key_username_defined), true);
+			editor.commit();
+		} else {
+			username = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getString(getString(R.string.sharedpreferences_key_username), "");
+		}
 		
 		//populate database presets
 		Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);

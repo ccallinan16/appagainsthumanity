@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 
@@ -43,18 +44,22 @@ public class GamelistAdapter extends CursorAdapter {
 		numplayers.setText(c.getString(5) + " players");
 		//ImageView thumbnail
 		ImageView image = (ImageView)view.findViewById(R.id.list_image);
+		LinearLayout thumbnail = (LinearLayout)view.findViewById(R.id.thumbnail);
 		//case: choose black card
 		if (c.getLong(6) == c.getLong(7) && c.getLong(8) == 0) {
 			image.setImageDrawable(context.getResources().getDrawable(R.drawable.card_black));
-			image.setOnClickListener(black);
+			thumbnail.setBackgroundResource(R.drawable.list_selector);
+			thumbnail.setOnClickListener(black);
 		} else if (c.getLong(6) != c.getLong(7) && c.getInt(9) < (c.getInt(5) - 1)) {
 			//choose white card
 			image.setImageDrawable(context.getResources().getDrawable(R.drawable.card_white));
-			image.setOnClickListener(white);
+			thumbnail.setBackgroundResource(R.drawable.list_selector);
+			thumbnail.setOnClickListener(white);
 		} else if (c.getLong(6) == c.getLong(7) && c.getInt(9) == (c.getInt(5) - 1)) {
 			//choose winning card
 			image.setImageDrawable(context.getResources().getDrawable(R.drawable.star));
-			image.setOnClickListener(winning);
+			thumbnail.setBackgroundResource(R.drawable.list_selector);
+			thumbnail.setOnClickListener(winning);
 		} else 
 			image.setImageDrawable(context.getResources().getDrawable(R.drawable.time));
 	}

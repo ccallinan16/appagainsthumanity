@@ -12,5 +12,7 @@ public class PathTestRunner extends RobolectricTestRunner{
     
     public PathTestRunner(Class testClass) throws InitializationError {
         super(testClass, new RobolectricConfig(new File(PROJECT_PATH)));
+        RobolectricConfig config = new RobolectricConfig(new File(PROJECT_PATH));
+        System.out.println(config.getSdkVersion());
     }
 }
