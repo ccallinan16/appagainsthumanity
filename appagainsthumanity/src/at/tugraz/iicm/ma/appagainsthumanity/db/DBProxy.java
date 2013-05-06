@@ -94,7 +94,11 @@ public class DBProxy {
 		//table game
 
 		printTableWithOnlyInts(DBContract.Turn.TABLE_NAME);
-		printTableWithOnlyInts(DBContract.Participation.TABLE_NAME);
+		System.out.println("\n----------------");
+
+		printTableWithOnlyInts(DBContract.DealtWhiteCard.TABLE_NAME);
+		System.out.println("\n----------------");
+
 		printPlayedWhiteCards();
 		
 	}
@@ -216,7 +220,6 @@ public class DBProxy {
 		
 		System.out.println("END DATABASE DUMP");
 	}
-
 	
 	/*
 	 * READ QUERIES
@@ -264,9 +267,91 @@ public class DBProxy {
 		    "t1.roundnumber = MAX(t1.roundnumber)",                                    // don't filter by row groups
 		    sortOrder                                 // The sort order
 		    );
-		
 	}
 	
+	public Cursor readKnownOtherUsers(String username) {
+		String[] projection = {
+			DBContract.User.TABLE_NAME + "." + DBContract.User._ID,
+		    DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME
+		};
+
+		// How you want the results sorted in the resulting Cursor
+		String sortOrder = DBContract.User.COLUMN_NAME_USERNAME + " ASC";
+
+		return getReadableDatabase().query(
+			DBContract.User.TABLE_NAME,		// The table to query
+		    projection,                     // The columns to return
+		    DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME + " != ? AND +" +
+		    DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " > 1",	// The WHERE clause
+		    new String[]{username},         // The values for the WHERE clause
+		    null,                           // don't group the rows
+		    null,                           // don't filter by row groups
+		    sortOrder                       // The sort order
+		    );
+	}
+	
+	public Cursor readTurnlist(long game_id) {
+		// Define a projection that specifies which columns from the database
+		// you will actually use after this query.
+		String[] projection = {
+		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID,
+		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_ROUNDNUMBER,
+		    "COUNT(DISTINCT " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_USER_ID + " ) AS numplayers",
+		    DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME,
+		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID,
+		    "COUNT(DISTINCT "+DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard._ID + ") AS numwhitechosen"
+		};
+
+		// How you want the results sorted in the resulting Cursor
+		String sortOrder = DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_ROUNDNUMBER + " DESC";
+
+		return getReadableDatabase().query(
+			DBContract.Game.TABLE_NAME +
+			" INNER JOIN " + DBContract.Participation.TABLE_NAME + 
+			" ON " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_GAME_ID + " = " + DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID +        
+			" INNER JOIN " + DBContract.Turn.TABLE_NAME + 
+			" ON " + DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID + " = " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_GAME_ID + 
+			" INNER JOIN " + DBContract.User.TABLE_NAME + 
+			" ON " + DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " = " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_USER_ID + 
+			" LEFT JOIN " + DBContract.PlayedWhiteCard.TABLE_NAME + 
+			" ON " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID + " = " + DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID,
+			
+			// The table to query
+		    projection,                               // The columns to return
+		    DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID + " = ? ",
+		    new String[]{String.valueOf(game_id)},    // The values for the WHERE clause
+		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID, // don't group the rows
+		    null,                                     // don't filter by row groups
+		    sortOrder                                 // The sort order
+		    );
+	}
+	
+	public Cursor readPlayerList(long game_id) {
+		// Define a projection that specifies which columns from the database
+		// you will actually use after this query.
+		String[] projection = {
+			DBContract.Participation.TABLE_NAME + "." + DBContract.Participation._ID,
+			DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME,
+			DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_SCORE
+		};
+
+		// How you want the results sorted in the resulting Cursor
+		String sortOrder = DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_SCORE + " DESC";
+
+		return getReadableDatabase().query(
+			DBContract.Participation.TABLE_NAME +
+			" INNER JOIN " + DBContract.User.TABLE_NAME + 
+			" ON " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_USER_ID + " = " + DBContract.User.TABLE_NAME + "." + DBContract.User._ID,
+			// The table to query
+		    projection,                               // The columns to return
+		    DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_GAME_ID + " = ? ",
+		    new String[]{String.valueOf(game_id)},    // The values for the WHERE clause
+		    null, // don't group the rows
+		    null,                                     // don't filter by row groups
+		    sortOrder                                 // The sort order
+		    );
+	}
+
 	
 	/*
 	 * UPDATE QUERIES
@@ -331,12 +416,12 @@ public class DBProxy {
 	    return (affected > 0);
 	}
 	
-	public boolean setWhiteCardID(int turnid, int cardIndex) {
+	public boolean setWhiteCardID(long turn_id, long user_id, int cardIndex) {
 	    SQLiteDatabase db = this.getWritableDatabase();
 
 	    ContentValues values = new ContentValues();
-	    values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID, turnid);
-	    values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID, 1);
+	    values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID, turn_id);
+	    values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID, user_id);
 	    values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID, cardIndex);
 	 
 	    // Inserting Row
@@ -383,7 +468,55 @@ public class DBProxy {
 	    return turnid;
 	}
 	
+	public int getUserID()
+	{
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    
+	    //this should only happen in testenvironments
+	    if (getUsername().equals(""))
+	    	return -1;
+	    
+	    Cursor cursor = db.query(DBContract.User.TABLE_NAME, 
+	    		new String[] { DBContract.User._ID }, 
+	    		DBContract.User.COLUMN_NAME_USERNAME + "=?" , 
+	    		new String[] { getUsername() } , 
+	    		null, null, null);
+	        
+	    int userID = -1;
+	    
+	    if (cursor != null)
+	    {
+		    cursor.moveToFirst();
+		    userID = cursor.getInt(0);
+		    cursor.close();    
+	    }
+	    return userID;
+
+	}
 	
+	public int getGameIDFromTurn(long turn_id)
+	{
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    
+	    Cursor cursor = db.query(DBContract.Turn.TABLE_NAME, 
+	    		new String[] { DBContract.Turn.COLUMN_NAME_GAME_ID }, 
+	    		DBContract.Turn._ID + "=?" , 
+	    		new String[] { String.valueOf(turn_id) } , 
+	    		null, null, null);
+	        
+	    int gameID = -1;
+	    
+	    if (cursor != null)
+	    {
+		    cursor.moveToFirst();
+		    gameID = cursor.getInt(0);
+		    cursor.close();    
+	    }
+	    return gameID;
+
+	}
+	
+
 	
 	public int getBlackCard(long turnid) {
 	    SQLiteDatabase db = this.getReadableDatabase();
@@ -408,7 +541,7 @@ public class DBProxy {
 	/*
 	 * DEBUG QUERIES
 	 */
-	public long setPreset(int preset) {
+	public void setPreset(int preset) {
 		dbHelper.reinitialize(getWritableDatabase());
 		long user_1, user_2, user_3, user_4;
 		long game_1, game_2, game_3, game_4;
@@ -421,7 +554,7 @@ public class DBProxy {
 		case NO_GAMES:
 			//1 user, no games
 			addUser(username);
-			return 0;
+			break;
 			
 		case CHOOSE_BLACK:
 			//3 users, 1 game, 2 rounds, user has to choose black card
@@ -430,21 +563,20 @@ public class DBProxy {
 				user_2 = addUser("user2@dummy.com");
 				user_3 = addUser("user3@dummy.com");
 			//table game: add game
-				game_1 = addGame(true, 5, false, 0);
+				game_1 = addGame(5, 0);
 			//table participation
-				addParticipation(game_1, user_1);
-				addParticipation(game_1, user_2);
-				addParticipation(game_1, user_3);
+				addParticipation(game_1, user_1, 0);
+				addParticipation(game_1, user_2, 0);
+				addParticipation(game_1, user_3, 1);
 			//table turn
-				turn_1 = addTurn(game_1, 1, user_1, 22);
+				turn_1 = addTurn(game_1, 1, user_1, 1);
 				turn_2 = addTurn(game_1, 2, user_1, null);
 			//table playedWhiteCards
 				//turn1, player2
-				addPlayedWhiteCard(turn_1, user_2, 11, false);
+				addPlayedWhiteCard(turn_1, user_2, 11, null);
 				//turn1, player3
-				addPlayedWhiteCard(turn_1, user_3, 12, true);
-			return game_1;
-			
+				addPlayedWhiteCard(turn_1, user_3, 12, null);
+			break;
 		case CHOOSE_WHITE:
 			//3 users, 1 game, 2 rounds, user has to choose black card
 			//table user: add local user
@@ -452,11 +584,11 @@ public class DBProxy {
 				user_2 = addUser("user2@dummy.com");
 				user_3 = addUser("user3@dummy.com");
 			//table game: add game
-				game_1 = addGame(true, 5, false, 0);
+				game_1 = addGame(5, 0);
 			//table participation
-				addParticipation(game_1, user_1);
-				addParticipation(game_1, user_2);
-				addParticipation(game_1, user_3);
+				addParticipation(game_1, user_1, 0);
+				addParticipation(game_1, user_2, 1);
+				addParticipation(game_1, user_3, 0);
 			//table turn
 				turn_1 = addTurn(game_1, 1, user_1, 1);
 				turn_2 = addTurn(game_1, 2, user_2, 2);
@@ -467,32 +599,32 @@ public class DBProxy {
 				addPlayedWhiteCard(turn_1, user_3, 12, null);
 				//turn2, player 3
 				addPlayedWhiteCard(turn_2, user_3, 13, null);
-			return game_1;
+			break;
 		}
-		return 0;
 	}
 	
-	protected long addUser(String username) {
+	public long addUser(String username) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.User.COLUMN_NAME_USERNAME, username);
-		return getWritableDatabase().insert(DBContract.User.TABLE_NAME, null, values);
+		return getWritableDatabase().insertWithOnConflict(DBContract.User.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 	}
 	
-	protected long addGame(boolean limitRounds, int roundCap, boolean limitScore, int scoreCap) {
+	public long addGame(int roundCap, int scoreCap) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.Game.COLUMN_NAME_ROUND_CAP, roundCap);
 		values.put(DBContract.Game.COLUMN_NAME_SCORE_CAP, scoreCap);
-		return getWritableDatabase().insert(DBContract.Game.TABLE_NAME, null, values);
+		return getWritableDatabase().insertWithOnConflict(DBContract.Game.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 	}
 	
-	protected long addParticipation(long game_id, long user_id) {
+	public long addParticipation(long game_id, long user_id, int score) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.Participation.COLUMN_NAME_GAME_ID, game_id);
 		values.put(DBContract.Participation.COLUMN_NAME_USER_ID, user_id);
-		return getWritableDatabase().insert(DBContract.Participation.TABLE_NAME, null, values);
+		values.put(DBContract.Participation.COLUMN_NAME_SCORE, score);
+		return getWritableDatabase().insertWithOnConflict(DBContract.Participation.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 	}
 	
-	protected long addTurn(long game_id, int roundnumber, long user_id, Integer black_id) {
+	public long addTurn(long game_id, int roundnumber, long user_id, Integer black_id) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.Turn.COLUMN_NAME_GAME_ID, game_id);
 		values.put(DBContract.Turn.COLUMN_NAME_ROUNDNUMBER, roundnumber);
@@ -501,10 +633,10 @@ public class DBProxy {
 			values.put(DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID, black_id);
 		else
 			values.putNull(DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID);
-		return getWritableDatabase().insert(DBContract.Turn.TABLE_NAME, null, values);
+		return getWritableDatabase().insertWithOnConflict(DBContract.Turn.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 	}
 	
-	protected long addPlayedWhiteCard(long turn_id, long user_id, long white_card_id, Boolean won) {
+	public long addPlayedWhiteCard(long turn_id, long user_id, long white_card_id, Boolean won) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID, turn_id);
 		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID, user_id);
@@ -513,42 +645,38 @@ public class DBProxy {
 			values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_WON, won);
 		else
 			values.putNull(DBContract.PlayedWhiteCard.COLUMN_NAME_WON);
-		return getWritableDatabase().insert(DBContract.PlayedWhiteCard.TABLE_NAME, null, values);
+		return getWritableDatabase().insertWithOnConflict(DBContract.PlayedWhiteCard.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 	}
 
-	public void addDealtWhiteCards(long turn_id, Integer num) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	public void updatePlayedWhiteCard(long turn_id, int chosen_card) {
-		// TODO Auto-generated method stub
+		ContentValues values = new ContentValues();
+		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_WON, true);
 		
-	}
-
-	public int getUserID() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public void setWhiteCardID(long turn_id, int userID, int id) {
-		// TODO Auto-generated method stub
+		//TODO: everything else is still null... change?
 		
+		getWritableDatabase().update(
+				DBContract.PlayedWhiteCard.TABLE_NAME, values,
+				DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID +"=? AND "+
+				DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID + "=?",
+				new String[] {String.valueOf(turn_id),String.valueOf(chosen_card)});
+
 	}
 
-	public Cursor readPlayerList(long game_id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
-	public Cursor readTurnlist(long game_id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public long addDealtWhiteCards(long turn_id, Integer num) {
+		
+		//we get userID from shared prefs, as we are only calling 
+		//that function for ourselves
+		
+		ContentValues values = new ContentValues();
+		values.put(DBContract.DealtWhiteCard.COLUMN_NAME_GAME_ID, getGameIDFromTurn(turn_id));
+		values.put(DBContract.DealtWhiteCard.COLUMN_NAME_PLAYER_ID, getUserID());
+		values.put(DBContract.DealtWhiteCard.COLUMN_NAME_WHITE_CARD_ID, num);
 
-	public Cursor readKnownOtherUsers(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		return getWritableDatabase().insert(DBContract.DealtWhiteCard.TABLE_NAME, null, values);
+		
 	}
 
 }

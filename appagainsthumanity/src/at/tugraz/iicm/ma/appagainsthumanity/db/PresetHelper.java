@@ -32,7 +32,7 @@ public class PresetHelper {
 	public void addGame()
 	{
 		//TODO: replace values by real values
-		gameIDs.add(proxy.addGame(true, 5, false, 0));
+		gameIDs.add(proxy.addGame(5, 0));
 	}
 	
 	public void addTurn(long firstGame) {
@@ -49,7 +49,7 @@ public class PresetHelper {
 		{
 			for (long player_id : userIDs)
 			{
-				proxy.addParticipation(game_id, player_id);
+				proxy.addParticipation(game_id, player_id, 0);
 			}
 		}
 	}

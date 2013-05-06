@@ -58,12 +58,17 @@ public class MainActivity extends Activity {
 		if (!flagUsernameExists) {
 			//get username
 			AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
-			Account[] list = manager.getAccounts();
-			if (list.length == 0) {
-				//TODO: handle non-existing google account
+			if (manager == null)
 				username="emulatedUser@gmail.com";
-			} else
-				username = list[0].name;
+			else
+			{
+				Account[] list = manager.getAccounts();
+				if (list.length == 0) {
+					//TODO: handle non-existing google account
+					username="emulatedUser@gmail.com";
+				} else
+					username = list[0].name;
+			}
 			
 			//supply username to shared preferences for other activities
 			SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).edit();
