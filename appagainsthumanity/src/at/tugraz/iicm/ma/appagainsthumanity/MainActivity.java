@@ -8,17 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.GamelistAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
@@ -49,7 +46,7 @@ public class MainActivity extends Activity {
 	 */
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -85,6 +82,17 @@ public class MainActivity extends Activity {
 		
 		//bind gameListView
 		gameListView = (ListView) findViewById(R.id.game_list_view);
+	}
+	
+	public void setUsername(String name)
+	{
+		//supply username to shared preferences for other activities
+		SharedPreferences.Editor editor = getApplicationContext()
+				.getSharedPreferences(
+						getString(R.string.sharedpreferences_filename), 
+						Context.MODE_PRIVATE).edit();
+		editor.putString(getString(R.string.sharedpreferences_key_username), name);
+		editor.commit();
 	}
 	
 	@Override
@@ -144,6 +152,9 @@ public class MainActivity extends Activity {
 	
     public void createGame(View view) {
     	Intent intent = new Intent(this, CreateGameActivity.class);
+//    	EditText editText = (EditText) findViewById(R.id.edit_message);
+//    	String message = editText.getText().toString();
+//    	intent.putExtra(EXTRA_MESSAGE, message);
     	startActivity(intent);
     }
 
@@ -164,7 +175,7 @@ public class MainActivity extends Activity {
     public void setPreset(View view) {
     	Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
     	dbProxy.setPreset(spinner.getSelectedItemPosition());
-    	
+
     	Toast toast = Toast.makeText(getApplicationContext(), spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT);
     	toast.show();
     	
@@ -180,6 +191,7 @@ public class MainActivity extends Activity {
     public OnClickListener chooseBlackCardListener = new OnClickListener() {
     	@Override
 		public void onClick(View view) {
+    		
         	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
         	intent.putExtras(BundleCreator.getSelectBlack());
         	startActivity(intent);

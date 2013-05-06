@@ -1,6 +1,5 @@
 package test.slow;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -11,12 +10,9 @@ import test.util.SQLTestRunner;
 import android.app.Activity;
 import android.content.Context;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
-import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
-import at.tugraz.iicm.ma.appagainsthumanity.db.DataBase;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 @RunWith(SQLTestRunner.class)
 public class DatabaseTest {

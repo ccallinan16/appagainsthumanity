@@ -128,7 +128,10 @@ public class CardSlideActivity extends FragmentActivity {
     		if(context.equals(ViewContext.CONFIRM_SINGLE))
     			db.setBlackCardID(1, id);
     		else
-    			db.setWhiteCardID(2, id);
+    		{
+    			int userid = db.getUserID();
+    			db.setWhiteCardID(2,userid, id);
+    		}
 		}
       });
       

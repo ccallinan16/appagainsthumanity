@@ -31,6 +31,7 @@ public class PresetHelper {
 	
 	public void addGame()
 	{
+		//TODO: replace values by real values
 		gameIDs.add(proxy.addGame(true, 5, false, 0));
 	}
 	
@@ -53,6 +54,26 @@ public class PresetHelper {
 		}
 	}
 
+	public void addDealtWhiteCards(long turn_id, Integer[] cardIDs) {
+		for (Integer num : cardIDs)
+			proxy.addDealtWhiteCards(turn_id, num);
+	}
+
+	
+	public void updateScores(long turn_id) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void addPlayedCards(long turn_id) {
+		//TODO: this function
+		//proxy.addPlayedWhiteCard(turn_id, user_id, white_card_id, won);
+	}
+
+	public void updatePlayedWhiteCards(long turn_id, int chosen_card) {
+		proxy.updatePlayedWhiteCard(turn_id, chosen_card);
+	}
+	
 	public long getFirstGame() {
 		if (gameIDs.size() > 0)
 			return gameIDs.get(0);
@@ -64,5 +85,6 @@ public class PresetHelper {
 			return turnIDs.get(0);
 		return 0;
 	}
+
 
 }
