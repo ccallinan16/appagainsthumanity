@@ -9,7 +9,7 @@
     <string name="main_key_game_list">GAME_LIST</string>
     
     <string name="create_game_title_create_game">Create game</string>
-    <string name="create_game_text_add_player">add player</string>
+    <string name="create_game_button_add_player">add player</string>
     <string name="create_game_button_confirm">Confirm</string>
     <string name="create_game_toast_invalidentry">ERROR: invalid entry</string>
     <string name="create_game_toast_notenoughplayers">ERROR: not enough players</string>
@@ -21,6 +21,13 @@
     <string name="game_overview_text_turns">Rounds</string>
     <string name="game_overview_text_players">Players</string>
     <string name="game_overview_text_options">Options</string>
+    <string name="game_overview_turns_text_chooseblack">choose black card</string>
+    <string name="game_overview_turns_text_choosewhiteblack">choose white card</string>
+    <string name="game_overview_turns_text_choosewinner">choose winning card</string>
+    <string name="game_overview_turns_text_youwon">you won!</string>
+    <string name="game_overview_turns_text_winner">winner</string>
+    <string name="game_overview_turns_text_wait">waiting for other player</string>
+    
     <string name="prompt_new_invite_title">Invite player</string>
     <string name="prompt_new_invite_comment">Player-ID</string>
     <string name="prompt_edit_invite_title">Invite player</string>

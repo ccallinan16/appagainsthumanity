@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,25 +49,25 @@ public class GamelistAdapter extends CursorAdapter {
 		TextView numplayers = (TextView)view.findViewById(R.id.tvNumplayers);
 		numplayers.setText(c.getString(5) + " players");
 		//ImageView thumbnail
-		ImageView image = (ImageView)view.findViewById(R.id.list_image);
-		LinearLayout thumbnail = (LinearLayout)view.findViewById(R.id.thumbnail);
+		ImageButton thumbnail = (ImageButton)view.findViewById(R.id.thumbnail);
+		//set focusable to false - otherwise listitem won't be clickable
+		thumbnail.setFocusable(false);
 		//case: choose black card
 		if (c.getLong(6) == c.getLong(7) && c.getLong(8) == 0) {
-			image.setImageDrawable(context.getResources().getDrawable(R.drawable.card_black));
-			thumbnail.setBackgroundResource(R.drawable.list_selector);
+			thumbnail.setImageResource(R.drawable.card_black);
 			thumbnail.setOnClickListener(black);
 		} else if (c.getLong(6) != c.getLong(7) && c.getInt(9) < (c.getInt(5) - 1)) {
 			//choose white card
-			image.setImageDrawable(context.getResources().getDrawable(R.drawable.card_white));
-			thumbnail.setBackgroundResource(R.drawable.list_selector);
+			thumbnail.setImageResource(R.drawable.card_white);
 			thumbnail.setOnClickListener(white);
 		} else if (c.getLong(6) == c.getLong(7) && c.getInt(9) == (c.getInt(5) - 1)) {
 			//choose winning card
-			image.setImageDrawable(context.getResources().getDrawable(R.drawable.star));
-			thumbnail.setBackgroundResource(R.drawable.list_selector);
+			thumbnail.setImageResource(R.drawable.winner);
 			thumbnail.setOnClickListener(winning);
-		} else 
-			image.setImageDrawable(context.getResources().getDrawable(R.drawable.time));
+		} else {
+			thumbnail.setImageResource(R.drawable.time);
+			thumbnail.setEnabled(false);
+		}
 	}
 
 	@Override

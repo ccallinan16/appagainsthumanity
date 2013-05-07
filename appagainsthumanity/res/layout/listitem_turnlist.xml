@@ -1,32 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="50dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/list_selector"
-    android:gravity="center"
-    >
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="5dp" 
+    android:paddingLeft="10dp"
+	>
+    <ImageView
+        android:contentDescription="@string/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/arrow" 
+	 />
+    
+    <LinearLayout
+        android:id="@+id/layout_thumbnail"
+        android:paddingTop="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="4dp"
+        android:layout_alignParentLeft="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        >
+	    <ImageView
+	        android:id="@+id/thumbnail"
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	   		android:src="@drawable/star"
+	   		 />
+    </LinearLayout>
+    
     <TextView
-        android:id="@+id/tv_label"
+        android:id="@+id/tv_round"
+        style="@style/text.white.bold"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textColor="#ffffff"
-		android:textSize="18sp"
-		android:textStyle="bold"
-		android:typeface="sans" 
+        android:layout_toRightOf="@+id/layout_thumbnail"
+        android:layout_marginLeft="10dp"
         android:text="@string/listitem_turnlist_text_turn"
     />
-    
+	
 	<TextView 
-    android:id="@android:id/text1"
-    android:layout_width="wrap_content"
-	android:layout_height="match_parent"
-	android:layout_marginLeft="10dp"
-	android:gravity="center"
-	android:textColor="#ffffff"
-	android:textSize="18sp"
-	android:textStyle="bold"
-	android:typeface="sans" 
+	    android:id="@+id/tv_status"
+	    style="@style/text.white.small"
+	    android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/tv_round"
+		android:layout_alignLeft="@id/tv_round"
+		android:layout_marginTop="5dp"
+		android:text="@string/listitem_turnlist_text_turn"
 	/>
-</LinearLayout>
+	
+</RelativeLayout>

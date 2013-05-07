@@ -297,9 +297,10 @@ public class DBProxy {
 		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID,
 		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_ROUNDNUMBER,
 		    "COUNT(DISTINCT " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_USER_ID + " ) AS numplayers",
-		    DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME,
+		    DBContract.User.TABLE_NAME + "1" + "." + DBContract.User.COLUMN_NAME_USERNAME,
 		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID,
-		    "COUNT(DISTINCT "+DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard._ID + ") AS numwhitechosen"
+		    "COUNT(DISTINCT "+DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard._ID + ") AS numwhitechosen",
+		    DBContract.User.TABLE_NAME + "2" + "." + DBContract.User.COLUMN_NAME_USERNAME + " AS winner",
 		};
 
 		// How you want the results sorted in the resulting Cursor
@@ -311,17 +312,19 @@ public class DBProxy {
 			" ON " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_GAME_ID + " = " + DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID +        
 			" INNER JOIN " + DBContract.Turn.TABLE_NAME + 
 			" ON " + DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID + " = " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_GAME_ID + 
-			" INNER JOIN " + DBContract.User.TABLE_NAME + 
-			" ON " + DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " = " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_USER_ID + 
+			" INNER JOIN " + DBContract.User.TABLE_NAME + " AS " + DBContract.User.TABLE_NAME + "1" +  
+			" ON " + DBContract.User.TABLE_NAME + "1" + "." + DBContract.User._ID + " = " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_USER_ID + 
 			" LEFT JOIN " + DBContract.PlayedWhiteCard.TABLE_NAME + 
-			" ON " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID + " = " + DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID,
+			" ON " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID + " = " + DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID + 
+			" LEFT JOIN " + DBContract.User.TABLE_NAME + " AS " + DBContract.User.TABLE_NAME + "2" +  
+			" ON " + DBContract.User.TABLE_NAME + "2" + "." + DBContract.User._ID + " = " + DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID,
 			
 			// The table to query
 		    projection,                               // The columns to return
 		    DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID + " = ? ",
 		    new String[]{String.valueOf(game_id)},    // The values for the WHERE clause
 		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID, // don't group the rows
-		    null,                                     // don't filter by row groups
+		    null,//DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_WON + " = 1",                                     // don't filter by row groups
 		    sortOrder                                 // The sort order
 		    );
 	}

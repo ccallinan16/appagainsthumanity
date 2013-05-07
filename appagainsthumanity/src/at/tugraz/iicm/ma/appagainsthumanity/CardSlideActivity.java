@@ -63,7 +63,7 @@ public class CardSlideActivity extends FragmentActivity {
 
       cancelBtn.setOnClickListener(new View.OnClickListener() {
 		
-		@Override
+		@Override 
 		public void onClick(View v) {
 			//do not add any entries to db
 			createAndStartMainActivity(v);

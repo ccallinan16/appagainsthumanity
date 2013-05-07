@@ -10,6 +10,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.TurnlistAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
@@ -28,7 +30,7 @@ public class TurnsFragment extends Fragment {
 	 */
 	
 	private ListView turnListView;
-	private SimpleCursorAdapter turnListAdapter;
+	private TurnlistAdapter turnListAdapter;
 	private String username;
 	private long game_id;
 	private DBProxy dbProxy;
@@ -71,47 +73,14 @@ public class TurnsFragment extends Fragment {
 		
 		//retrieve game list
 		turnListCursor = dbProxy.readTurnlist(game_id);
+		DatabaseUtils.dumpCursor(turnListCursor);
 		
 		//create adapter
-		turnListAdapter = new SimpleCursorAdapter(getActivity(), R.layout.listitem_turnlist, turnListCursor,
-		        new String[] { DBContract.Turn.COLUMN_NAME_ROUNDNUMBER }, 
-		        new int[] { android.R.id.text1 });
+		turnListAdapter = new TurnlistAdapter(getActivity(), turnListCursor, username, chooseBlackCardListener, chooseWhiteCardListener, chooseWinningCardListener, showResultListener);
 
 		//set adapter
 		turnListView.setAdapter(turnListAdapter);
 		
-		//add onclick listener
-		turnListView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-				//set cursor to current position
-				turnListCursor.moveToPosition(position);
-				
-				//react depending on situation
-				if (turnListCursor.getString(3).equals(username) && turnListCursor.getLong(4) == 0) {
-					//choose black card
-					Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-		        	intent.putExtras(BundleCreator.getSelectBlack());
-		        	startActivity(intent);
-				} else if (!turnListCursor.getString(3).equals(username) && turnListCursor.getInt(5) < (turnListCursor.getInt(2) - 1)) {
-					//choose white card
-					Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-		        	intent.putExtras(BundleCreator.getSelectWhite());
-		        	startActivity(intent);
-				} else if (turnListCursor.getString(3).equals(username) && turnListCursor.getInt(5) == (turnListCursor.getInt(2) - 1)) {
-					//choose winning card
-					Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-		        	intent.putExtras(BundleCreator.getSelectWhite());
-		        	startActivity(intent);
-				} else {
-					Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-		        	intent.putExtras(BundleCreator.getShowResults());
-		        	startActivity(intent);
-				}
-				
-			}
-		});
 	}
     
     @Override
@@ -131,4 +100,45 @@ public class TurnsFragment extends Fragment {
         /** Error Handler Code **/
     	}// end try/catch (Exception error)
     }
+    
+    /*
+     * CALLBACKS
+     */
+    
+    public OnClickListener chooseBlackCardListener = new OnClickListener() {
+    	@Override
+		public void onClick(View view) {
+    		
+        	Intent intent = new Intent(getActivity(), CardSlideActivity.class);
+        	intent.putExtras(BundleCreator.getSelectBlack());
+        	startActivity(intent);
+		}
+    };
+    
+    public OnClickListener chooseWhiteCardListener = new OnClickListener() {
+    	@Override
+		public void onClick(View view) {
+        	Intent intent = new Intent(getActivity(), CardSlideActivity.class);
+        	intent.putExtras(BundleCreator.getSelectWhite());
+        	startActivity(intent);
+		}
+    };
+    
+    public OnClickListener chooseWinningCardListener = new OnClickListener() {
+    	@Override
+		public void onClick(View view) {
+        	Intent intent = new Intent(getActivity(), CardSlideActivity.class);
+        	intent.putExtras(BundleCreator.getSelectWhite());
+        	startActivity(intent);
+		}
+    };
+    
+    public OnClickListener showResultListener = new OnClickListener() {
+    	@Override
+		public void onClick(View view) {
+        	Intent intent = new Intent(getActivity(), CardSlideActivity.class);
+        	intent.putExtras(BundleCreator.getShowResults());
+        	startActivity(intent);
+		}
+    };
 }
