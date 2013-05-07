@@ -163,7 +163,7 @@ public class CardSlideActivity extends FragmentActivity {
 	
 	 	      
 	      //TODO: exception in Unittests, comment back in for nice effects
-	      pager.setPageTransformer(true, new ZoomOutPageTransformer());
+	      //pager.setPageTransformer(true, new ZoomOutPageTransformer());
 	      pager.setAdapter(pageAdapter);
 	
 	    	  initTop(dealer);

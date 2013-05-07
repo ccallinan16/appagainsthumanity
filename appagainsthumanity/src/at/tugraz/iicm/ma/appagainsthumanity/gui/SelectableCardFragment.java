@@ -46,17 +46,15 @@ public class SelectableCardFragment extends SingleCardFragment {
 		 
 		 View v = super.onCreateView(inflater, container, savedInstanceState);
 		 
-		 
-		 ScrollView scroller = (ScrollView) v.findViewById(R.id.my_scroll_view);
-		 TextView child = (TextView) scroller.getChildAt(0);
-		 
+		 TextView child = (TextView)  v.findViewById(R.id.cardText);
+		 /*
 		 child.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				actionSelect((View)v.getParent().getParent());
 			}
-		});
+		});*/
 		 
 	      v.setOnClickListener(new OnClickListener() {
 	  		

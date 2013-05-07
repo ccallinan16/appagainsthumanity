@@ -83,26 +83,8 @@ public class GamelistAdapter extends CursorAdapter {
 			break;
 		case SELECT_WHITE:
 			white.onClick(null);
-			break;			
+			break;
 		}
 		return false;
 	}
-	
-//	public View getView(int position, View convertView, ViewGroup parent) {
-//	    if (!mDataValid) {
-//	        throw new IllegalStateException("this should only be called when the cursor is valid");
-//	    }
-//	    if (!mCursor.moveToPosition(position)) {
-//	        throw new IllegalStateException("couldn't move cursor to position " + position);
-//	    }
-//	    View v;
-//	    if (convertView == null) {
-//	        v = newView(mContext, mCursor, parent);
-//	    } else {
-//	        v = convertView;
-//	    }
-//	    bindView(v, mContext, mCursor);
-//	    return v;
-//	}
-
 }

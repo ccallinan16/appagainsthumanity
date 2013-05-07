@@ -9,23 +9,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SingleCardActivity" >
 
-    <ScrollView
-        android:id="@+id/my_scroll_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-         >
-
-            <CheckedTextView
-                android:id="@+id/cardText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:freezesText="true"
-                android:maxLines="10"
-                android:textColor="@android:color/black"
-                android:textIsSelectable="false" />
-
-    </ScrollView>
+     <CheckedTextView
+         android:id="@+id/cardText"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:checked="false"
+         android:freezesText="true"
+         android:maxLines="10"
+         android:textColor="@android:color/black"
+         android:textIsSelectable="false" />
 
 </FrameLayout>
