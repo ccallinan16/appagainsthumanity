@@ -3,82 +3,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/gradient_bg"
-    tools:context=".GameOptionsActivity" >
-
-	<RelativeLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:background="@drawable/list_selector" >
-	    <TextView
-	        android:id="@+id/text_scorecap"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_centerVertical="true"
-	        android:paddingLeft="10dp"
-	        android:text="@string/game_options_text_scorecap"
-	        android:textColor="#ffffff"
-	        android:textSize="18sp"
-	        android:textStyle="bold"
-	        android:typeface="sans" />
-
-	    <EditText
-	        android:id="@+id/input_scorecap"
-	        android:layout_width="100dp"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentRight="true"
-	        android:ems="10"
-	        android:hint="@string/game_options_hint_scorecap"
-	        android:inputType="number" >
-	    </EditText>
-
-	</RelativeLayout>
-	
-	<RelativeLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:background="@drawable/list_selector">
-	    <TextView
-	        android:id="@+id/text_roundcap"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:paddingLeft="10dp"
-	        android:layout_centerVertical="true"
-	        android:text="@string/game_options_text_roundcap"
-	        android:textColor="#ffffff"
-	        android:textSize="18sp"
-	        android:textStyle="bold"
-	        android:typeface="sans" />
-    	<EditText
-		    android:id="@+id/input_roundcap"
-		    android:layout_width="100dp"
-		    android:layout_height="wrap_content"
-		    android:layout_alignParentRight="true"
-		    android:hint="@string/game_options_hint_roundcap"
-		    android:inputType="number" />
-	</RelativeLayout>
-
-	<RelativeLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent">
-	    <Button
+    tools:context=".GameOptionsActivity" 
+    >
+	<LinearLayout 
+    	style="@style/layout_content"
+    	android:orientation="vertical"
+    	android:layout_width="match_parent"
+    	android:layout_height="0dp"
+    	android:layout_weight="1"
+    	>
+		<RelativeLayout
 		    android:layout_width="fill_parent"
-		    android:layout_height="50dp"
-		    android:layout_alignParentBottom="true"
-		    android:layout_marginTop="100dp"
-		    android:background="@drawable/gradient_bg_hover"
-		    android:textColor="#000000"
-       		android:textSize="18sp"
-        	android:textStyle="bold"
-		    android:onClick="confirmEntries"
-		    android:text="@string/create_game_button_confirm" />
-	</RelativeLayout>
+		    android:layout_height="wrap_content"
+		    android:background="@drawable/gradient_bg" >
+		    <TextView
+		        android:id="@+id/text_scorecap"
+		        style="@style/text.white.bold"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentLeft="true"
+		        android:paddingLeft="10dp"
+		        android:layout_centerVertical="true"
+		        android:text="@string/game_options_text_scorecap"
+		    />
+		    <EditText
+		        android:id="@+id/input_scorecap"
+		        android:layout_width="100dp"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentRight="true"
+		        android:layout_centerVertical="true"
+		        android:hint="@string/game_options_hint_scorecap"
+		        android:inputType="number" >
+		    </EditText>
+		</RelativeLayout>
 	
+		<RelativeLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:background="@drawable/list_selector">
+		    <TextView
+		        android:id="@+id/text_roundcap"
+		        style="@style/text.white.bold"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentLeft="true"
+		        android:paddingLeft="10dp"
+		        android:layout_centerVertical="true"
+		        android:text="@string/game_options_text_roundcap"
+	        />
+	    	<EditText
+			    android:id="@+id/input_roundcap"
+			    android:layout_width="100dp"
+			    android:layout_height="wrap_content"
+			    android:layout_alignParentRight="true"
+			    android:layout_centerVertical="true"
+			    android:hint="@string/game_options_hint_roundcap"
+			    android:inputType="number" />
+		</RelativeLayout>
 
+	</LinearLayout>
+	
+    <LinearLayout 
+        style="@style/bar_button"
+    	>
+    	<Button
+	  		style="@style/button"
+	        android:layout_width="fill_parent"
+	        android:text="@string/create_game_button_confirm"
+	        android:onClick="confirmEntries"
+       	/>
+    </LinearLayout>
 </LinearLayout>

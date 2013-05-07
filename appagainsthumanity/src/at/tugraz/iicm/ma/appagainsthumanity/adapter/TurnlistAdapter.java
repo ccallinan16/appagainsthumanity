@@ -18,61 +18,73 @@ import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
-public class GamelistAdapter extends CursorAdapter {
+public class TurnlistAdapter extends CursorAdapter {
 
-	private Cursor cursor;
 	private final LayoutInflater inflater;
+	private String username;
 	private OnClickListener black;
 	private OnClickListener white;
 	private OnClickListener winning;
-
+	private OnClickListener result;
+	
 	//other constructors would need api level 11 - our base-level is 8
 	@SuppressWarnings("deprecation") 
-	public GamelistAdapter(Context context, Cursor c, OnClickListener chooseBlackCardListener, OnClickListener chooseWhiteCardListener, OnClickListener chooseWinningCardListener) {
+	public TurnlistAdapter(Context context, Cursor c, String username, OnClickListener chooseBlackCardListener, OnClickListener chooseWhiteCardListener, OnClickListener chooseWinningCardListener, OnClickListener showResultListener) {
 		super(context, c);
-		cursor = c;
 		inflater=LayoutInflater.from(context);
+		this.username = username;
 		this.black = chooseBlackCardListener;
 		this.white = chooseWhiteCardListener;
 		this.winning = chooseWinningCardListener;
+		this.result = showResultListener;
 	}
 
 	@Override
 	public void bindView(View view, final Context context, Cursor c) {
-		//TextView round
-		TextView round = (TextView)view.findViewById(R.id.tvRound);
-		round.setText("round: " + c.getString(1) + (c.getInt(2) > 0 ? " / " + c.getString(2) : ""));
-		//TextView score
-		TextView score = (TextView)view.findViewById(R.id.tvScore);
-		score.setText("score: " + c.getString(3) + (c.getInt(4) > 0 ? " / " + c.getString(4) : ""));
-		//TextView numplayers
-		TextView numplayers = (TextView)view.findViewById(R.id.tvNumplayers);
-		numplayers.setText(c.getString(5) + " players");
-		//ImageView thumbnail
-		ImageButton thumbnail = (ImageButton)view.findViewById(R.id.thumbnail);
-		//set focusable to false - otherwise listitem won't be clickable
-		thumbnail.setFocusable(false);
-		//case: choose black card
-		if (c.getLong(6) == c.getLong(7) && c.getLong(8) == 0) {
+		//retrieve views
+		TextView round = (TextView)view.findViewById(R.id.tv_round);
+		TextView status = (TextView)view.findViewById(R.id.tv_status);
+		ImageView thumbnail = (ImageView)view.findViewById(R.id.thumbnail);
+		
+		//set roundnumber
+		round.setText("Round " + c.getString(1));
+		
+		if (username.equals(c.getString(3)) && c.getLong(4) == 0) {
+			//case: choose black card
 			thumbnail.setImageResource(R.drawable.card_black);
-			thumbnail.setOnClickListener(black);
-		} else if (c.getLong(6) != c.getLong(7) && c.getInt(9) < (c.getInt(5) - 1)) {
+			status.setText(context.getString(R.string.game_overview_turns_text_chooseblack));
+			view.setOnClickListener(black);
+		} else if (!username.equals(c.getString(3)) && c.getInt(5) < (c.getInt(2) - 1)) {
 			//choose white card
 			thumbnail.setImageResource(R.drawable.card_white);
-			thumbnail.setOnClickListener(white);
-		} else if (c.getLong(6) == c.getLong(7) && c.getInt(9) == (c.getInt(5) - 1)) {
+			status.setText(context.getString(R.string.game_overview_turns_text_choosewhiteblack));
+			view.setOnClickListener(white);
+		} else if (username.equals(c.getString(3)) && c.getInt(5) == (c.getInt(2) - 1) && c.getString(6).equals(null)) {
 			//choose winning card
 			thumbnail.setImageResource(R.drawable.winner);
-			thumbnail.setOnClickListener(winning);
+			status.setText(context.getString(R.string.game_overview_turns_text_choosewinner));
+			view.setOnClickListener(winning);
+		} else if (!c.getString(6).equals(null)) {
+			//show result
+			if (c.getString(6).equals(username)) {
+				thumbnail.setImageResource(R.drawable.star);
+				status.setText(context.getString(R.string.game_overview_turns_text_youwon));
+			}
+			else {
+				thumbnail.setImageResource(R.drawable.star_empty);
+				status.setText(context.getString(R.string.game_overview_turns_text_winner) + ": " + c.getString(6));
+			}
+			view.setOnClickListener(result);
 		} else {
 			thumbnail.setImageResource(R.drawable.time);
+			status.setText(context.getString(R.string.game_overview_turns_text_wait));
 			thumbnail.setEnabled(false);
 		}
 	}
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		return inflater.inflate(R.layout.listitem_gamelist,  parent, false);
+		return inflater.inflate(R.layout.listitem_turnlist,  parent, false);
 	}
 	
 	public boolean simulateClick(ViewContext context)
