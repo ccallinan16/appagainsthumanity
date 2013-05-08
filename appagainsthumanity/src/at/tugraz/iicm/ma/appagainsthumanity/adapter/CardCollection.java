@@ -89,14 +89,18 @@ public class CardCollection {
 		//c.setHighlighted(!tmp);
 	}
 
-	public void setBlackCard(Card card)
+	public void setBlackCard(int id)
 	{
+		System.out.println("set black called, id: " + id);
+
 		//TODO: call to server / DB
-		blackCardId = card.getId();
+		blackCardId = id;
 	}
 	
 	public Card getBlackCard()
 	{
+		System.out.println("get black called, id: " + blackCardId);
+		System.out.println("black: " + black);
 		//TODO: call to server
 		return getCard(blackCardId,CardType.BLACK);
 	}
@@ -152,7 +156,7 @@ public class CardCollection {
 			  
 		  case SELECT_WHITE:
 		  case SHOW_RESULT:
-			  setBlackCard(black);
+			  setBlackCard(black.getId());
 			  //already added to CardsInPlay, TODO: change
 			  break;
 			  
@@ -161,7 +165,7 @@ public class CardCollection {
 			  break;
 
 		  case CONFIRM_PAIR:
-			  setBlackCard(black);
+			  setBlackCard(black.getId());
 			  setSelected(white);
 			  break;
 			  

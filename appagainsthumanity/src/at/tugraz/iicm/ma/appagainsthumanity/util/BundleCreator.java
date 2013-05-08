@@ -1,5 +1,6 @@
 package at.tugraz.iicm.ma.appagainsthumanity.util;
 
+import android.content.Intent;
 import android.os.Bundle;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
@@ -11,6 +12,8 @@ public class BundleCreator {
 	public static final String SELECTABLE = "KEY_SELECT";
 	public static final String NUM_BLACK = "KEY_NUM_BLACK";
 	public static final String NUM_WHITE = "KEY_NUM_WHITE";
+	public static final String TURN_ID = "TURN_ID";
+
 		
 	private static Bundle createBundle(ViewContext context) {
 
@@ -20,6 +23,14 @@ public class BundleCreator {
 	}
 	
 
+	public static Bundle makeBundle(ViewContext context, long turn_id) {
+
+		Bundle b = createBundle(context);
+		b.putLong(TURN_ID, turn_id);
+		return b;
+	}
+
+	
 	public static Bundle getSelectBlack()
 	{
 		//assert(CardCollection.instance.getCardCount(CardType.WHITE) == 0);

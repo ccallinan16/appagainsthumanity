@@ -114,7 +114,8 @@ public class ViewContextTest {
     {
     	int numWhiteCards = 7;
     	   	
-    	CardCollection.instance.setBlackCard(CardCollection.instance.makeCard(10, "hello", CardType.BLACK));
+    	Card c = CardCollection.instance.makeCard(10, "hello", CardType.BLACK);
+    	CardCollection.instance.setBlackCard(c.getId());
     	testContextView(ViewContext.SELECT_WHITE, numWhiteCards);
     }
     
@@ -124,7 +125,7 @@ public class ViewContextTest {
     	Card white = CardCollection.instance.makeCard(1,"Hello",CardType.WHITE);
     	Card black = CardCollection.instance.makeCard(5,"black",CardType.BLACK);
 
-    	CardCollection.instance.setBlackCard(black);
+    	CardCollection.instance.setBlackCard(black.getId());
     	CardCollection.instance.setSelected(white);
     	testContextView(ViewContext.CONFIRM_PAIR, 1);
     }

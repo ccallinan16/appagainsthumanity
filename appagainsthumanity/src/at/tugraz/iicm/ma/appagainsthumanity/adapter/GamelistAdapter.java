@@ -14,21 +14,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
+import at.tugraz.iicm.ma.appagainsthumanity.ChooseViewListener;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
 public class GamelistAdapter extends CursorAdapter {
 
 	private Cursor cursor;
 	private final LayoutInflater inflater;
-	private OnClickListener black;
-	private OnClickListener white;
-	private OnClickListener winning;
+	private ChooseViewListener black;
+	private ChooseViewListener white;
+	private ChooseViewListener winning;
 
 	//other constructors would need api level 11 - our base-level is 8
 	@SuppressWarnings("deprecation") 
-	public GamelistAdapter(Context context, Cursor c, OnClickListener chooseBlackCardListener, OnClickListener chooseWhiteCardListener, OnClickListener chooseWinningCardListener) {
+	public GamelistAdapter(Context context, Cursor c, 
+			ChooseViewListener chooseBlackCardListener, 
+			ChooseViewListener chooseWhiteCardListener, 
+			ChooseViewListener chooseWinningCardListener) {
 		super(context, c);
 		cursor = c;
 		inflater=LayoutInflater.from(context);
@@ -55,14 +60,17 @@ public class GamelistAdapter extends CursorAdapter {
 		//case: choose black card
 		if (c.getLong(6) == c.getLong(7) && c.getLong(8) == 0) {
 			thumbnail.setImageResource(R.drawable.card_black);
+			black.setTurnID(c.getLong(10));
 			thumbnail.setOnClickListener(black);
 		} else if (c.getLong(6) != c.getLong(7) && c.getInt(9) < (c.getInt(5) - 1)) {
 			//choose white card
 			thumbnail.setImageResource(R.drawable.card_white);
+			white.setTurnID(c.getLong(10));
 			thumbnail.setOnClickListener(white);
 		} else if (c.getLong(6) == c.getLong(7) && c.getInt(9) == (c.getInt(5) - 1)) {
 			//choose winning card
 			thumbnail.setImageResource(R.drawable.winner);
+			winning.setTurnID(c.getLong(10));
 			thumbnail.setOnClickListener(winning);
 		} else {
 			thumbnail.setImageResource(R.drawable.time);
@@ -77,12 +85,15 @@ public class GamelistAdapter extends CursorAdapter {
 	
 	public boolean simulateClick(ViewContext context)
 	{
+		System.out.println("sim click: " + context + ", last: " + PresetHelper.man.getLastTurnID());
 		switch(context)
 		{
 		case SELECT_BLACK:
+			black.setTurnID(PresetHelper.man.getLastTurnID());
 			black.onClick(null);
 			break;
 		case SELECT_WHITE:
+			white.setTurnID(PresetHelper.man.getLastTurnID());
 			white.onClick(null);
 			break;
 		}

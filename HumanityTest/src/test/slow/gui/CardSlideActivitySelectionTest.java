@@ -66,7 +66,7 @@ public class CardSlideActivitySelectionTest {
     	Bundle b = TestBundleCreator.getSelectWhiteBundle();
 
     	Card black = CardCollection.instance.makeCard(1, "hello", CardType.BLACK);
-    	CardCollection.instance.setBlackCard(black);
+    	CardCollection.instance.setBlackCard(black.getId());
 
     	csa.getIntent().putExtras(b);
     	csa.onCreate(null);

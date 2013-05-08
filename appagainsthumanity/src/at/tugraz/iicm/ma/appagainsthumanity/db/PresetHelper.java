@@ -10,12 +10,12 @@ public class PresetHelper {
 	public static final int SELECT_WHITE = 2; 	//3 users, 1 game, 2 rounds user has to choose white card
 	public static final int SELECT_WINNER = 3; 	//3 users, 1 game, 2 rounds user has to choose white card
 
+	public static final GameManager man = new GameManager();
 	
 	public static void setPreset(DBProxy proxy, int type) {
 		
 		proxy.reinitializeDB();
 		ServerConnector connector = new ServerConnector(proxy);
-		GameManager man = new GameManager();
 		
 		switch(type)
 		{

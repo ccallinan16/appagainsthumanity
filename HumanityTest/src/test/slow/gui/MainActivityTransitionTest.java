@@ -8,16 +8,19 @@ import test.util.SQLTestRunner;
 import test.util.SelectionAndContextHelper;
 import android.content.Intent;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
+import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
-import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.GamelistAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
+import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
+import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
 import com.xtremelabs.robolectric.matchers.StartedMatcher;
-import com.xtremelabs.robolectric.shadows.ShadowCursorAdapter;
 
 @RunWith(SQLTestRunner.class)
 public class MainActivityTransitionTest {
@@ -36,14 +39,30 @@ public class MainActivityTransitionTest {
 		activity.onStart();
 		
 		ListView list = (ListView) activity.findViewById(R.id.game_list_view);
-		
-		GamelistAdapter adapter = (GamelistAdapter) list.getAdapter();
 
+		/* tried to access imagebutton, but didn't manage to.
+		
+        LinearLayout firstItemLayout = (LinearLayout) list.getChildAt(0);
+        
+		System.out.println("children: " + firstItemLayout.getChildCount());
+        
+        list.findViewById(R.layout.listitem_gamelist);
+        
+		ImageButton thumbnail = (ImageButton)firstItemLayout.findViewById(R.id.thumbnail);
+
+		thumbnail.performClick();
+		*/
+		GamelistAdapter adapter = (GamelistAdapter) list.getAdapter();
 		adapter.simulateClick(context);
 
 		CardSlideActivity csa = new CardSlideActivity();
 				
-		return SelectionAndContextHelper.createAndGetIntent(csa, context);
+    	Intent i = new Intent(csa, CardSlideActivity.class);
+    	i.putExtras(BundleCreator.makeBundle(context,PresetHelper.man.getLastTurnID()));
+
+    	csa.setIntent(i);
+		
+		return i;//SelectionAndContextHelper.createAndGetIntent(csa, context);
 	}
 	
 	@Test

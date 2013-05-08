@@ -109,6 +109,8 @@ public class MainActivity extends Activity {
 		// Instanciate database proxy
 		dbProxy = new DBProxy(this.getApplicationContext());
 				
+		PresetHelper.setPreset(dbProxy, PresetHelper.SELECT_BLACK);
+		
 		//retrieve game list
 		gamelistCursor = dbProxy.readGameList(username);
 		displayListView(gamelistCursor);
@@ -142,7 +144,10 @@ public class MainActivity extends Activity {
 //		System.out.println("row count: " + c.getCount());
 //		System.out.println(DatabaseUtils.dumpCursorToString(c));
 		if (gamelistAdapter == null)
-			gamelistAdapter = new GamelistAdapter(getApplicationContext(), c, chooseBlackCardListener, chooseWhiteCardListener, chooseWinningCardListener);
+			gamelistAdapter = new GamelistAdapter(getApplicationContext(),c,
+					new ChooseViewListener(this, ViewContext.SELECT_BLACK),
+					new ChooseViewListener(this, ViewContext.SELECT_WHITE),
+					new ChooseViewListener(this, ViewContext.SELECT_WHITE)); //TODO
 		else
 			gamelistAdapter.changeCursor(c);
 		gameListView.setAdapter(gamelistAdapter);
@@ -194,39 +199,7 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(MainActivity.this, MainActivity.class);
         startActivity(intent);
     }
-    
-    /*
-     * CALLBACKS
-     */
-    
-    public OnClickListener chooseBlackCardListener = new OnClickListener() {
-    	@Override
-		public void onClick(View view) {
-    		
-        	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
-        	intent.putExtras(BundleCreator.getSelectBlack());
-        	startActivity(intent);
-		}
-    };
-    
-    public OnClickListener chooseWhiteCardListener = new OnClickListener() {
-    	@Override
-		public void onClick(View view) {
-        	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
-        	intent.putExtras(BundleCreator.getSelectWhite());
-        	startActivity(intent);
-		}
-    };
-    
-    public OnClickListener chooseWinningCardListener = new OnClickListener() {
-    	@Override
-		public void onClick(View view) {
-        	Intent intent = new Intent(MainActivity.this, CardSlideActivity.class);
-        	intent.putExtras(BundleCreator.getSelectWhite());
-        	startActivity(intent);
-		}
-    };
-    
+        
     /*
      * DEFAULT METHODS
      */

@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class ServerConnector {
@@ -39,6 +40,7 @@ public class ServerConnector {
 	public void selectCardBlack(long turn_id, int id)
 	{
 		//Czar selects a black card, CardType.BLACK
+		CardCollection.instance.setBlackCard(id);
 		
 		//tables affected: (locally)
 		//turn

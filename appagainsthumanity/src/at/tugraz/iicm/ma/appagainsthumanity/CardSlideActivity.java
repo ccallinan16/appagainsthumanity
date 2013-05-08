@@ -1,6 +1,8 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
 
+import javax.security.auth.callback.ConfirmationCallback;
+
 import mocks.MockDealer;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +18,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.OnCardSelectionListener;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
@@ -94,18 +97,23 @@ public class CardSlideActivity extends FragmentActivity {
 					int id = CardCollection.instance.getSelectedID();
 					
 			  		Intent intent = new Intent(v.getContext(),MainActivity.class);
-				
-					DBProxy db = new DBProxy(v.getContext());
+								
+					ServerConnector connector = new ServerConnector(new DBProxy(v.getContext()));
 					
+					//TODO: select winner, where do we decide?
 					//TODO: get turn_id!!
-					if(context.equals(ViewContext.CONFIRM_SINGLE))
-						db.getDBSetter().setBlackCardID(1, id);
-					else
+					switch (context)
 					{
-						int userid = db.getUserID();
-						db.getDBSetter().setWhiteCardID(2,userid, id);
+					case CONFIRM_SINGLE:
+						connector.selectCardBlack(1, id);
+						break;
+					case CONFIRM_PAIR:
+						connector.selectCardWhite(2, id); 
+						break;
+					default:
+						break;
 					}
-					
+										
 				  	v.getContext().startActivity(intent);									
 				}
 			});
@@ -147,11 +155,16 @@ public class CardSlideActivity extends FragmentActivity {
 	{
 		boolean draw = false;
 		
+		System.out.println("initTop, context: " + context + ", draw: " + draw);
+		
 	      if (	  context == ViewContext.CONFIRM_PAIR ||
 	    		  context == ViewContext.SELECT_WHITE ||
 	    		  context == ViewContext.SHOW_RESULT)
 	    	  draw = true;
 		
+		System.out.println("initTop, context: " + context + ", draw: " + draw);
+
+	      
 		Card black = CardCollection.instance.getBlackCard();
 		
 		if (black == null || !draw)
