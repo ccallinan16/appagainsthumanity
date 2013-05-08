@@ -1,5 +1,7 @@
 package at.tugraz.iicm.ma.appagainsthumanity.adapter;
 
+import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
+
 public enum ViewContext {
 	SELECT_WHITE, SELECT_BLACK, CONFIRM_SINGLE, CONFIRM_PAIR, SHOW_RESULT, UNKNOWN;
 	
@@ -18,6 +20,15 @@ public enum ViewContext {
 		
 		
 		return UNKNOWN;
+	}
+
+	public CardType getCardType() {
+
+		if (this.equals(SELECT_BLACK) || this.equals(CONFIRM_SINGLE))
+			return CardType.BLACK;
+		else
+			return CardType.WHITE;
+		
 	}
 	
 }

@@ -9,13 +9,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SingleCardActivity" >
 
-     <CheckedTextView
+     <TextView
          android:id="@+id/cardText"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:checked="false"
-         android:freezesText="true"
          android:maxLines="10"
+         android:freezesText="true"
          android:textColor="@android:color/black"
          android:textIsSelectable="false" />
 

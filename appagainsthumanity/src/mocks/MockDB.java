@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class MockDB {
 
-	int size = 50;
+	int size = 25;
 	
 	public MockDB() {
 

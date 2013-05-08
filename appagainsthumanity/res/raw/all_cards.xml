@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <cardCollection>
    <white>
       <entry>
@@ -129,7 +130,7 @@
       <entry>
          <integer>23</integer>
          <card id="23">
-            <text>The Tempur-Pedic(r) Swedish Sleep System(tm).</text>
+            <text>The Tempur-Pedic&#174; Swedish Sleep System&#8482;.</text>
          </card>
       </entry>
       <entry>
@@ -183,7 +184,7 @@
       <entry>
          <integer>30</integer>
          <card id="30">
-            <text>Five-Dollar Footlongs(tm).</text>
+            <text>Five-Dollar Footlongs&#8482;.</text>
          </card>
       </entry>
       <entry>
@@ -273,7 +274,7 @@
       <entry>
          <integer>44</integer>
          <card id="44">
-            <text>Overompensation.</text>
+            <text>Overcompensation.</text>
          </card>
       </entry>
       <entry>
@@ -483,7 +484,7 @@
       <entry>
          <integer>84</integer>
          <card id="84">
-            <text>Hot Pockets(r).</text>
+            <text>Hot Pockets&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -927,7 +928,7 @@
       <entry>
          <integer>147</integer>
          <card id="147">
-            <text>GoGurt(r).</text>
+            <text>GoGurt&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -1653,7 +1654,7 @@
       <entry>
          <integer>262</integer>
          <card id="262">
-            <text>Lunchables(tm).</text>
+            <text>Lunchables&#8482;.</text>
          </card>
       </entry>
       <entry>
@@ -1773,7 +1774,7 @@
       <entry>
          <integer>313</integer>
          <card id="313">
-            <text>Adderall(tm).</text>
+            <text>Adderall&#8482;.</text>
          </card>
       </entry>
       <entry>
@@ -1887,7 +1888,7 @@
       <entry>
          <integer>299</integer>
          <card id="299">
-            <text>Swithing to Geico(r).</text>
+            <text>Swithing to Geico&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -2043,7 +2044,7 @@
       <entry>
          <integer>323</integer>
          <card id="323">
-            <text>Home video of Oprah sobbing into a Lean Cuisine(r).</text>
+            <text>Home video of Oprah sobbing into a Lean Cuisine&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -2055,7 +2056,7 @@
       <entry>
          <integer>321</integer>
          <card id="321">
-            <text>A SuperSoaker(tm) full of cat pee.</text>
+            <text>A SuperSoaker&#8482; full of cat pee.</text>
          </card>
       </entry>
       <entry>
@@ -2127,13 +2128,13 @@
       <entry>
          <integer>374</integer>
          <card id="374">
-            <text>The Make-A-Wich(r) Foundation.</text>
+            <text>The Make-A-Wich&#174; Foundation.</text>
          </card>
       </entry>
       <entry>
          <integer>369</integer>
          <card id="369">
-            <text>A Bop It(tm).</text>
+            <text>A Bop It&#8482;.</text>
          </card>
       </entry>
       <entry>
@@ -2367,7 +2368,7 @@
       <entry>
          <integer>401</integer>
          <card id="401">
-            <text>Fancy Feast(r).</text>
+            <text>Fancy Feast&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -2463,7 +2464,7 @@
       <entry>
          <integer>384</integer>
          <card id="384">
-            <text>The �bermensch.</text>
+            <text>The Übermensch.</text>
          </card>
       </entry>
       <entry>
@@ -2499,7 +2500,7 @@
       <entry>
          <integer>441</integer>
          <card id="441">
-            <text>Domino&apos;s(tm) Oreo(tm) Dessert Pizza.</text>
+            <text>Domino&apos;s&#8482; Oreo&#8482; Dessert Pizza.</text>
          </card>
       </entry>
       <entry>
@@ -2683,30 +2684,6 @@
          </card>
       </entry>
       <entry>
-         <integer>463</integer>
-         <card id="463">
-            <text></text>
-         </card>
-      </entry>
-      <entry>
-         <integer>462</integer>
-         <card id="462">
-            <text></text>
-         </card>
-      </entry>
-      <entry>
-         <integer>461</integer>
-         <card id="461">
-            <text></text>
-         </card>
-      </entry>
-      <entry>
-         <integer>460</integer>
-         <card id="460">
-            <text></text>
-         </card>
-      </entry>
-      <entry>
          <integer>459</integer>
          <card id="459">
             <text>An erection that lasts longer than four hours.</text>
@@ -2739,7 +2716,7 @@
       <entry>
          <integer>454</integer>
          <card id="454">
-            <text>Viagra(r).</text>
+            <text>Viagra&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -2801,43 +2778,43 @@
       <entry>
          <integer>4</integer>
          <card id="4">
-            <text>I got 99 problems but ____ ain&apos;t one.</text>
+            <text>I got 99 problems but ______ ain&apos;t one.</text>
          </card>
       </entry>
       <entry>
          <integer>5</integer>
          <card id="5">
-            <text>Maybe she&apos;s born with it. Maybe it&apos;s ____.</text>
+            <text>Maybe she&apos;s born with it. Maybe it&apos;s ______.</text>
          </card>
       </entry>
       <entry>
          <integer>6</integer>
          <card id="6">
-            <text>What&apos;s the next Happy Meal(r) toy?</text>
+            <text>What&apos;s the next Happy Meal&#174; toy?</text>
          </card>
       </entry>
       <entry>
          <integer>7</integer>
          <card id="7">
-            <text>Here is the church Here is the steeple Open the doors And there is ____.</text>
+            <text>Here is the church Here is the steeple Open the doors And there is ______.</text>
          </card>
       </entry>
       <entry>
          <integer>8</integer>
          <card id="8">
-            <text>It&apos;s a pity that kids these days are all getting involved with ____.</text>
+            <text>It&apos;s a pity that kids these days are all getting involved with ______.</text>
          </card>
       </entry>
       <entry>
          <integer>9</integer>
          <card id="9">
-            <text>During his childhood, Salvador Dal� produced hundreds of paintings of ____.</text>
+            <text>During his childhood, Salvador Dali produced hundreds of paintings of ______.</text>
          </card>
       </entry>
       <entry>
          <integer>10</integer>
          <card id="10">
-            <text>Alternative medicine is now embracing the curative powers of ____.</text>
+            <text>Alternative medicine is now embracing the curative powers of ______.</text>
          </card>
       </entry>
       <entry>
@@ -2855,37 +2832,37 @@
       <entry>
          <integer>13</integer>
          <card id="13">
-            <text>MTV&apos;s new reality show features eight washed-up celebrities living with ____.</text>
+            <text>MTV&apos;s new reality show features eight washed-up celebrities living with ______.</text>
          </card>
       </entry>
       <entry>
          <integer>14</integer>
          <card id="14">
-            <text>I drink to forget ____.</text>
+            <text>I drink to forget ______.</text>
          </card>
       </entry>
       <entry>
          <integer>15</integer>
          <card id="15">
-            <text>I&apos;m sorry, Professor, but I couldn&apos;t complete my homework because of ____.</text>
+            <text>I&apos;m sorry, Professor, but I couldn&apos;t complete my homework because of ______.</text>
          </card>
       </entry>
       <entry>
          <integer>17</integer>
          <card id="17">
-            <text>This is the way the world ends \ This is the way the world ends \ Not with a bang but with ____.</text>
+            <text>This is the way the world ends \ This is the way the world ends \ Not with a bang but with ______.</text>
          </card>
       </entry>
       <entry>
          <integer>16</integer>
          <card id="16">
-            <text>What is Batman&apos;S guilty pleasure?</text>
+            <text>What is Batman&apos;s guilty pleasure?</text>
          </card>
       </entry>
       <entry>
          <integer>19</integer>
          <card id="19">
-            <text>TSA guidelines now prohibit ____ on airplanes.</text>
+            <text>TSA guidelines now prohibit ______ on airplanes.</text>
          </card>
       </entry>
       <entry>
@@ -2897,19 +2874,19 @@
       <entry>
          <integer>21</integer>
          <card id="21">
-            <text>In the new Disney Channel Original Movie, Hannah Montana struggles with ____ for the first time.</text>
+            <text>In the new Disney Channel Original Movie, Hannah Montana struggles with ______ for the first time.</text>
          </card>
       </entry>
       <entry>
          <integer>20</integer>
          <card id="20">
-            <text>____. That&apos;s how I want to die.</text>
+            <text>______. That&apos;s how I want to die.</text>
          </card>
       </entry>
       <entry>
          <integer>23</integer>
          <card id="23">
-            <text>Dear Abby, I&apos;m having some trouble with ____ and would kike your advice.</text>
+            <text>Dear Abby, I&apos;m having some trouble with ______ and would like your advice.</text>
          </card>
       </entry>
       <entry>
@@ -2927,13 +2904,13 @@
       <entry>
          <integer>24</integer>
          <card id="24">
-            <text>Instead of coal, Santa now gives to bad children ____.</text>
+            <text>Instead of coal, Santa now gives to bad children ______.</text>
          </card>
       </entry>
       <entry>
          <integer>27</integer>
          <card id="27">
-            <text>A romantic, candlelit dinner would be incomplete without ____.</text>
+            <text>A romantic, candlelit dinner would be incomplete without ______.</text>
          </card>
       </entry>
       <entry>
@@ -2945,31 +2922,31 @@
       <entry>
          <integer>29</integer>
          <card id="29">
-            <text>White people like ____.</text>
+            <text>White people like ______.</text>
          </card>
       </entry>
       <entry>
          <integer>28</integer>
          <card id="28">
-            <text>____. Betcha can&apos;t have just one!</text>
+            <text>______. Betcha can&apos;t have just one!</text>
          </card>
       </entry>
       <entry>
          <integer>31</integer>
          <card id="31">
-            <text>Next from J.K. Rowling: Harry Potter and the Chamber of ____.</text>
+            <text>Next from J.K. Rowling: Harry Potter and the Chamber of ______.</text>
          </card>
       </entry>
       <entry>
          <integer>30</integer>
          <card id="30">
-            <text>____. High five, bro.</text>
+            <text>______. High five, bro.</text>
          </card>
       </entry>
       <entry>
          <integer>34</integer>
          <card id="34">
-            <text>During sex, I like to think about ____.</text>
+            <text>During sex, I like to think about ______.</text>
          </card>
       </entry>
       <entry>
@@ -2981,7 +2958,7 @@
       <entry>
          <integer>32</integer>
          <card id="32">
-            <text>BILLY MAYS HERE FOR ____.</text>
+            <text>BILLY MAYS HERE FOR ______.</text>
          </card>
       </entry>
       <entry>
@@ -3005,25 +2982,25 @@
       <entry>
          <integer>36</integer>
          <card id="36">
-            <text>What will alwaays get you laid?</text>
+            <text>What will always get you laid?</text>
          </card>
       </entry>
       <entry>
          <integer>37</integer>
          <card id="37">
-            <text>In L.A. County Jail, word is you can trade 200 cigarettes for ____.</text>
+            <text>In L.A. County Jail, word is you can trade 200 cigarettes for ______.</text>
          </card>
       </entry>
       <entry>
          <integer>42</integer>
          <card id="42">
-            <text>____. It&apos;s a trap!</text>
+            <text>______. It&apos;s a trap!</text>
          </card>
       </entry>
       <entry>
          <integer>43</integer>
          <card id="43">
-            <text>Coming to Broadway this season, ____: The Musical.</text>
+            <text>Coming to Broadway this season, ______: The Musical.</text>
          </card>
       </entry>
       <entry>
@@ -3041,37 +3018,37 @@
       <entry>
          <integer>46</integer>
          <card id="46">
-            <text>Next on ESPN2, the World Series of ____.</text>
+            <text>Next on ESPN2, the World Series of ______.</text>
          </card>
       </entry>
       <entry>
          <integer>47</integer>
          <card id="47">
-            <text>But before I kill you, Mr. Bond, I must whow you ____.</text>
+            <text>But before I kill you, Mr. Bond, I must show you ______.</text>
          </card>
       </entry>
       <entry>
          <integer>44</integer>
          <card id="44">
-            <text>While the United States raced the Soviet Union to the moon, the Mexican government funneled millions of pesos into research on ____.</text>
+            <text>While the United States raced the Soviet Union to the moon, the Mexican government funneled millions of pesos into research on ______.</text>
          </card>
       </entry>
       <entry>
          <integer>45</integer>
          <card id="45">
-            <text>After the earthquake, Sean Penn brought ____ to the people of Haiti.</text>
+            <text>After the earthquake, Sean Penn brought ______ to the people of Haiti.</text>
          </card>
       </entry>
       <entry>
          <integer>51</integer>
          <card id="51">
-            <text>When Pharaoh remained unmoved, Moses called down a Plague of ____.</text>
+            <text>When Pharaoh remained unmoved, Moses called down a Plague of ______.</text>
          </card>
       </entry>
       <entry>
          <integer>50</integer>
          <card id="50">
-            <text>The class field trip was completely ruined by ____.</text>
+            <text>The class field trip was completely ruined by ______.</text>
          </card>
       </entry>
       <entry>
@@ -3119,7 +3096,7 @@
       <entry>
          <integer>58</integer>
          <card id="58">
-            <text>____: good to the last drop.</text>
+            <text>______: good to the last drop.</text>
          </card>
       </entry>
       <entry>
@@ -3143,13 +3120,13 @@
       <entry>
          <integer>62</integer>
          <card id="62">
-            <text>Datty, why is mommy crying?</text>
+            <text>Daddy, why is mommy crying?</text>
          </card>
       </entry>
       <entry>
          <integer>61</integer>
          <card id="61">
-            <text>____: kid-tested, mother-approved.</text>
+            <text>______: kid-tested, mother-approved.</text>
          </card>
       </entry>
       <entry>
@@ -3167,37 +3144,37 @@
       <entry>
          <integer>69</integer>
          <card id="69">
-            <text>In Michael Jackson&apos;s final moments, he thaught about ____.</text>
+            <text>In Michael Jackson&apos;s final moments, he thought about ______.</text>
          </card>
       </entry>
       <entry>
          <integer>70</integer>
          <card id="70">
-            <text>The Smithsonian Museum of Natural History has just opened an interactive exhibit on ____.</text>
+            <text>The Smithsonian Museum of Natural History has just opened an interactive exhibit on ______.</text>
          </card>
       </entry>
       <entry>
          <integer>71</integer>
          <card id="71">
-            <text>When I am President of the United States, I will create the Department of ____.</text>
+            <text>When I am President of the United States, I will create the Department of ______.</text>
          </card>
       </entry>
       <entry>
          <integer>64</integer>
          <card id="64">
-            <text>Studies show that lab rats navigate mazes 50% faster after being exposed to ____.</text>
+            <text>Studies show that lab rats navigate mazes 50% faster after being exposed to ______.</text>
          </card>
       </entry>
       <entry>
          <integer>65</integer>
          <card id="65">
-            <text>Life for American Indians was forever changed wehen the White Man introduced them to ____.</text>
+            <text>Life for American Indians was forever changed when the White Man introduced them to ______.</text>
          </card>
       </entry>
       <entry>
          <integer>66</integer>
          <card id="66">
-            <text>I do not know with what weapons World War III will be faught, but World War IV will be faught with ____.</text>
+            <text>I do not know with what weapons World War III will be fought, but World War IV will be fought with ______.</text>
          </card>
       </entry>
       <entry>
@@ -3207,33 +3184,9 @@
          </card>
       </entry>
       <entry>
-         <integer>76</integer>
-         <card id="76">
-            <text>Major League Baseball has banned ____ for giving players an unfair advantage.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>77</integer>
-         <card id="77">
-            <text></text>
-         </card>
-      </entry>
-      <entry>
-         <integer>78</integer>
-         <card id="78">
-            <text></text>
-         </card>
-      </entry>
-      <entry>
-         <integer>79</integer>
-         <card id="79">
-            <text>And the Academy Award for ____ goes to ____.</text>
-         </card>
-      </entry>
-      <entry>
          <integer>72</integer>
          <card id="72">
-            <text>When I am a billionaire, I shall erect a 50-foot statue to commemorate ____.</text>
+            <text>When I am a billionaire, I shall erect a 50-foot statue to commemorate ______.</text>
          </card>
       </entry>
       <entry>
@@ -3252,96 +3205,6 @@
          <integer>75</integer>
          <card id="75">
             <text>What&apos;s the new fad diet?</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>85</integer>
-         <card id="85">
-            <text>Step 1: ____. Step 2: ____. Step 3: Profit.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>84</integer>
-         <card id="84">
-            <text>In a world ravaged by ____ our only solace is ____.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>87</integer>
-         <card id="87">
-            <text>I never truly understood ____ until I encountered ____.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>86</integer>
-         <card id="86">
-            <text>Rumor has it that Vladimir Putin&apos;s favourite delicacy is ____ stuffed with ____.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>81</integer>
-         <card id="81">
-            <text>____ is a slippery slope that leads to ____.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>80</integer>
-         <card id="80">
-            <text>For my next trick, I will pull ____ out of ____.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>83</integer>
-         <card id="83">
-            <text>In M. Night Shyamalan&apos;s new movie, Bruce Willis discovers that ____ had really been ____ all along.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>82</integer>
-         <card id="82">
-            <text>What&apos;s the next superhero/sidekick duo?</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>93</integer>
-         <card id="93">
-            <text>Make a haiku.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>92</integer>
-         <card id="92">
-            <text></text>
-         </card>
-      </entry>
-      <entry>
-         <integer>94</integer>
-         <card id="94">
-            <text>____ + ____ = ____.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>89</integer>
-         <card id="89">
-            <text>When I was trippin on acid, ____ turned into ____.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>88</integer>
-         <card id="88">
-            <text>Lifetime(r) presents ____, the story of ____.</text>
-         </card>
-      </entry>
-      <entry>
-         <integer>91</integer>
-         <card id="91">
-            <text></text>
-         </card>
-      </entry>
-      <entry>
-         <integer>90</integer>
-         <card id="90">
-            <text>That&apos;s right, I killed ____. How, you ask? ____.</text>
          </card>
       </entry>
    </black>

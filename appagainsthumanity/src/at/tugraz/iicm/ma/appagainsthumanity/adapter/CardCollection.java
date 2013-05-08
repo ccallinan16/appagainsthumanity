@@ -72,18 +72,21 @@ public class CardCollection {
 
 	public void setSelected(Card c) {
 
-		HashMap<Integer,Card> map = (c.getType().equals(CardType.WHITE))? white : black;
+		//HashMap<Integer,Card> map = (c.getType().equals(CardType.WHITE))? white : black;
 		
-		boolean tmp = c.isHighlighted();
+		//boolean tmp = c.isHighlighted();
+		
+		//System.out.println("set selected : " + c + ", is highlighted: " + tmp);
+
 		selectedId = -1;
 		
-		for (Card card : map.values())
-			card.setHighlighted(false);
+		//for (Card card : map.values())
+		//	card.setHighlighted(false);
 		
-		if (!tmp)
-			selectedId = c.getId();
+		//if (!tmp)
+		selectedId = c.getId();
 		
-		c.setHighlighted(!tmp);
+		//c.setHighlighted(!tmp);
 	}
 
 	public void setBlackCard(Card card)
@@ -131,9 +134,16 @@ public class CardCollection {
 		//overwrite the usual dealer
 		this.dealer = ctxDealer;
 		
-		Card black = makeCard(77, "some very long very very long very long card test, " +
-				"which sucks, because long texts are boring.", CardType.BLACK);
-		Card white = makeCard(66, "white card text", CardType.WHITE);
+		String ws = "W";
+		
+		while (ws.length() < 27)
+			ws += "W";
+		
+		String longest = "While the United States raced the Soviet Union to the moon, the Mexican government funneled millions of pesos into research on ____.";
+
+		Card black = makeCard(77, longest, CardType.BLACK);
+		
+		Card white = makeCard(66, longest, CardType.WHITE);
 
 		  switch(context)
 		  {

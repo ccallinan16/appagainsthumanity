@@ -11,10 +11,12 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.gui.OnCardSelectionListener;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.util.MessageDialog;
@@ -48,95 +50,69 @@ public class CardSlideActivity extends FragmentActivity {
       //setup the ViewPager (to flip through cards) as well as the Top card
       initSlider();
       
-      
-      
-      Button okButton = (Button) findViewById(R.id.okButton);
-      
-      switch (context)
-      {
-      case CONFIRM_PAIR:
-      case CONFIRM_SINGLE:
-    	  okButton.setText(R.string.menu_send);
-      }
-      
-      Button cancelBtn = (Button) findViewById(R.id.cancelButton);
+      initTop(dealer);
 
-      cancelBtn.setOnClickListener(new View.OnClickListener() {
+      initButtons();
+    }      
+    	
+	private void initButtons() {
 		
-		@Override 
-		public void onClick(View v) {
-			//do not add any entries to db
-			createAndStartMainActivity(v);
+		if (context == ViewContext.SELECT_BLACK ||
+				context == ViewContext.SELECT_WHITE)
+		{
+		      LinearLayout btns = (LinearLayout) findViewById(R.id.footer);
+		      btns.setVisibility(View.GONE);
 		}
-	});
-      
-      okButton.setOnClickListener(new View.OnClickListener() {
-          public void onClick(View v) {
-        	  
-        	int id = CardCollection.instance.getSelectedID();
-        	        	
-        	if (id == -1)
-        		showAlertDialog(v);
-        	
-        	else
-        		createAndStartNewActivity(v,id);
-        	
-
-          }
-
-		private void showAlertDialog(View v) {
-			
-			
-			MessageDialog dialog = new MessageDialog(v.getContext(),R.string.pop_title_select,R.string.pop_text_select) {
+		else
+		{
+		      Button okButton = (Button) findViewById(R.id.okButton);
+		      
+		      switch (context)
+		      {
+		      case CONFIRM_PAIR:
+		      case CONFIRM_SINGLE:
+		    	  okButton.setText(R.string.menu_send);
+		      }
+		      
+		      Button cancelBtn = (Button) findViewById(R.id.cancelButton);
+		      cancelBtn.setVisibility(View.GONE);
+		      
+		      cancelBtn.setOnClickListener(new View.OnClickListener() {
+				
+				@Override 
+				public void onClick(View v) {
+					//do not add any entries to db
+					createAndStartMainActivity(v);
+				}
+			});
+		      
+		      okButton.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					//don't do anything.
+				public void onClick(View v) {
+					
+					int id = CardCollection.instance.getSelectedID();
+					
+			  		Intent intent = new Intent(v.getContext(),MainActivity.class);
+				
+					DBProxy db = new DBProxy(v.getContext());
+					
+					//TODO: get turn_id!!
+					if(context.equals(ViewContext.CONFIRM_SINGLE))
+						db.getDBSetter().setBlackCardID(1, id);
+					else
+					{
+						int userid = db.getUserID();
+						db.getDBSetter().setWhiteCardID(2,userid, id);
+					}
+					
+				  	v.getContext().startActivity(intent);									
 				}
-			};
-			dialog.show();
-		}
+			});
 
-		private void createAndStartNewActivity(View v,int id) {
-        	Intent intent = new Intent(v.getContext(),CardSlideActivity.class);
-	       	
-        	switch(context)
-        	{
-        	case SELECT_WHITE:
-        		if (id == -1) return;
-  	        	intent.putExtras(BundleCreator.getConfirmWhite());
-  	        	break;
-        	case SELECT_BLACK:
-        		if (id == -1) return;
-        		intent.putExtras(BundleCreator.getConfirmBlack());
-        		break;
-        	case CONFIRM_SINGLE:
-        	case CONFIRM_PAIR:
-        		setSelectedInDB(v.getContext(),id);
-        		default:
-        			intent = new Intent(v.getContext(),MainActivity.class);
+		}  
+	}     
 
-        	}
-        	
-        	startActivity(intent);
-			
-		}
-
-		private void setSelectedInDB(Context c, int id) {
-			DBProxy db = new DBProxy(c);
-			//TODO: get turn_id!!
-    		if(context.equals(ViewContext.CONFIRM_SINGLE))
-    			db.setBlackCardID(1, id);
-    		else
-    		{
-    			int userid = db.getUserID();
-    			db.setWhiteCardID(2,userid, id);
-    		}
-		}
-      });
-      
-    }     
-    	
 	protected void createAndStartMainActivity(View v) {
 		Intent intent = new Intent(v.getContext(),MainActivity.class);
     	startActivity(intent);
@@ -144,9 +120,6 @@ public class CardSlideActivity extends FragmentActivity {
 
 	private void initSlider()
 	{
-	      //TODO
-		  MockDealer dealer = new MockDealer(this);
-		
 		  boolean selectable = false;
 		  
 		  if (context == ViewContext.SELECT_BLACK || 
@@ -160,13 +133,12 @@ public class CardSlideActivity extends FragmentActivity {
 	    		  );
 	      
 	      ViewPager pager = (ViewPager) findViewById(R.id.cs_card_slider);
-	
-	 	      
+	      
 	      //TODO: exception in Unittests, comment back in for nice effects
 	      //pager.setPageTransformer(true, new ZoomOutPageTransformer());
 	      pager.setAdapter(pageAdapter);
-	
-	    	  initTop(dealer);
+	      
+	      pager.setOnClickListener(new OnCardSelectionListener(context.getCardType()));
 	
 	}
 	
@@ -192,7 +164,7 @@ public class CardSlideActivity extends FragmentActivity {
 		topCardId = black.getId();
 		
 		SingleCardFragment scv = SingleCardFragment.newInstance(
-				black.getId(),black.getType(),30f,false);
+				black.getId(),black.getType(),false);
 
 		getSupportFragmentManager()
 		.beginTransaction()

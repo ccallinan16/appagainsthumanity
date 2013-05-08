@@ -3,6 +3,9 @@ package at.tugraz.iicm.ma.appagainsthumanity.xml.serie;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 
+import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract.BlackCard;
+
 public class Card {
 
    @Element
@@ -66,6 +69,36 @@ public class Card {
 
 	public void setText(String string) {
 		this.text = string;
+	}
+
+	public float getRelativeTextSize(float max, float min)
+	{
+		int length = text.length();
+		
+		float initialSize = max;
+		
+		while (length > 20 && initialSize > min)
+		{
+			initialSize--;
+			length -= 6;
+		}
+		
+		
+		//ok for white
+		/*while (length > 20 && initialSize > min)
+		{
+			initialSize--;
+			length -= 6;
+		}*/
+		
+		return initialSize;
+	}
+	
+	public int getTextAppearance() {
+		if (type.equals(CardType.BLACK))
+			return R.style.text_white_large;
+		else
+			return R.style.text_black_large;
 	}
 
 	

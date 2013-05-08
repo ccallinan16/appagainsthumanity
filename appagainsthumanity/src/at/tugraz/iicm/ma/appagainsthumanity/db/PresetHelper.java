@@ -1,90 +1,54 @@
 package at.tugraz.iicm.ma.appagainsthumanity.db;
 
-import java.util.ArrayList;
-import java.util.Random;
+import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
+import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class PresetHelper {
 
-	ArrayList<Long> userIDs;
-	ArrayList<Long> gameIDs;
-	ArrayList<Long> turnIDs;
-	private DBProxy proxy;
+	public static final int NO_GAMES = 0; 		//1 user, no games
+	public static final int SELECT_BLACK = 1; 	//3 users, 1 game, 2 rounds user has to choose black card
+	public static final int SELECT_WHITE = 2; 	//3 users, 1 game, 2 rounds user has to choose white card
+	public static final int SELECT_WINNER = 3; 	//3 users, 1 game, 2 rounds user has to choose white card
 
 	
-	public PresetHelper(DBProxy proxy) {
-		// TODO Auto-generated constructor stub
-		userIDs = new ArrayList<Long>();
-		gameIDs = new ArrayList<Long>();
-		turnIDs = new ArrayList<Long>();
-
-		this.proxy = proxy;
-
-	}
+	public static void setPreset(DBProxy proxy, int type) {
 		
-	public void addUsers(String[] usernames)
-	{
-		for (String str : usernames)
+		proxy.reinitializeDB();
+		ServerConnector connector = new ServerConnector(proxy);
+		GameManager man = new GameManager();
+		
+		switch(type)
 		{
-			userIDs.add(proxy.addUser(str));
+		case SELECT_BLACK:
+			connector.startGame(man);
+			connector.startRound(man);
+			connector.selectCardBlack(man.getLastTurnID(), man.getSelectedBlack());
+			connector.getPlayedCards(man);
+			//the following two should be one function:
+			connector.selectWinner(man.getLastTurnID(), man.getWinnerCard());
+			connector.updateScore(man.getLastTurnID(), man.getWinnerCard());
+			man.czar = man.getCurrentUserID();
+			connector.startRound(man);
+			break;
+		case SELECT_WHITE:
+			connector.startGame(man);
+			connector.startRound(man);
+			connector.selectCardBlack(man.getLastTurnID(), man.getSelectedBlack());
+			connector.getPlayedCards(man);
+			connector.selectWinner(man.getLastTurnID(), man.getWinnerCard());
+			connector.updateScore(man.getLastTurnID(), man.getWinnerCard());
+			connector.startRound(man);
+			connector.dealCards(man.getLastTurnID(), CardType.WHITE, man.getDealtCardIDs());
+			break;
+			
+		case NO_GAMES:
+			connector.startGame(man); //adds users
+			break;
+		default:
+			break;
 		}
 	}
 	
-	public void addGame()
-	{
-		//TODO: replace values by real values
-		gameIDs.add(proxy.addGame(5, 0));
-	}
 	
-	public void addTurn(long firstGame) {
-		Random rand = new Random();
 		
-		turnIDs.add(proxy.addTurn(firstGame, turnIDs.size()+1, 
-				rand.nextInt(userIDs.size()+1)+1, 
-				null));
-	}
-	
-	public void addParticipationAllPlayersToAllGames()
-	{
-		for (long game_id : gameIDs)
-		{
-			for (long player_id : userIDs)
-			{
-				proxy.addParticipation(game_id, player_id, 0);
-			}
-		}
-	}
-
-	public void addDealtWhiteCards(long turn_id, Integer[] cardIDs) {
-		for (Integer num : cardIDs)
-			proxy.addDealtWhiteCards(turn_id, num);
-	}
-
-	
-	public void updateScores(long turn_id) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public void addPlayedCards(long turn_id) {
-		//TODO: this function
-		//proxy.addPlayedWhiteCard(turn_id, user_id, white_card_id, won);
-	}
-
-	public void updatePlayedWhiteCards(long turn_id, int chosen_card) {
-		proxy.updatePlayedWhiteCard(turn_id, chosen_card);
-	}
-	
-	public long getFirstGame() {
-		if (gameIDs.size() > 0)
-			return gameIDs.get(0);
-		return 0;
-	}
-
-	public long getLastTurn() {
-		if (turnIDs.size() > 0)
-			return turnIDs.get(0);
-		return 0;
-	}
-
-
 }

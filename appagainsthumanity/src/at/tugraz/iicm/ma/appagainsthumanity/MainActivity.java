@@ -22,6 +22,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.GamelistAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
 public class MainActivity extends Activity {
@@ -181,7 +182,10 @@ public class MainActivity extends Activity {
     
     public void setPreset(View view) {
     	Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
-    	dbProxy.setPreset(spinner.getSelectedItemPosition());
+    	
+    	PresetHelper.setPreset(dbProxy, spinner.getSelectedItemPosition());
+    	
+    	//dbProxy.setPreset(spinner.getSelectedItemPosition());
 
     	Toast toast = Toast.makeText(getApplicationContext(), spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT);
     	toast.show();

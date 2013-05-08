@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 
 @RunWith(SQLTestRunner.class)
 public class DBProxyTest {
@@ -26,7 +27,7 @@ public class DBProxyTest {
         if (proxy == null)
         	System.err.println("dbh not created");		
         
-        proxy.setPreset(1);
+        PresetHelper.setPreset(proxy, PresetHelper.SELECT_BLACK);
 	}
 
     @After
@@ -44,14 +45,7 @@ public class DBProxyTest {
 	public void checkIfTableExists()
 	{	
 		assertEquals(DBContract.Turn.TABLE_NAME,
-				proxy.checkIfTableExists(DBContract.Turn.TABLE_NAME));
+				proxy.getter.checkIfTableExists(DBContract.Turn.TABLE_NAME));
 	}
 	
-	@Test
-	public void getTurnIDForBlackCard()
-	{
-		int turnid = proxy.getLastTurnID();
-		
-		assertEquals(2,turnid);
-	}	
 }

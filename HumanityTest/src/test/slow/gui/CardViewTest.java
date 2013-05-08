@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
-import at.tugraz.iicm.ma.appagainsthumanity.gui.SelectableCardFragment;
+import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
  
 @RunWith(PathTestRunner.class)
@@ -68,7 +68,7 @@ public class CardViewTest {
 
     	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
     	CardFragmentAdapter cfa = (CardFragmentAdapter) pager.getAdapter();
-    	assertEquals(cfa.getItem(0).getClass(),SelectableCardFragment.class);
+    	assertEquals(cfa.getItem(0).getClass(),SingleCardFragment.class);
     	
     	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
     	assertEquals(0,frame.getChildCount());

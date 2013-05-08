@@ -46,36 +46,6 @@ public class CardSlideActivityTransitionsTest {
     public void tearDown() throws Exception {
     	
     }
-
-    
-    private void testContextSwitchDisplayToPopupHelper(Bundle b)
-    {
-    	csa.getIntent().putExtras(b);
-    	csa.onCreate(null);
-    	
-    	SelectionAndContextHelper.performClick(csa);
-
-        AlertDialog alert = ShadowAlertDialog.getLatestAlertDialog();
-        if (alert == null)
-        	fail("no Popup created");
-        
-        ShadowAlertDialog sAlert = Robolectric.shadowOf(alert);
-        
-        assertTrue(sAlert.getTitle().toString().        		
-        		equals(csa.getString(R.string.pop_title_select)));
-        
-    }
-    
-    @Test
-    public void testContextSwitchSelectToPopup()
-    {
-    	testContextSwitchDisplayToPopupHelper(
-    			TestBundleCreator.getSelectBlackBundle());
-    	    	
-    	testContextSwitchDisplayToPopupHelper(
-    			TestBundleCreator.getSelectBlackBundle());
-    	
-    }
         
     @Test
     public void testTransitionDisplayToMain()

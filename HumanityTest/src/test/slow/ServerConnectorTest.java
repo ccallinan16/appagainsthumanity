@@ -1,6 +1,8 @@
 package test.slow;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map.Entry;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +11,7 @@ import org.junit.runner.RunWith;
 import test.util.SQLTestRunner;
 import android.app.Activity;
 import android.content.Context;
+import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.ServerConnector;
@@ -18,11 +21,15 @@ import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 public class ServerConnectorTest {
 		
 	private DBProxy proxy;
+	ServerConnector connector;
+	GameManager preset;
 	
 	@Before
 	public void setUp() throws Exception {
         Context c = new Activity();
         proxy = new DBProxy(c);
+        connector = new ServerConnector(proxy);
+    	preset = new GameManager();
 
 	}
 
@@ -30,97 +37,138 @@ public class ServerConnectorTest {
     public void teardown() {
     }
     
+    /**
+     * userside + serverside are equal
+     */
+    
     @Test
     public void testStartGame()
     {
-    	//instead of getting stuff from the server, we just fill it with presets.
-    	ServerConnector connector = new ServerConnector(proxy);
-    	
-    	long game_id = connector.startGame();
+       	connector.startGame(preset);
     	        
-    	assertTrue(proxy.checkEntryExistsWhere(DBContract.Game.TABLE_NAME,
-				DBContract.Game._ID+"="+game_id));
+    	assertTrue(proxy.getter.checkEntryExistsWhere(DBContract.Game.TABLE_NAME,
+				DBContract.Game._ID+"="+preset.gameID));
     	
-    	assertTrue(proxy.checkEntryExistsWhere(DBContract.Participation.TABLE_NAME, 
-								DBContract.Participation.COLUMN_NAME_GAME_ID+"="+game_id));
+    	assertTrue(proxy.getter.checkEntryExistsWhere(DBContract.Participation.TABLE_NAME, 
+								DBContract.Participation.COLUMN_NAME_GAME_ID+"="+preset.gameID));
     	
     }
-
+    
+    /**
+     * userside + serverside are equal
+     */
     @Test
     public void testStartRound()
     {
-    	ServerConnector connector = new ServerConnector(proxy);
+    	connector.startGame(preset);
+    	connector.startRound(preset);
     	
-    	long turn_id = connector.startRound();
-    	        
-    	proxy.printTables();
+    	assertTrue(proxy.getter.checkEntryExistsWhere(DBContract.Turn.TABLE_NAME, 
+    			DBContract.Turn._ID+"="+preset.getLastTurnID() + " AND " + 
+    					DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID+"=0"));
 
-    	assertTrue(proxy.checkEntryExistsWhere(DBContract.Turn.TABLE_NAME, 
-    			DBContract.Turn._ID+"="+turn_id + " AND " + 
-    					DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID+" IS NULL"));
     }
     
     @Test
-    public void testSelectBlackCard()
+    public void testSelectBlack()
     {
-    	ServerConnector connector = new ServerConnector(proxy);
-    	long turn_id = connector.startRound();
+    	/**
+    	 * setup
+    	 */
+    	connector.startGame(preset);
+    	connector.startRound(preset);
+    	    	
+    	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
     	
-    	connector.selectCardBlack(turn_id, 13);
-    	
-    	proxy.printTables();
+    	assertTrue(proxy.getter.checkEntryExistsWhere(DBContract.Turn.TABLE_NAME, 
+    			DBContract.Turn._ID+"="+preset.getLastTurnID() + " AND " + 
+    					DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID+"="+preset.getSelectedBlack()));
 
-    	assertTrue(proxy.checkEntryExistsWhere(DBContract.Turn.TABLE_NAME, 
-    			DBContract.Turn._ID+"="+turn_id + " AND " + 
-    					DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID+"=13"));
     }
     
     @Test
     public void testDealWhiteCards()
     {
-    	ServerConnector connector = new ServerConnector(proxy);
-    	long turn_id = connector.startRound();
-    	
-    	connector.selectCardBlack(turn_id, 13);
-    	
-		//TODO: get from mockdealer
-		Integer[] cardIds = new Integer[]{5,10,3,51,43}; 
+    	/**
+    	 * setup
+    	 */
+    	connector.startGame(preset);
+    	connector.startRound(preset);
+    	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
 
-    	connector.dealCards(turn_id,CardType.WHITE,cardIds);
+    	connector.dealCards(preset.getLastTurnID(), CardType.WHITE, preset.getDealtCardIDs());
     	
-    	proxy.printTables();
-
-    	for (Integer card : cardIds)
+    	for (Integer card : preset.getDealtCardIDs())
     	{
-        	assertTrue(proxy.checkEntryExistsWhere(DBContract.DealtWhiteCard.TABLE_NAME, 
+        	assertTrue(proxy.getter.checkEntryExistsWhere(DBContract.DealtWhiteCard.TABLE_NAME, 
     				DBContract.DealtWhiteCard.COLUMN_NAME_WHITE_CARD_ID+"="+card));
 
     	}
     }
-    
+
     @Test
     public void testSelectWhiteCard()
     {
-    	ServerConnector connector = new ServerConnector(proxy);
-    	long turn_id = connector.startRound();
+    	/**
+    	 * setup
+    	 */
+    	connector.startGame(preset);
+    	connector.startRound(preset);
+    	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
+    	connector.dealCards(preset.getLastTurnID(), CardType.WHITE, preset.getDealtCardIDs());
     	
-    	connector.selectCardBlack(turn_id, 13);
+    	connector.selectCardWhite(preset.getLastTurnID(), preset.getSelectedWhite());
     	
-		//TODO: get from mockdealer
-		Integer[] cardIds = new Integer[]{5,10,3,51,43}; 
+    	assertTrue(proxy.getter.checkEntryExistsWhere(DBContract.PlayedWhiteCard.TABLE_NAME, 
+    			DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID+"="+preset.getLastTurnID()+" AND "+
+    	    	DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID+"="+proxy.getUserID()+" AND "+
+				DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID+"="+preset.getSelectedWhite()));
+    }
 
-    	connector.dealCards(turn_id,CardType.WHITE,cardIds);
+    
+    @Test
+    public void testGetPlayedCards()
+    {
+    	connector.startGame(preset);
+    	connector.startRound(preset);
+    	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
     	
-    	int card = 51;
-    	connector.selectCardWhite(turn_id, card);
+    	connector.getPlayedCards(preset);
     	
     	proxy.printTables();
-
-    	assertTrue(proxy.checkEntryExistsWhere(DBContract.PlayedWhiteCard.TABLE_NAME, 
-    			DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID+"="+turn_id+" AND "+
-    	    	DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID+"="+proxy.getUserID()+" AND "+
-				DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID+"="+card));
-
     	
+    	for (Entry<Long, Integer> entry : preset.getPlayedCards().entrySet())
+    	{
+    		System.out.println(entry);
+        	assertTrue(proxy.getter.checkEntryExistsWhere(DBContract.PlayedWhiteCard.TABLE_NAME, 
+        			DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID+"="+preset.getLastTurnID()+" AND "+
+        	    	DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID+"="+entry.getKey()+" AND "+
+    				DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID+"="+entry.getValue()));
+    	}
+
     }
+    
+    
+    @Test
+    public void testSelectWinner()
+    {
+    	connector.startGame(preset);
+    	connector.startRound(preset);
+    	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
+    	connector.getPlayedCards(preset);
+
+    	connector.selectWinner(preset.getLastTurnID(), preset.getWinnerCard());
+    	
+    	System.out.println("last turn: " + preset.getLastTurnID() + ", " + preset.getWinnerCard());
+    	
+    	proxy.printTables();    	
+    	assertTrue(proxy.getter.checkEntryExistsWhere(DBContract.PlayedWhiteCard.TABLE_NAME, 
+    			DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID+"="+preset.getLastTurnID()
+    			+" AND "+
+				DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID+"="+preset.getWinnerCard() 
+				+ " AND " +
+    			DBContract.PlayedWhiteCard.COLUMN_NAME_WON
+				));
+    }
+    
 }

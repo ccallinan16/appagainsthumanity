@@ -33,11 +33,18 @@
     <style name="text.white.large">
         <item name="android:textSize">22sp</item>
     </style>
+    <style name="text.white.card">
+        <item name="android:textSize">40sp</item>
+    </style>
+    
     <style name="text.black.small">
         <item name="android:textSize">14sp</item>
     </style>
     <style name="text.black.large">
         <item name="android:textSize">22sp</item>
+    </style>
+    <style name="text.black.card">
+        <item name="android:textSize">40sp</item>
     </style>
     <style name="text.white.bold">
     	<item name="android:textStyle">bold</item>

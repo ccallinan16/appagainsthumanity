@@ -12,6 +12,7 @@ import android.content.Context;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
+import at.tugraz.iicm.ma.appagainsthumanity.db.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 
 @RunWith(SQLTestRunner.class)
@@ -19,13 +20,15 @@ public class DatabaseTest {
 	
     private static final int CURRENT_DB_VERSION = 1;
 	
-    DBProxy db;
-    Context c;
+    DBProxy proxy;
+    ServerConnector connector;
     
 	@Before
 	public void setUp() throws Exception {
         Context c = new Activity();       
-        db = new DBProxy(c);
+        proxy = new DBProxy(c);
+        connector = new ServerConnector(proxy);
+
 	}
 		
 	@After
@@ -37,41 +40,32 @@ public class DatabaseTest {
 	@Test
 	public void setBlackIDAndSendToDB()
 	{
-		PresetHelper preset = new PresetHelper(db);
-		
-		preset.addGame();
-		preset.addTurn(preset.getFirstGame());
-		long turnid = preset.getLastTurn();
-		
-		//TODO: while we're not able to pass turnid
-		turnid = 1;
+		PresetHelper.setPreset(proxy, PresetHelper.SELECT_BLACK);
 
-		db.printTables();
+		//while GUI knows nothing about turnids
+		int turnid = 1;
 
 		GUIEmulator emulator = new GUIEmulator();
 		
 		Card origin = emulator.createSelectionTransitionReturnSelected(
 													ViewContext.SELECT_BLACK);
-		db.printTables();
-		assertEquals(origin.getId(),db.getBlackCard(turnid));
+		proxy.printTables();
+		assertEquals(origin.getId(),proxy.getter.getBlackCard(turnid));
 	}
 	
 	@Test
 	public void selectWhiteAndSendToDB()
-	{
-		PresetHelper preset = new PresetHelper(db);
-		
-		preset.addGame();
-		preset.addTurn(preset.getFirstGame());
-		long turnid = preset.getLastTurn();
+	{	
+		PresetHelper.setPreset(proxy, PresetHelper.SELECT_WHITE);
 
-		turnid = 2;
+		//while GUI knows nothing about turnids
+		int turnid = 2;
 		
 		GUIEmulator emulator = new GUIEmulator();
 		
 		Card origin = emulator.createSelectionTransitionReturnSelected(
 													ViewContext.SELECT_WHITE);
 		
-		assertEquals(origin.getId(),db.getPlayedWhiteCard(turnid));
+		assertEquals(origin.getId(),proxy.getter.getPlayedWhiteCard(turnid));
 	}	
 }

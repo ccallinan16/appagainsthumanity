@@ -3,8 +3,12 @@ package test.util;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
@@ -66,9 +70,6 @@ public class SelectionAndContextHelper {
 
     	return i;
     }
-
-    
-	
 	
     public static Card getFirstCard(CardSlideActivity activity, CardType type)
     {
@@ -84,8 +85,13 @@ public class SelectionAndContextHelper {
         
     public static void selectCardAndPerformClick(CardSlideActivity activity, Card c)
     {
-    	CardCollection.instance.setSelected(c);
-    	performClick(activity);
+    	performTap(activity);
+    }
+    
+    public static void performTap(CardSlideActivity activity)
+    {
+    	ViewPager fm = (ViewPager) activity.findViewById(R.id.cs_card_slider);
+    	fm.performClick();
     }
     
     public static void performClick(CardSlideActivity activity)

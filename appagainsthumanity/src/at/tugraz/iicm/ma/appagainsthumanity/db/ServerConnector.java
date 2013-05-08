@@ -1,14 +1,15 @@
 package at.tugraz.iicm.ma.appagainsthumanity.db;
 
-import android.app.Activity;
-import android.content.Context;
-import at.tugraz.iicm.ma.appagainsthumanity.R;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class ServerConnector {
 
 	private DBProxy proxy;
-	private PresetHelper preset;
 
 	/**
 	 * TODO: use Google Cloud Messaging to send push notifications if there
@@ -19,7 +20,6 @@ public class ServerConnector {
 	public ServerConnector(DBProxy proxy) {
 		// TODO Auto-generated constructor stub
 		this.proxy = proxy;
-		this.preset = new PresetHelper(proxy);
 	}
 	
 	
@@ -42,7 +42,7 @@ public class ServerConnector {
 		
 		//tables affected: (locally)
 		//turn
-			proxy.setBlackCardID(turn_id, id);
+			proxy.getDBSetter().setBlackCardID(turn_id, id);
 		//TODO: send info to server!
 		
 	}
@@ -53,7 +53,7 @@ public class ServerConnector {
 		
 		//tables affected:
 		//played_white_cards
-			proxy.setWhiteCardID(turn_id,proxy.getUserID(),id);
+			proxy.getDBSetter().setWhiteCardID(turn_id,proxy.getUserID(),id);
 		//TODO: send info to server
 	}
 	
@@ -63,8 +63,22 @@ public class ServerConnector {
 		
 		//tables affected:
 		//played_white_cards
-		proxy.updatePlayedWhiteCard(turn_id, id);
+		proxy.getDBSetter().updatePlayedWhiteCard(turn_id, id);
 		//TODO: send info to server
+	}
+	
+	public void addUsers(GameManager man)
+	{
+		//tables affected:
+		//users
+		
+		//our own username
+		man.setCurrentUser(proxy.getDBSetter().addUser(proxy.getUsername()), proxy.getUsername());
+				
+		//entered usernames
+		for (String name : man.users)
+			man.addUserID(proxy.getDBSetter().addUser(name),name);
+
 	}
 	
 	/**
@@ -72,25 +86,19 @@ public class ServerConnector {
 	 * @return the game_id of the started game.
 	 */
 	
-	public long startGame()
+	public void startGame(GameManager man)
 	{
 		//load information from server into db
-		//TODO: replace presets with real data.	
 		
 		//tables affected:
-		//users
-		preset.addUsers(new String[] {proxy.getUsername(),
-				"user2@dummy.com","user3@dummy.com"});
+		addUsers(man);
 		
 		//game
 		//table game: add game
-		preset.addGame();
-
-		//participation (possibly confirmation?)
-		preset.addParticipationAllPlayersToAllGames();
+		man.setGameID(proxy.getDBSetter().addGame(man.roundcap, man.scorecap));
 		
-				
-		return preset.getFirstGame();
+		for (Long uid : man.getUserIDs())
+			proxy.getDBSetter().addParticipation(man.gameID, uid, 0);				
 	}
 	
 	public void endGame()
@@ -99,19 +107,11 @@ public class ServerConnector {
 		
 	}
 	
-	public long startRound()
+	public void startRound(GameManager man)
 	{
-		long game_id = preset.getFirstGame();
-		if (game_id == 0)
-			game_id = startGame();
-		
-		//tables affected:
-		//turn
-		preset.addTurn(game_id);
-		
-		//TODO: put presets here
-		return preset.getLastTurn();
+		man.addTurnID(proxy.getDBSetter().addTurn(man.gameID, man.getRoundNum(), man.czar, 0));
 	}
+	
 	
 	public void dealCards(long turn_id, CardType type, Integer[] cardIds)
 	{
@@ -130,22 +130,29 @@ public class ServerConnector {
 				
 		//tables affected:
 		//dealt_white_cards (player_id is useless locally, as we only store our own)
-		
+		for (int card : cardIds)
+			proxy.getDBSetter().addDealtWhiteCards(turn_id, card);
+
 		//get a list of cardNums from Server
-		preset.addDealtWhiteCards(turn_id, cardIds);
 	}
-	
-	public void getPlayedCards(long turn_id)
-	{
-		preset.addPlayedCards(turn_id);
+		
+	public void getPlayedCards(GameManager preset) {
+		
+		for (Entry<Long, Integer> entry : preset.getPlayedCards().entrySet())
+		{
+			proxy.getDBSetter().addPlayedWhiteCard(preset.getLastTurnID(), entry.getKey(), entry.getValue(), null);
+		}
 	}
+
 	
 	public void updateScore(long turn_id, int chosen_card)
 	{
 		//tables affected:
 		//played_white_cards (to mark WON)
 		//participation / (scores)
-		preset.updatePlayedWhiteCards(turn_id,chosen_card);
-		preset.updateScores(turn_id);
+		proxy.getDBSetter().updatePlayedWhiteCard(turn_id,chosen_card);
+		proxy.getDBSetter().updateScores(turn_id);
 	}
+
+
 }

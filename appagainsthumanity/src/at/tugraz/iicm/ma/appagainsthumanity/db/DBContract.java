@@ -105,7 +105,7 @@ public abstract class DBContract {
 	    DBContract.Turn.COLUMN_NAME_GAME_ID + 		TYPE_INTEGER +		COMMA_SEP +
 	    DBContract.Turn.COLUMN_NAME_ROUNDNUMBER + 	TYPE_INTEGER + 		COMMA_SEP +
 	    DBContract.Turn.COLUMN_NAME_USER_ID + 		TYPE_INTEGER + 		COMMA_SEP +
-	    DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID + TYPE_INTEGER + 		" DEFAULT NULL"  +
+	    DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID + TYPE_INTEGER + 		" DEFAULT 0"  +
 	    " )",
 	    
 	    //Table played_white_card

@@ -33,7 +33,6 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 		  return SingleCardFragment.newInstance(
 				  cardIDs.get(position),
 				  type, 
-				  60f,
 				  selectable);
 	  }
 
