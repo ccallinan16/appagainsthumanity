@@ -14,28 +14,20 @@ public class BundleCreator {
 	public static final String NUM_WHITE = "KEY_NUM_WHITE";
 	public static final String TURN_ID = "TURN_ID";
 
-		
-	private static Bundle createBundle(ViewContext context) {
+
+	public static Bundle createBundle(ViewContext context, long turn_id) {
 
 		Bundle bundle = new Bundle();
 		bundle.putString(CONTEXT, context.toString());
+		bundle.putLong(TURN_ID, turn_id);
 		return bundle;
 	}
-	
 
-	public static Bundle makeBundle(ViewContext context, long turn_id) {
-
-		Bundle b = createBundle(context);
-		b.putLong(TURN_ID, turn_id);
-		return b;
-	}
-
-	
+	/*
 	public static Bundle getSelectBlack()
 	{
 		//assert(CardCollection.instance.getCardCount(CardType.WHITE) == 0);
 		//assert(CardCollection.instance.getCardCount(CardType.BLACK) == 0);
-
 		return createBundle(ViewContext.SELECT_BLACK);
 	}
 	
@@ -50,10 +42,10 @@ public class BundleCreator {
 	
 	public static Bundle getSelectWhite()
 	{
-/*
-		assert(CardCollection.instance.getBlackCard() != null);
-		assert(CardCollection.instance.getCardCount(CardType.BLACK) > 0);
-*/		//assert(CardCollection.instance.getCardCount(CardType.WHITE) == 0);
+
+		//assert(CardCollection.instance.getBlackCard() != null);
+		//assert(CardCollection.instance.getCardCount(CardType.BLACK) > 0);
+		//assert(CardCollection.instance.getCardCount(CardType.WHITE) == 0);
 		
 		return createBundle(ViewContext.SELECT_WHITE);
 	}
@@ -77,6 +69,6 @@ public class BundleCreator {
 		
 		return createBundle(ViewContext.SHOW_RESULT);
 	}
-
+	*/
 
 }

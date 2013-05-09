@@ -14,16 +14,18 @@ public class ChooseViewListener implements OnClickListener {
 	long turn_id;
 	Activity guiActivity;
 	
-	public ChooseViewListener(Activity activity, ViewContext context) {
+	public ChooseViewListener(Activity activity, ViewContext context, long turn) {
 		this.guiActivity = activity;
 		this.context = context;
+		this.turn_id = turn;
 	}
 	
 	@Override
 	public void onClick(View v) {
 		//should make sure that turn_id is set
+		
     	Intent intent = new Intent(guiActivity, CardSlideActivity.class);
-    	intent.putExtras(BundleCreator.makeBundle(context,turn_id));
+    	intent.putExtras(BundleCreator.createBundle(context,turn_id));
     	guiActivity.startActivity(intent);
 	}
 

@@ -1,7 +1,9 @@
 package at.tugraz.iicm.ma.appagainsthumanity.db;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 public class GetterProxy {
 	
@@ -49,7 +51,6 @@ public class GetterProxy {
 		
 	public int getGameIDFromTurn(long turn_id)
 	{
-	    
 	    Cursor cursor = db.getReadableDatabase().query(DBContract.Turn.TABLE_NAME, 
 	    		new String[] { DBContract.Turn.COLUMN_NAME_GAME_ID }, 
 	    		DBContract.Turn._ID + "=?" , 
@@ -57,7 +58,7 @@ public class GetterProxy {
 	    		null, null, null);
 	        
 	    int gameID = -1;
-	    
+	    	    
 	    if (cursor != null)
 	    {
 		    cursor.moveToFirst();
@@ -68,7 +69,29 @@ public class GetterProxy {
 
 	}
 	
-
+	public List<Integer> getDealtWhiteCards(long turn_id) {
+	    Cursor cursor = db.getReadableDatabase().query(DBContract.DealtWhiteCard.TABLE_NAME, 
+	    		new String[] { DBContract.DealtWhiteCard.COLUMN_NAME_WHITE_CARD_ID }, 
+	    		DBContract.DealtWhiteCard.COLUMN_NAME_GAME_ID + "=?", 
+	    		new String[] { String.valueOf(getGameIDFromTurn(turn_id)) } , 
+	    		null, null, null);
+	    
+	    ArrayList<Integer> cardIDs = new ArrayList<Integer>();
+	    
+	    if (cursor != null)
+	    {
+	    	cursor.moveToFirst();
+	    	for (int index = 0; index < cursor.getCount(); index++)
+	    	{
+	    		cardIDs.add(cursor.getInt(0));
+	    		cursor.moveToNext();
+	    	}
+	    	
+	    }
+	    
+	    return cardIDs;
+	        
+	}	
 	
 	public int getBlackCard(long turnid) {
 	    
@@ -123,6 +146,8 @@ public class GetterProxy {
 		    cursor.close();    
 	    }    
 	    return (numRows > 0);
-	}	
+	}
+
+
 
 }

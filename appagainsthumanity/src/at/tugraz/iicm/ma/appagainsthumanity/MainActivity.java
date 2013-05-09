@@ -108,9 +108,7 @@ public class MainActivity extends Activity {
 		super.onStart();
 		// Instanciate database proxy
 		dbProxy = new DBProxy(this.getApplicationContext());
-				
-		PresetHelper.setPreset(dbProxy, PresetHelper.SELECT_BLACK);
-		
+					
 		//retrieve game list
 		gamelistCursor = dbProxy.readGameList(username);
 		displayListView(gamelistCursor);
@@ -144,10 +142,7 @@ public class MainActivity extends Activity {
 //		System.out.println("row count: " + c.getCount());
 //		System.out.println(DatabaseUtils.dumpCursorToString(c));
 		if (gamelistAdapter == null)
-			gamelistAdapter = new GamelistAdapter(getApplicationContext(),c,
-					new ChooseViewListener(this, ViewContext.SELECT_BLACK),
-					new ChooseViewListener(this, ViewContext.SELECT_WHITE),
-					new ChooseViewListener(this, ViewContext.SELECT_WHITE)); //TODO
+			gamelistAdapter = new GamelistAdapter(this,c); //TODO
 		else
 			gamelistAdapter.changeCursor(c);
 		gameListView.setAdapter(gamelistAdapter);
@@ -180,7 +175,7 @@ public class MainActivity extends Activity {
 				ViewContext.SELECT_WHITE, 
 				new MockDealer(view.getContext()));
 
-    	intent.putExtras(BundleCreator.getSelectWhite());
+    	intent.putExtras(BundleCreator.createBundle(ViewContext.SELECT_WHITE, 1));
     	
     	startActivity(intent);
     }

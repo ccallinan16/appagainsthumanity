@@ -45,22 +45,21 @@ public class GUIEmulator {
 	}
 	
 	
-	public Card createSelectionTransitionReturnSelected(ViewContext context)
+	public Card createSelectionTransitionReturnSelected(ViewContext context, long turnid)
 	{
 		CardSlideActivity activity = new CardSlideActivity();
-		SelectionAndContextHelper.switchFromSelectionToDisplay(csa, activity, context,true);
+		SelectionAndContextHelper.switchFromSelectionToDisplay(csa, activity, context,turnid);
 				
     	Card selected = SelectionAndContextHelper.getFirstCard(csa, 
     			(context.equals(ViewContext.SELECT_BLACK))
     			?CardType.BLACK
     			:CardType.WHITE);
-		   	
-    	
+		    	    	
 		ViewContext follows = (context.equals(ViewContext.SELECT_BLACK)
 				?ViewContext.CONFIRM_SINGLE:ViewContext.CONFIRM_PAIR);
 		
 		MainActivity main = new MainActivity();
-		SelectionAndContextHelper.switchFromDisplayToMain(activity, main, follows,false);
+		SelectionAndContextHelper.switchFromDisplayToMain(activity, main, follows,turnid);
 		
 		return selected;
 

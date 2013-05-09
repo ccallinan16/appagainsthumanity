@@ -16,6 +16,9 @@ import android.os.Bundle;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
+import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
  
@@ -41,9 +44,10 @@ public class CardSlideActivitySelectionTest {
     @Test
     public void testSelectionRememberedBlack()
     {
-    	Bundle b = TestBundleCreator.getSelectBlackBundle();
-    	
-    	csa.getIntent().putExtras(b);
+    	PresetHelper.setPreset(new DBProxy(csa), PresetHelper.SELECT_BLACK);
+    	    	
+    	csa.getIntent().putExtras(BundleCreator.createBundle(ViewContext.SELECT_BLACK,
+    			PresetHelper.man.getLastTurnID()));
     	csa.onCreate(null);
     	
     	CardType type = CardType.BLACK;
@@ -63,22 +67,23 @@ public class CardSlideActivitySelectionTest {
     @Test
     public void testSelectionRememberedWhite()
     {
-    	Bundle b = TestBundleCreator.getSelectWhiteBundle();
-
-    	Card black = CardCollection.instance.makeCard(1, "hello", CardType.BLACK);
-    	CardCollection.instance.setBlackCard(black.getId());
-
-    	csa.getIntent().putExtras(b);
+    	DBProxy proxy = new DBProxy(csa);
+    	PresetHelper.setPreset(proxy, PresetHelper.SELECT_WHITE);
+    	
+    	csa.getIntent().putExtras(BundleCreator.createBundle(
+    			ViewContext.SELECT_WHITE, 
+    			PresetHelper.man.getLastTurnID()));
+    	    	
+    	csa.setProxy(proxy);
     	csa.onCreate(null);
     	    	
-    	assertEquals(black.getId(),SelectionAndContextHelper.getTopCard(csa).getId());
-    	
     	CardType type = CardType.WHITE;
     	
     	Card c = SelectionAndContextHelper.getFirstCard(csa, type);
     	SelectionAndContextHelper.selectCardAndPerformClick(csa,c);
     	
-    	CardSlideActivity activity = SelectionAndContextHelper.createNewCSActivity(ViewContext.CONFIRM_PAIR);
+    	CardSlideActivity activity = SelectionAndContextHelper.createNewCSActivity(
+    			ViewContext.CONFIRM_PAIR);
     	Card selected = SelectionAndContextHelper.getFirstCard(activity, CardType.WHITE);
     	
     	assertTrue(c != null);

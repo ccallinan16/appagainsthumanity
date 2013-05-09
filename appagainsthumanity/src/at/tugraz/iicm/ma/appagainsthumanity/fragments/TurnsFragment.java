@@ -19,6 +19,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.TurnlistAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
@@ -110,7 +111,7 @@ public class TurnsFragment extends Fragment {
 		public void onClick(View view) {
     		
         	Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-        	intent.putExtras(BundleCreator.getSelectBlack());
+        	intent.putExtras(BundleCreator.createBundle(ViewContext.SELECT_BLACK, 0));
         	startActivity(intent);
 		}
     };
@@ -119,7 +120,7 @@ public class TurnsFragment extends Fragment {
     	@Override
 		public void onClick(View view) {
         	Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-        	intent.putExtras(BundleCreator.getSelectWhite());
+        	intent.putExtras(BundleCreator.createBundle(ViewContext.SELECT_WHITE, 0));
         	startActivity(intent);
 		}
     };
@@ -128,7 +129,7 @@ public class TurnsFragment extends Fragment {
     	@Override
 		public void onClick(View view) {
         	Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-        	intent.putExtras(BundleCreator.getSelectWhite());
+        	intent.putExtras(BundleCreator.createBundle(ViewContext.SELECT_WHITE, 0));
         	startActivity(intent);
 		}
     };
@@ -137,7 +138,7 @@ public class TurnsFragment extends Fragment {
     	@Override
 		public void onClick(View view) {
         	Intent intent = new Intent(getActivity(), CardSlideActivity.class);
-        	intent.putExtras(BundleCreator.getShowResults());
+        	intent.putExtras(BundleCreator.createBundle(ViewContext.SHOW_RESULT, 0));
         	startActivity(intent);
 		}
     };

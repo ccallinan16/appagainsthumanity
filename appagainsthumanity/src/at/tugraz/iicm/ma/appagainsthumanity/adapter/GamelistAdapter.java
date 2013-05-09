@@ -22,7 +22,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
 public class GamelistAdapter extends CursorAdapter {
 
-	private Cursor cursor;
+	private Activity activity;
 	private final LayoutInflater inflater;
 	private ChooseViewListener black;
 	private ChooseViewListener white;
@@ -30,16 +30,15 @@ public class GamelistAdapter extends CursorAdapter {
 
 	//other constructors would need api level 11 - our base-level is 8
 	@SuppressWarnings("deprecation") 
-	public GamelistAdapter(Context context, Cursor c, 
-			ChooseViewListener chooseBlackCardListener, 
-			ChooseViewListener chooseWhiteCardListener, 
-			ChooseViewListener chooseWinningCardListener) {
-		super(context, c);
-		cursor = c;
-		inflater=LayoutInflater.from(context);
-		this.black = chooseBlackCardListener;
-		this.white = chooseWhiteCardListener;
-		this.winning = chooseWinningCardListener;
+	public GamelistAdapter( Activity activity, Cursor c) {
+		super(activity.getApplicationContext(), c);
+				
+		this.activity = activity;
+		//cursor = c;
+		inflater=LayoutInflater.from(activity.getApplicationContext());
+		this.black = new ChooseViewListener(activity, ViewContext.SELECT_BLACK,0);
+		this.white = new ChooseViewListener(activity, ViewContext.SELECT_WHITE,0);
+		this.winning = new ChooseViewListener(activity, ViewContext.SELECT_WHITE,0);
 	}
 
 	@Override
@@ -57,21 +56,24 @@ public class GamelistAdapter extends CursorAdapter {
 		ImageButton thumbnail = (ImageButton)view.findViewById(R.id.thumbnail);
 		//set focusable to false - otherwise listitem won't be clickable
 		thumbnail.setFocusable(false);
+		
+		long turn = c.getLong(10);
+		
 		//case: choose black card
 		if (c.getLong(6) == c.getLong(7) && c.getLong(8) == 0) {
 			thumbnail.setImageResource(R.drawable.card_black);
-			black.setTurnID(c.getLong(10));
-			thumbnail.setOnClickListener(black);
+			thumbnail.setOnClickListener(
+					new ChooseViewListener(activity, ViewContext.SELECT_BLACK,turn));
 		} else if (c.getLong(6) != c.getLong(7) && c.getInt(9) < (c.getInt(5) - 1)) {
 			//choose white card
 			thumbnail.setImageResource(R.drawable.card_white);
-			white.setTurnID(c.getLong(10));
-			thumbnail.setOnClickListener(white);
+			thumbnail.setOnClickListener(
+					new ChooseViewListener(activity, ViewContext.SELECT_WHITE,turn));
 		} else if (c.getLong(6) == c.getLong(7) && c.getInt(9) == (c.getInt(5) - 1)) {
 			//choose winning card
 			thumbnail.setImageResource(R.drawable.winner);
-			winning.setTurnID(c.getLong(10));
-			thumbnail.setOnClickListener(winning);
+			thumbnail.setOnClickListener(
+					new ChooseViewListener(activity, ViewContext.SELECT_WHITE,turn));
 		} else {
 			thumbnail.setImageResource(R.drawable.time);
 			thumbnail.setEnabled(false);

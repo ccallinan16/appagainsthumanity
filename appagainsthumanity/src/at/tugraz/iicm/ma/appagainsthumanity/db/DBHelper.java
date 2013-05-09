@@ -26,7 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
 	public void onCreate(SQLiteDatabase db) {
-    	
+    	    	
     	try{
         	for (String query : DBContract.SQL_CREATE_ENTRIES) 
         		db.execSQL(query);

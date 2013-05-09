@@ -29,11 +29,13 @@ public class SingleCardFragment extends Fragment {
 	 protected static final String SELECTABLE = "SELECTABLE";
 
 	 protected CardType TYPE;
+	 private long turnID;
 	     
-	public static SingleCardFragment newInstance(int cardID, CardType type, boolean selectable) {
+	public static SingleCardFragment newInstance(int cardID, CardType type, boolean selectable, long turnID) {
 		
 		   SingleCardFragment f = new SingleCardFragment();
 		   f.TYPE = type;
+		   f.turnID = turnID;
 		   Bundle bdl = new Bundle();
 		   bdl.putInt(ID, cardID);
 		   bdl.putBoolean(SELECTABLE,selectable);
@@ -52,9 +54,6 @@ public class SingleCardFragment extends Fragment {
 
 		 Card card = CardCollection.instance.getCard(cardId, TYPE);
 
-		 if (card == null)
-			 System.err.println("card id: " + cardId);
-
 		 TextView messageTextView = (TextView)v.findViewById(R.id.cardText);
 		 messageTextView.setText(card.getText());
 		 messageTextView.setTextAppearance(v.getContext(), card.getTextAppearance());
@@ -62,11 +61,8 @@ public class SingleCardFragment extends Fragment {
 		 
 		 if (getArguments().getBoolean(SELECTABLE))
 		 {
-			 v.setOnClickListener(new OnCardSelectionListener(TYPE));
-
+			 v.setOnClickListener(new OnCardSelectionListener(TYPE,turnID));
 		 }
-
-		 
 		 
 		 messageTextView.setTextSize(card.getRelativeTextSize(MAX_SIZE, MIN_SIZE));
 		 

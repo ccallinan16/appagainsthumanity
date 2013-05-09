@@ -52,13 +52,13 @@ public class CardSlideActivityTransitionsTest {
     {
      	MainActivity newActivity = new MainActivity();
     	Intent i = SelectionAndContextHelper.switchFromDisplayToMain(
-    			csa, newActivity, ViewContext.CONFIRM_SINGLE,true);
+    			csa, newActivity, ViewContext.CONFIRM_SINGLE,0);
     	Assert.assertThat(newActivity, new StartedMatcher(i));
 
     	newActivity = new MainActivity();
 
     	i = SelectionAndContextHelper.switchFromDisplayToMain(
-    			csa, newActivity, ViewContext.CONFIRM_PAIR,true);
+    			csa, newActivity, ViewContext.CONFIRM_PAIR,0);
     	Assert.assertThat(newActivity, new StartedMatcher(i)); 	
     }
     
@@ -67,7 +67,7 @@ public class CardSlideActivityTransitionsTest {
     {
     	CardSlideActivity activity = new CardSlideActivity();
     	Intent i = SelectionAndContextHelper.switchFromSelectionToDisplay(
-    			csa, activity, ViewContext.SELECT_BLACK,true);
+    			csa, activity, ViewContext.SELECT_BLACK,0);
         Assert.assertThat(activity, new StartedMatcher(i));
     }
     
@@ -77,7 +77,7 @@ public class CardSlideActivityTransitionsTest {
     	CardSlideActivity activity = new CardSlideActivity();
 
     	Intent i = SelectionAndContextHelper.switchFromSelectionToDisplay(
-    			csa, activity, ViewContext.SELECT_WHITE,true);
+    			csa, activity, ViewContext.SELECT_WHITE,0);
         Assert.assertThat(activity, new StartedMatcher(i));
     }
 

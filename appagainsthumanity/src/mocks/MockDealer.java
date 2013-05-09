@@ -16,9 +16,9 @@ public class MockDealer {
 	MockDB db;
 	
 	//knows rules and numPlayers:
-	private int numBlackCards = 4;
+	private int numBlackCards = 3;
 	private int numWhiteCards = 4;
-	private int numPlayers = 3;
+	private int numPlayers = 6;
 	
 	public MockDealer(Context context) {
     	reader = new XMLReader(context);
@@ -30,27 +30,35 @@ public class MockDealer {
     	db = new MockDB();
 	}
 
-	public List<Card> dealCards(CardType type, int num) {
-    	List<Card> cards = new ArrayList<Card>();
-    	
-    	List<Integer> cardNumbers = db.assignCards(num);
-    	
-    	for(Integer index : cardNumbers)
-    	{
+	
+	public List<Card> getCardFromIDs(CardType type, List<Integer> cardIDs)
+	{
+		List<Card> cards = new ArrayList<Card>();
+		
+		for (Integer index : cardIDs)
+		{
     		String tmp = reader.getText(type, index);
     		if (tmp == null)
     			tmp = "couldn't read from xml";
     		
     		cards.add(CardCollection.instance.makeCard(index,tmp,type));
-    	}
+		}
+		
 		return cards;
 	}
 	
+	public List<Integer> getRandomBlackCardIDs(CardType cardType) {
+		
+    	return db.assignCards(numBlackCards);
+    }
+
+	
 	public List<Card> dealCards(ViewContext context) {
+					
     	List<Card> cards = new ArrayList<Card>();
     	
     	CardType type = CardType.WHITE;
-    	int numCards = 0;
+    	int numCards = 1;
     	
     	switch (context)
     	{
@@ -61,7 +69,8 @@ public class MockDealer {
     		
     	case SELECT_WHITE:
     		type = CardType.WHITE;
-    		numCards = numWhiteCards; //TODO: aditional context, SELECT_WINNER, needs different nums of cards.
+    		numCards = numWhiteCards;
+    		//TODO: aditional context, SELECT_WINNER, needs different nums of cards.
     		break;
     		
     	case SHOW_RESULT:
@@ -97,4 +106,5 @@ public class MockDealer {
 	public void setNumPlayers(int numPlayers) {
 		this.numPlayers = numPlayers;
 	}
+
 }

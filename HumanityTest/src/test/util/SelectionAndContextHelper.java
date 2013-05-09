@@ -25,9 +25,12 @@ public class SelectionAndContextHelper {
     		CardSlideActivity origin, 
     		CardSlideActivity activity, 
     		ViewContext context,
-    		boolean createTestingCards)
+    		long turnid)
     {
-    	origin.getIntent().putExtras(TestBundleCreator.createBundle(context,createTestingCards));
+    	if (turnid > 0)
+    		origin.getIntent().putExtras(BundleCreator.createBundle(context,turnid));
+    	else
+    		origin.getIntent().putExtras(TestBundleCreator.createBundle(context, true));
     	origin.onCreate(null);
     	
     	Card c = getFirstCard(origin, 
@@ -42,10 +45,10 @@ public class SelectionAndContextHelper {
     	switch (context)
     	{
     	case SELECT_WHITE:
-        	i.putExtras(TestBundleCreator.createBundle(ViewContext.CONFIRM_PAIR,false));
+        	i.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_PAIR,turnid));
         	break;
     	case SELECT_BLACK:
-        	i.putExtras(TestBundleCreator.createBundle(ViewContext.CONFIRM_SINGLE,false));
+        	i.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_SINGLE,turnid));
         	break;
         	
         	default:
@@ -56,11 +59,13 @@ public class SelectionAndContextHelper {
     }
 
     public static Intent switchFromDisplayToMain(CardSlideActivity origin, 
-    		Activity activity, ViewContext context,boolean createTestingEnv)
+    		Activity activity, ViewContext context,long turnid)
     {
-    	Bundle b = TestBundleCreator.createBundle(context,createTestingEnv);
     	Intent origIntent = new Intent();
-    	origIntent.putExtras(b);
+    	if (turnid > 0)
+    		origIntent.putExtras(BundleCreator.createBundle(context,turnid));
+    	else
+    		origIntent.putExtras(TestBundleCreator.createBundle(context, true));
     	origin.setIntent(origIntent);
     	origin.onCreate(null);
     	
@@ -112,26 +117,11 @@ public class SelectionAndContextHelper {
     public static Intent createAndGetIntent(Activity activity, ViewContext context)
     {
     	Intent i = new Intent(activity, CardSlideActivity.class);
-   	
-    	switch (context)
-    	{
-		case CONFIRM_PAIR:
-	    	i.putExtras(BundleCreator.getConfirmWhite());
-	    	break;
-		case CONFIRM_SINGLE:
-	    	i.putExtras(BundleCreator.getConfirmBlack());
-	    	break;
-		case SELECT_BLACK:
-			i.putExtras(BundleCreator.getSelectBlack());
-			break;
-		case SELECT_WHITE:
-			i.putExtras(BundleCreator.getSelectWhite());
-			break;
-		case UNKNOWN:
-			default:
+    	i.putExtras(TestBundleCreator.createBundle(context,false));
+
+    	if(context == ViewContext.UNKNOWN)
 			i = new Intent(activity, MainActivity.class);
-			
-    	}
+ 
     	activity.setIntent(i);
     	return i;
     }    

@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
@@ -37,9 +38,11 @@ public class F_DealerTest {
     public void testMockDealerTop()
     {
     	MockDealer dealer = new MockDealer("testdata/xml/raw/all_cards.xml");
-    	    	
-    	List<Card> cards = dealer.dealCards(CardType.WHITE,5);
-    	assertTrue(cards.size()==5);
+    	int numCards = 7;
+    	dealer.setNumWhiteCards(numCards);
+    	
+    	List<Card> cards = dealer.dealCards(ViewContext.SELECT_WHITE);
+    	assertTrue(cards.size()==numCards);
     	for (Card c : cards)
     	{
         	assertEquals(CardType.WHITE,c.getType());

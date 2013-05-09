@@ -12,41 +12,46 @@ public class PresetHelper {
 
 	public static final GameManager man = new GameManager();
 	
-	public static void setPreset(DBProxy proxy, int type) {
-		
+	public static void setPreset(GameManager manager, DBProxy proxy, int type)
+	{
 		proxy.reinitializeDB();
 		ServerConnector connector = new ServerConnector(proxy);
 		
 		switch(type)
 		{
 		case SELECT_BLACK:
-			connector.startGame(man);
-			connector.startRound(man);
-			connector.selectCardBlack(man.getLastTurnID(), man.getSelectedBlack());
-			connector.getPlayedCards(man);
+			connector.startGame(manager);
+			connector.startRound(manager);
+			connector.selectCardBlack(manager.getLastTurnID(), manager.getSelectedBlack());
+			connector.getPlayedCards(manager);
 			//the following two should be one function:
-			connector.selectWinner(man.getLastTurnID(), man.getWinnerCard());
-			connector.updateScore(man.getLastTurnID(), man.getWinnerCard());
-			man.czar = man.getCurrentUserID();
-			connector.startRound(man);
+			connector.selectWinner(manager.getLastTurnID(), manager.getWinnerCard());
+			connector.updateScore(manager.getLastTurnID(), manager.getWinnerCard());
+			manager.czar = manager.getCurrentUserID();
+			connector.startRound(manager);
 			break;
 		case SELECT_WHITE:
-			connector.startGame(man);
-			connector.startRound(man);
-			connector.selectCardBlack(man.getLastTurnID(), man.getSelectedBlack());
-			connector.getPlayedCards(man);
-			connector.selectWinner(man.getLastTurnID(), man.getWinnerCard());
-			connector.updateScore(man.getLastTurnID(), man.getWinnerCard());
-			connector.startRound(man);
-			connector.dealCards(man.getLastTurnID(), CardType.WHITE, man.getDealtCardIDs());
+			connector.startGame(manager);
+			connector.startRound(manager);
+			connector.selectCardBlack(manager.getLastTurnID(), manager.getSelectedBlack());
+			connector.getPlayedCards(manager);
+			connector.selectWinner(manager.getLastTurnID(), manager.getWinnerCard());
+			connector.updateScore(manager.getLastTurnID(), manager.getWinnerCard());
+			connector.startRound(manager);
+			connector.dealCards(manager.getLastTurnID(), CardType.WHITE, manager.getDealtCardIDs());
 			break;
 			
 		case NO_GAMES:
-			connector.startGame(man); //adds users
+			connector.startGame(manager); //adds users
 			break;
 		default:
 			break;
 		}
+
+	}
+	
+	public static void setPreset(DBProxy proxy, int type) {
+		setPreset(man,proxy,type);
 	}
 	
 	

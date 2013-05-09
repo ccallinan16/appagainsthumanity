@@ -17,7 +17,11 @@ import android.widget.FrameLayout;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
+import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
  
 @RunWith(PathTestRunner.class)
@@ -29,7 +33,11 @@ public class CardViewTest {
     public void setUp() throws Exception {
     	csa = new CardSlideActivity();
     	Intent i = new Intent();
-    	i.putExtras(TestBundleCreator.getSelectBlackBundle());
+    	PresetHelper.setPreset(new DBProxy(csa), PresetHelper.SELECT_BLACK);
+    	
+    	i.putExtras(BundleCreator.createBundle(ViewContext.SELECT_BLACK,
+    			PresetHelper.man.getLastTurnID()));
+
     	csa.setIntent(i);
 
     }
@@ -60,10 +68,7 @@ public class CardViewTest {
     @Test
     public void testCreateSwipableBlackList()
     {
-   	
-    	Bundle b = TestBundleCreator.getSelectBlackBundle();
-
-    	csa.getIntent().putExtras(b);
+    	//Preset SELECT_BLACK already selected
     	csa.onCreate(null);
 
     	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
@@ -102,10 +107,11 @@ public class CardViewTest {
 
     	int numCards = 9;
     	MockDealer dealer = new MockDealer(csa);
+    	dealer.setNumWhiteCards(numCards);
             	
     	csa.onCreate(null);
     	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
-    	((CardFragmentAdapter) pager.getAdapter()).setCards(dealer.dealCards(CardType.WHITE, numCards));
+    	((CardFragmentAdapter) pager.getAdapter()).setCards(dealer.dealCards(ViewContext.SELECT_WHITE));
 
     	
     	assertEquals(numCards,pager.getAdapter().getCount());

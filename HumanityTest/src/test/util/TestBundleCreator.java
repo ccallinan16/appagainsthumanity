@@ -4,6 +4,8 @@ import mocks.MockDealer;
 import android.os.Bundle;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
 public class TestBundleCreator {
@@ -17,31 +19,14 @@ public class TestBundleCreator {
 		AllCards.instance.fillWithCards(CardType.BLACK,numBlackCards,dealer);
 		*/
 		
+		//TODO: replace setupContextTesting with preset!
+			
 		dealer.setNumBlack(numBlackCards);
 		CardCollection.instance.setupContextTESTING(ViewContext.SELECT_BLACK, dealer);
 
-		return BundleCreator.getSelectBlack();
-	}
-
-	public static Bundle getSelectWhiteTESTING(int numWhiteCards)
-	{
-		dealer.setNumWhiteCards(numWhiteCards);
-		CardCollection.instance.setupContextTESTING(ViewContext.SELECT_WHITE, dealer);
-
-		return BundleCreator.getSelectWhite();
+		return BundleCreator.createBundle(ViewContext.SELECT_BLACK,0);
 	}
 	
-	public static Bundle getSelectBlackBundle()
-	{
-		return BundleCreator.getSelectBlack();
-	}
-	
-	public static Bundle getSelectWhiteBundle()
-	{
-		CardCollection.instance.setupContextTESTING(ViewContext.SELECT_WHITE, dealer);
-		return BundleCreator.getSelectWhite();
-	}
-
 	public static Bundle createBundleOverwrite(ViewContext context, int overwriteNum) {
 	
 		CardCollection.instance.setupContextTESTING(context, dealer);

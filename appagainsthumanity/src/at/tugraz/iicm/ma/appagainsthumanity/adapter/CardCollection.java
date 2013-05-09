@@ -76,13 +76,11 @@ public class CardCollection {
 		
 		//boolean tmp = c.isHighlighted();
 		
-		//System.out.println("set selected : " + c + ", is highlighted: " + tmp);
-
 		selectedId = -1;
 		
 		//for (Card card : map.values())
 		//	card.setHighlighted(false);
-		
+				
 		//if (!tmp)
 		selectedId = c.getId();
 		
@@ -91,16 +89,12 @@ public class CardCollection {
 
 	public void setBlackCard(int id)
 	{
-		System.out.println("set black called, id: " + id);
-
 		//TODO: call to server / DB
 		blackCardId = id;
 	}
 	
 	public Card getBlackCard()
 	{
-		System.out.println("get black called, id: " + blackCardId);
-		System.out.println("black: " + black);
 		//TODO: call to server
 		return getCard(blackCardId,CardType.BLACK);
 	}
@@ -197,33 +191,37 @@ public class CardCollection {
 			  //do nothing
 	  }
 	  
-	if (dealer == null)
+	  if (dealer == null)
 		this.dealer = ctxDealer;
 
 	  dealer.dealCards(context); //already added to CardsInPlay, TODO: change
 
 	}
 
-	public List<Card> getCardsForPager(ViewContext context) {
+	public void setCardsForPager(MockDealer dealer, List<Integer> list, CardType type)
+	{
+		dealer.getCardFromIDs(type, list);
+		//cards are already set... //TODO: change that
+	}
+	
+	public List<Integer> getCardsForPager(ViewContext context) {
 		
-		ArrayList<Card> cards = new ArrayList<Card>();
+		ArrayList<Integer> cards = new ArrayList<Integer>();
+			
 		  switch(context)
 		  {
 		  case SELECT_BLACK:
-			  cards.addAll(black.values());
+			  cards.addAll(black.keySet());
 			  break;
 			  
 		  case SELECT_WHITE:
 		  case SHOW_RESULT:
-			  cards.addAll(white.values());
+			  cards.addAll(white.keySet());
 			  break;
 			  
 		  case CONFIRM_SINGLE:
 		  case CONFIRM_PAIR:
-			  cards.add(getSelectedCard((
-					  context.equals(ViewContext.CONFIRM_SINGLE)
-					  ?CardType.BLACK:CardType.WHITE)));
-
+			  cards.add(getSelectedID());
 			  break;
 			  
 		  default:

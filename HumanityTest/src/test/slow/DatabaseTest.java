@@ -17,9 +17,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 
 @RunWith(SQLTestRunner.class)
 public class DatabaseTest {
-	
-    private static final int CURRENT_DB_VERSION = 1;
-	
+		
     DBProxy proxy;
     ServerConnector connector;
     
@@ -41,15 +39,15 @@ public class DatabaseTest {
 	public void setBlackIDAndSendToDB()
 	{
 		PresetHelper.setPreset(proxy, PresetHelper.SELECT_BLACK);
-
+		
 		//while GUI knows nothing about turnids
-		int turnid = 1;
+		long turnid = PresetHelper.man.getLastTurnID();
 
 		GUIEmulator emulator = new GUIEmulator();
 		
 		Card origin = emulator.createSelectionTransitionReturnSelected(
-													ViewContext.SELECT_BLACK);
-		proxy.printTables();
+													ViewContext.SELECT_BLACK,
+													turnid);
 		assertEquals(origin.getId(),proxy.getter.getBlackCard(turnid));
 	}
 	
@@ -59,12 +57,12 @@ public class DatabaseTest {
 		PresetHelper.setPreset(proxy, PresetHelper.SELECT_WHITE);
 
 		//while GUI knows nothing about turnids
-		int turnid = 2;
+		long turnid = PresetHelper.man.getLastTurnID();
 		
 		GUIEmulator emulator = new GUIEmulator();
 		
 		Card origin = emulator.createSelectionTransitionReturnSelected(
-													ViewContext.SELECT_WHITE);
+													ViewContext.SELECT_WHITE,turnid);
 		
 		assertEquals(origin.getId(),proxy.getter.getPlayedWhiteCard(turnid));
 	}	

@@ -1,8 +1,9 @@
 package at.tugraz.iicm.ma.appagainsthumanity.db;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
+
+import mocks.MockDealer;
 
 import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
@@ -38,13 +39,13 @@ public class ServerConnector {
 	}
 	
 	public void selectCardBlack(long turn_id, int id)
-	{
+	{		
 		//Czar selects a black card, CardType.BLACK
 		CardCollection.instance.setBlackCard(id);
 		
 		//tables affected: (locally)
 		//turn
-			proxy.getDBSetter().setBlackCardID(turn_id, id);
+		proxy.getDBSetter().setBlackCardID(turn_id, id);
 		//TODO: send info to server!
 		
 	}
@@ -117,6 +118,7 @@ public class ServerConnector {
 	
 	public void dealCards(long turn_id, CardType type, Integer[] cardIds)
 	{
+
 		//deal BlackCards to person whose turn it is (to be Czar)
 	
 		//tables affected:
@@ -137,6 +139,28 @@ public class ServerConnector {
 
 		//get a list of cardNums from Server
 	}
+	
+	public List<Integer> getDealtCards(MockDealer dealer, CardType cardType, long turnID) {
+
+		//the user getting the cards the server dealt 
+		
+		//1. from server
+		
+		List<Integer> listIDs;
+		
+		//2. then from the database
+		if (cardType.equals(CardType.WHITE))
+			listIDs = proxy.getter.getDealtWhiteCards(turnID);
+		else
+			listIDs = dealer.getRandomBlackCardIDs(cardType); //TODO, tmp only
+						
+		//3. then sets it to the card collection
+		CardCollection.instance.setCardsForPager(dealer, listIDs, cardType);
+		return listIDs;
+
+	}
+
+	
 		
 	public void getPlayedCards(GameManager preset) {
 		
@@ -155,6 +179,8 @@ public class ServerConnector {
 		proxy.getDBSetter().updatePlayedWhiteCard(turn_id,chosen_card);
 		proxy.getDBSetter().updateScores(turn_id);
 	}
+
+
 
 
 }

@@ -134,12 +134,9 @@ public class ServerConnectorTest {
     	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
     	
     	connector.getPlayedCards(preset);
-    	
-    	proxy.printTables();
-    	
+    	   	
     	for (Entry<Long, Integer> entry : preset.getPlayedCards().entrySet())
     	{
-    		System.out.println(entry);
         	assertTrue(proxy.getter.checkEntryExistsWhere(DBContract.PlayedWhiteCard.TABLE_NAME, 
         			DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID+"="+preset.getLastTurnID()+" AND "+
         	    	DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID+"="+entry.getKey()+" AND "+
@@ -158,10 +155,7 @@ public class ServerConnectorTest {
     	connector.getPlayedCards(preset);
 
     	connector.selectWinner(preset.getLastTurnID(), preset.getWinnerCard());
-    	
-    	System.out.println("last turn: " + preset.getLastTurnID() + ", " + preset.getWinnerCard());
-    	
-    	proxy.printTables();    	
+    	    	
     	assertTrue(proxy.getter.checkEntryExistsWhere(DBContract.PlayedWhiteCard.TABLE_NAME, 
     			DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID+"="+preset.getLastTurnID()
     			+" AND "+

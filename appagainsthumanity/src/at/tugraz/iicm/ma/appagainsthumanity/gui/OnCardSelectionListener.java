@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
@@ -14,9 +15,11 @@ import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 public class OnCardSelectionListener implements OnClickListener {
 	
 	CardType type;
+	long turnID;
 	
-	public OnCardSelectionListener(CardType type) {
+	public OnCardSelectionListener(CardType type, long turnID) {
 		this.type = type;
+		this.turnID = turnID;
 	}
 	
     public void onClick(View v) {
@@ -31,20 +34,21 @@ public class OnCardSelectionListener implements OnClickListener {
 		
 		int currentCard = cfa.getCardID(pager.getCurrentItem());
 			
+		 
 		Card c = CardCollection.instance.getCard(currentCard,type);
-			  			
 		CardCollection.instance.setSelected(c);
-  		createAndStartNewActivity(v,currentCard);
+		
+  		createAndStartNewActivity(v,turnID);
 
     }
 
-	private void createAndStartNewActivity(View v,int id) {
+	private void createAndStartNewActivity(View v,long turn_id) {
 	  	Intent intent = new Intent(v.getContext(),CardSlideActivity.class);
 	     	
 	  	if (type.equals(CardType.BLACK))
-	  		intent.putExtras(BundleCreator.getConfirmBlack());
+	  		intent.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_SINGLE, turn_id));
 	  	else
-	  		intent.putExtras(BundleCreator.getConfirmWhite());
+	  		intent.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_PAIR, turn_id));
 
 	  	v.getContext().startActivity(intent);
 	}

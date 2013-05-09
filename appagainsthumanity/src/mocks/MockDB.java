@@ -20,6 +20,10 @@ public class MockDB {
 	 * @return a SET of IDs (all unique)
 	 */
 	public List<Integer> assignCards(int numCards) {
+		
+		if (numCards == 0)
+			throw new RuntimeException();
+		
 		Random rand = new Random();
 		Set<Integer> list = new HashSet<Integer>();
 
@@ -27,7 +31,10 @@ public class MockDB {
 		{
 			list.add(rand.nextInt(size));
 		}
-		return new ArrayList<Integer>(list);
+				
+		List<Integer> newList =  new ArrayList<Integer>(list);
+		
+		return newList;
 	}
 
 }

@@ -58,7 +58,7 @@ public class MainActivityTransitionTest {
 		CardSlideActivity csa = new CardSlideActivity();
 				
     	Intent i = new Intent(csa, CardSlideActivity.class);
-    	i.putExtras(BundleCreator.makeBundle(context,PresetHelper.man.getLastTurnID()));
+    	i.putExtras(BundleCreator.createBundle(context,PresetHelper.man.getLastTurnID()));
 
     	csa.setIntent(i);
 		

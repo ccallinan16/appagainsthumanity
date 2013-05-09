@@ -14,6 +14,7 @@ public class GameManager {
 	public String[] users;
 	public int roundcap;
 	public int scorecap;
+	public int numCards = 5;
 	
 	/**
 	 * info set by database
@@ -79,11 +80,13 @@ public class GameManager {
 	}
 	
 	public Integer[] getDealtCardIDs() {
-			
-		if (dealtCards == null)
+		
+		if (dealtCards == null || dealtCards.length == 0)
 		{
 			MockDB db = new MockDB();
-			List<Integer> dealt = db.assignCards(5);
+			List<Integer> dealt = db.assignCards(numCards);
+			
+			
 			dealtCards = new Integer[dealt.size()];
 			dealtCards = dealt.toArray(dealtCards);
 		}
@@ -92,6 +95,8 @@ public class GameManager {
 	}
 
 	public HashMap<Long,Integer> getPlayedCards() {
+	
+		
 		if (playedCards == null)
 		{
 			MockDB db = new MockDB();

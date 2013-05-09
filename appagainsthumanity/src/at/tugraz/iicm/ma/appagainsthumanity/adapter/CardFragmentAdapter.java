@@ -6,34 +6,50 @@ import java.util.List;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.db.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class CardFragmentAdapter extends FragmentPagerAdapter {
 	  private List<Integer> cardIDs;
-	  private FragmentManager fm;
 	  private CardType type;
 	  private boolean selectable;
+	  private long turnID;
 	  
-	  public CardFragmentAdapter(FragmentManager fm, List<Card> fragments,boolean selectable) {
+	  /*
+	  private CardFragmentAdapter(FragmentManager fm, List<Card> fragments,boolean selectable, long turnID) {
 		    super(fm);
-		    this.fm = fm;
 		    cardIDs = new ArrayList<Integer>();
 		    if (fragments != null && !fragments.isEmpty())
 		    {
 		    	type = fragments.get(0).getType();
 		    }
 		    this.selectable = selectable;
+		    this.turnID = turnID;
 		    setCards(fragments);
 		  }
+	  */
 	  
-	  @Override 
+	  public CardFragmentAdapter(FragmentManager supportFragmentManager, 
+			  List<Integer> cardIDs,
+			  boolean selectable, CardType type, long turnID) {
+		    super(supportFragmentManager);
+		    
+		    this.type = type;
+		    this.selectable = selectable;
+		    this.turnID = turnID;
+		    this.cardIDs = cardIDs;
+		    		    
+	}
+
+	@Override 
 	  public Fragment getItem(int position) {		  
 		  return SingleCardFragment.newInstance(
 				  cardIDs.get(position),
 				  type, 
-				  selectable);
+				  selectable,
+				  turnID);
 	  }
 
 	  @Override
@@ -64,9 +80,6 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 		  }
 	  }
 	  
-	  public FragmentManager getFm() {
-		return fm;
-	}
 
 	public CardType getCardType() {
 		return type;

@@ -1,11 +1,10 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
 
-import javax.security.auth.callback.ConfirmationCallback;
+import java.util.ArrayList;
+import java.util.List;
 
 import mocks.MockDealer;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -22,38 +21,46 @@ import at.tugraz.iicm.ma.appagainsthumanity.db.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.OnCardSelectionListener;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
-import at.tugraz.iicm.ma.appagainsthumanity.util.MessageDialog;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class CardSlideActivity extends FragmentActivity {
 	
 	private ViewContext context = ViewContext.UNKNOWN;
 	public int topCardId = -1;
+	private long turnID = 0;
+	
+	DBProxy proxy;
+	
+	//to be used by test functions
+	public void setProxy(DBProxy proxy)
+	{
+		this.proxy = proxy;
+	}
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_screen_slide);
                   
       //we cannot create a view without a context.
 	  if (getIntent() == null || getIntent().getExtras() == null)
 		  return; 
-	  	  
-	  
+	   
 	  context = ViewContext.getContextFromString(
 				  		  getIntent().getExtras()
 				  		  .getString(BundleCreator.CONTEXT));
 	  
+	  turnID = getIntent().getExtras().getLong(BundleCreator.TURN_ID);
+	  	  
       //TODO
-	  MockDealer dealer = new MockDealer(this);
-      CardCollection.instance.setupContext(context,dealer);
-  
-	  
+	  //MockDealer dealer = new MockDealer(this);
+      //CardCollection.instance.setupContext(context,dealer);
+      
       //setup the ViewPager (to flip through cards) as well as the Top card
       initSlider();
       
-      initTop(dealer);
+      initTop();
 
       initButtons();
     }      
@@ -100,15 +107,13 @@ public class CardSlideActivity extends FragmentActivity {
 								
 					ServerConnector connector = new ServerConnector(new DBProxy(v.getContext()));
 					
-					//TODO: select winner, where do we decide?
-					//TODO: get turn_id!!
 					switch (context)
 					{
 					case CONFIRM_SINGLE:
-						connector.selectCardBlack(1, id);
+						connector.selectCardBlack(turnID, id);
 						break;
 					case CONFIRM_PAIR:
-						connector.selectCardWhite(2, id); 
+						connector.selectCardWhite(turnID, id); 
 						break;
 					default:
 						break;
@@ -128,16 +133,49 @@ public class CardSlideActivity extends FragmentActivity {
 
 	private void initSlider()
 	{
+		
 		  boolean selectable = false;
 		  
 		  if (context == ViewContext.SELECT_BLACK || 
 			  context == ViewContext.SELECT_WHITE)
 			  selectable = true;
 		  
-	      CardFragmentAdapter pageAdapter = new CardFragmentAdapter(
-	    		  getSupportFragmentManager(), 
-	    		  CardCollection.instance.getCardsForPager(context),
-	    		  selectable
+		  if (proxy == null)
+			  proxy = new DBProxy(this);
+		  
+		  ServerConnector serverConnector = new ServerConnector(proxy);
+		  MockDealer dealer = new MockDealer(this);
+		  
+		  List<Integer> cardIDs = new ArrayList<Integer>();
+
+		  //what if server connector returns an empty list?
+		  
+		  switch(context)
+		  {
+		  case SELECT_BLACK:
+		  case SELECT_WHITE:
+			  if (turnID > 0)
+				  cardIDs = serverConnector.getDealtCards(dealer,context.getCardType(),turnID);
+		    
+			  if (cardIDs == null) //obviously, we didn't get cards from the db
+			  {
+				  CardCollection.instance.setupContext(context, dealer);
+				  cardIDs = CardCollection.instance.getCardsForPager(context);
+			  }
+			  break;
+			  
+		  case CONFIRM_SINGLE:
+		  case CONFIRM_PAIR:
+			  cardIDs.add(CardCollection.instance.getSelectedID());
+		  }
+		  		  
+		  //TODO: do something else for confirm views
+		  CardFragmentAdapter pageAdapter = new CardFragmentAdapter(
+	    		  getSupportFragmentManager(),
+	    		  cardIDs,
+	    		  selectable,
+	    		  context.getCardType(),
+	    		  turnID
 	    		  );
 	      
 	      ViewPager pager = (ViewPager) findViewById(R.id.cs_card_slider);
@@ -146,24 +184,20 @@ public class CardSlideActivity extends FragmentActivity {
 	      //pager.setPageTransformer(true, new ZoomOutPageTransformer());
 	      pager.setAdapter(pageAdapter);
 	      
-	      pager.setOnClickListener(new OnCardSelectionListener(context.getCardType()));
+	      pager.setOnClickListener(new OnCardSelectionListener(context.getCardType(),turnID));
 	
 	}
 	
 	
-	private void initTop(MockDealer dealer)
+	private void initTop()
 	{
 		boolean draw = false;
+				
+		if (	  context == ViewContext.CONFIRM_PAIR ||
+				  context == ViewContext.SELECT_WHITE ||
+				  context == ViewContext.SHOW_RESULT)
+			draw = true;
 		
-		System.out.println("initTop, context: " + context + ", draw: " + draw);
-		
-	      if (	  context == ViewContext.CONFIRM_PAIR ||
-	    		  context == ViewContext.SELECT_WHITE ||
-	    		  context == ViewContext.SHOW_RESULT)
-	    	  draw = true;
-		
-		System.out.println("initTop, context: " + context + ", draw: " + draw);
-
 	      
 		Card black = CardCollection.instance.getBlackCard();
 		
@@ -177,7 +211,7 @@ public class CardSlideActivity extends FragmentActivity {
 		topCardId = black.getId();
 		
 		SingleCardFragment scv = SingleCardFragment.newInstance(
-				black.getId(),black.getType(),false);
+				black.getId(),black.getType(),false,turnID);
 
 		getSupportFragmentManager()
 		.beginTransaction()

@@ -17,6 +17,10 @@ import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
+import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
  
@@ -39,17 +43,22 @@ public class S_RobolectricStuff {
 	public void testMockDBResourceXML() {
 		
 		CardSlideActivity csa = new CardSlideActivity();
+		DBProxy proxy = new DBProxy(csa);
+		PresetHelper.setPreset(proxy, PresetHelper.SELECT_WHITE);
+		
 		Intent i = new Intent();
-		i.putExtras(TestBundleCreator.getSelectWhiteBundle());
+		i.putExtras(BundleCreator.createBundle(ViewContext.SELECT_WHITE, 
+				PresetHelper.man.getLastTurnID()));
 		csa.setIntent(i);
+		csa.setProxy(proxy);
 		csa.onCreate(null);
 
-		
     	int numCards = 5;
     	MockDealer dealer = new MockDealer(csa);
+    	dealer.setNumWhiteCards(numCards);
     	
     	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
-    	((CardFragmentAdapter) pager.getAdapter()).setCards(dealer.dealCards(CardType.WHITE, numCards));
+    	((CardFragmentAdapter) pager.getAdapter()).setCards(dealer.dealCards(ViewContext.SELECT_WHITE));
    	
     	assertEquals(numCards,pager.getAdapter().getCount());
 	}

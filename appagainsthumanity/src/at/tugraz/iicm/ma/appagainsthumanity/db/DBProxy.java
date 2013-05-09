@@ -32,6 +32,8 @@ public class DBProxy {
 
 	
 	public DBProxy(Context context) {
+		
+		System.out.println("DBProxy called, new start");
 		this.context = context;
 		this.dbHelper = new DBHelper(context);
 		this.readableDatabase = null;
@@ -39,7 +41,6 @@ public class DBProxy {
 		
 		setDBSetter(new SetterProxy(this));
 		getter = new GetterProxy(this);
-
 	}
 	
 	protected SQLiteDatabase getReadableDatabase() {

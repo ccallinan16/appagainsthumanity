@@ -21,6 +21,10 @@ import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
+import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
@@ -33,10 +37,6 @@ public class S_DealerXMLTest {
     @Before
     public void setUp() throws Exception {
     	csa = new CardSlideActivity();
-    	Intent i = new Intent();
-    	i.putExtras(TestBundleCreator.getSelectBlackBundle());
-    	csa.setIntent(i);
-    	csa.onCreate(null);
     }
  
     @After
@@ -60,10 +60,17 @@ public class S_DealerXMLTest {
 	@Test
 	public void testMockDBResourceXML() {
 			
+    	Intent i = new Intent();
+    	i.putExtras(BundleCreator.createBundle(
+    			ViewContext.SELECT_BLACK, 0));
+    	csa.setIntent(i);
+    	csa.onCreate(null);
+		
     	int numCards = 10;
     	MockDealer dealer = new MockDealer(csa);
+    	dealer.setNumWhiteCards(numCards);
         
-    	List<Card> cards = dealer.dealCards(CardType.WHITE,numCards);
+    	List<Card> cards = dealer.dealCards(ViewContext.SELECT_WHITE);
     	assertTrue(cards.size()==numCards);
     	for (Card c : cards)
     	{
