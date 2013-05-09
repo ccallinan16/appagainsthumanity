@@ -5,14 +5,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import test.util.SQLTestRunner;
-import test.util.SelectionAndContextHelper;
 import android.content.Intent;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
-import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.GamelistAdapter;

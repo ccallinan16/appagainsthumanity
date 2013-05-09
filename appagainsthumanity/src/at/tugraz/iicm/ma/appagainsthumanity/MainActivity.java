@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -108,7 +107,7 @@ public class MainActivity extends Activity {
 		super.onStart();
 		// Instanciate database proxy
 		dbProxy = new DBProxy(this.getApplicationContext());
-					
+		
 		//retrieve game list
 		gamelistCursor = dbProxy.readGameList(username);
 		displayListView(gamelistCursor);
@@ -163,20 +162,6 @@ public class MainActivity extends Activity {
 //    	EditText editText = (EditText) findViewById(R.id.edit_message);
 //    	String message = editText.getText().toString();
 //    	intent.putExtra(EXTRA_MESSAGE, message);
-    	startActivity(intent);
-    }
-
-    public void showGallery(View view) {
-    	
-
-    	Intent intent = new Intent(this, CardSlideActivity.class);
-    	
-		CardCollection.instance.setupContextTESTING(
-				ViewContext.SELECT_WHITE, 
-				new MockDealer(view.getContext()));
-
-    	intent.putExtras(BundleCreator.createBundle(ViewContext.SELECT_WHITE, 1));
-    	
     	startActivity(intent);
     }
     

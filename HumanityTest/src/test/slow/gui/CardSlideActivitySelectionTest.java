@@ -10,11 +10,8 @@ import org.junit.runner.RunWith;
 
 import test.util.PathTestRunner;
 import test.util.SelectionAndContextHelper;
-import test.util.TestBundleCreator;
 import android.content.Intent;
-import android.os.Bundle;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
-import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;

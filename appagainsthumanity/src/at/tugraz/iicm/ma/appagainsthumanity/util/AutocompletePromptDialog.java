@@ -4,17 +4,15 @@ package at.tugraz.iicm.ma.appagainsthumanity.util;
  * refer to: http://www.jjoe64.com/2011/06/prompt-dialog-for-android.html
  */
 
-	import android.app.AlertDialog;  
 	import android.R;
-    import android.content.Context;  
-    import android.content.DialogInterface;  
-    import android.content.DialogInterface.OnClickListener;  
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;  
 import android.widget.SimpleCursorAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
       

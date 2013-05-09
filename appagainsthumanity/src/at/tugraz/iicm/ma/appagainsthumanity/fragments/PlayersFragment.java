@@ -1,7 +1,5 @@
 package at.tugraz.iicm.ma.appagainsthumanity.fragments;
 
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,16 +7,12 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
-import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
-import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
 public class PlayersFragment extends Fragment {
 	/*

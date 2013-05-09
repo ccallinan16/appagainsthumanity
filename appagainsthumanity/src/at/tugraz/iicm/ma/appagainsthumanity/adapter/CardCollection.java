@@ -119,47 +119,6 @@ public class CardCollection {
 			return black.size();
 		return 0;
 	}
-
-	public void setupContextTESTING(ViewContext context, MockDealer ctxDealer)
-	{
-		//overwrite the usual dealer
-		this.dealer = ctxDealer;
-		
-		String ws = "W";
-		
-		while (ws.length() < 27)
-			ws += "W";
-		
-		String longest = "While the United States raced the Soviet Union to the moon, the Mexican government funneled millions of pesos into research on ____.";
-
-		Card black = makeCard(77, longest, CardType.BLACK);
-		
-		Card white = makeCard(66, longest, CardType.WHITE);
-
-		  switch(context)
-		  {
-		  case SELECT_BLACK:
-			  break;
-			  
-		  case SELECT_WHITE:
-		  case SHOW_RESULT:
-			  setBlackCard(black.getId());
-			  //already added to CardsInPlay, TODO: change
-			  break;
-			  
-		  case CONFIRM_SINGLE:
-			  setSelectedID(black.getId(), black.getType());
-			  break;
-
-		  case CONFIRM_PAIR:
-			  setBlackCard(black.getId());
-			  setSelectedID(white.getId(), white.getType());
-			  break;
-			  
-		  default:
-				  //do nothing
-		  }
-	}
 	
 	public void setupContext(ViewContext context, MockDealer ctxDealer) {
 				

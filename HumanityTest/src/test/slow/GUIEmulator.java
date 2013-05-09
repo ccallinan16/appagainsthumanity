@@ -1,20 +1,13 @@
 package test.slow;
 
 import test.util.SelectionAndContextHelper;
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.widget.Button;
 import android.widget.ListView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
-import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
-import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.GamelistAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
-import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
@@ -39,9 +32,6 @@ public class GUIEmulator {
 		GamelistAdapter adapter = (GamelistAdapter) list.getAdapter();
 
 		adapter.simulateClick(context);
-
-		CardSlideActivity csa = new CardSlideActivity();
-
 	}
 	
 	

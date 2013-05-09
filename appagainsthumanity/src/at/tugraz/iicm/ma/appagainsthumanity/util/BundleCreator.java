@@ -1,10 +1,7 @@
 package at.tugraz.iicm.ma.appagainsthumanity.util;
 
-import android.content.Intent;
 import android.os.Bundle;
-import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class BundleCreator {
 

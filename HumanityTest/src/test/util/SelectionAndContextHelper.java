@@ -2,13 +2,8 @@ package test.util;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
@@ -27,10 +22,7 @@ public class SelectionAndContextHelper {
     		ViewContext context,
     		long turnid)
     {
-    	if (turnid > 0)
-    		origin.getIntent().putExtras(BundleCreator.createBundle(context,turnid));
-    	else
-    		origin.getIntent().putExtras(TestBundleCreator.createBundle(context, true));
+   		origin.getIntent().putExtras(BundleCreator.createBundle(context,turnid));
     	origin.onCreate(null);
     	
     	Card c = getFirstCard(origin, 
@@ -62,10 +54,7 @@ public class SelectionAndContextHelper {
     		Activity activity, ViewContext context,long turnid)
     {
     	Intent origIntent = new Intent();
-    	if (turnid > 0)
-    		origIntent.putExtras(BundleCreator.createBundle(context,turnid));
-    	else
-    		origIntent.putExtras(TestBundleCreator.createBundle(context, true));
+    	origIntent.putExtras(BundleCreator.createBundle(context,turnid));
     	origin.setIntent(origIntent);
     	origin.onCreate(null);
     	
@@ -117,7 +106,7 @@ public class SelectionAndContextHelper {
     public static Intent createAndGetIntent(Activity activity, ViewContext context)
     {
     	Intent i = new Intent(activity, CardSlideActivity.class);
-    	i.putExtras(TestBundleCreator.createBundle(context,false));
+    	i.putExtras(BundleCreator.createBundle(context,0));
 
     	if(context == ViewContext.UNKNOWN)
 			i = new Intent(activity, MainActivity.class);

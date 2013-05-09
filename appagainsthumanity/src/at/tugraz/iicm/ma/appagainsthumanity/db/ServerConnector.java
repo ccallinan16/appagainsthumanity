@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import mocks.MockDealer;
-
 import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;

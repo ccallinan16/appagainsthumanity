@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import test.util.PathTestRunner;
-import test.util.TestBundleCreator;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
@@ -22,8 +21,6 @@ import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
-import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
-import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.XMLReader;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;

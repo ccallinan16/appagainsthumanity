@@ -59,7 +59,7 @@ public class GetterProxy {
 	        
 	    int gameID = -1;
 	    	    
-	    if (cursor != null)
+	    if (cursor != null && cursor.getCount() > 0)
 	    {
 		    cursor.moveToFirst();
 		    gameID = cursor.getInt(0);

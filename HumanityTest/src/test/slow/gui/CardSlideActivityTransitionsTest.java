@@ -1,8 +1,5 @@
 package test.slow.gui;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,23 +8,14 @@ import org.junit.runner.RunWith;
 
 import test.util.PathTestRunner;
 import test.util.SelectionAndContextHelper;
-import test.util.TestBundleCreator;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
-import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 
-import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.matchers.StartedMatcher;
-import com.xtremelabs.robolectric.shadows.ShadowAlertDialog;
  
 @RunWith(PathTestRunner.class)
 public class CardSlideActivityTransitionsTest {
@@ -51,14 +39,17 @@ public class CardSlideActivityTransitionsTest {
     public void testTransitionDisplayToMain()
     {
      	MainActivity newActivity = new MainActivity();
+    	PresetHelper.setPreset(new DBProxy(newActivity), PresetHelper.SELECT_BLACK);
+
     	Intent i = SelectionAndContextHelper.switchFromDisplayToMain(
-    			csa, newActivity, ViewContext.CONFIRM_SINGLE,0);
+    			csa, newActivity, ViewContext.CONFIRM_SINGLE,PresetHelper.man.getLastTurnID());
     	Assert.assertThat(newActivity, new StartedMatcher(i));
 
     	newActivity = new MainActivity();
+    	PresetHelper.setPreset(new DBProxy(newActivity), PresetHelper.SELECT_WHITE);
 
     	i = SelectionAndContextHelper.switchFromDisplayToMain(
-    			csa, newActivity, ViewContext.CONFIRM_PAIR,0);
+    			csa, newActivity, ViewContext.CONFIRM_PAIR,PresetHelper.man.getLastTurnID());
     	Assert.assertThat(newActivity, new StartedMatcher(i)); 	
     }
     
@@ -66,8 +57,10 @@ public class CardSlideActivityTransitionsTest {
     public void testTransitionBlackSelectToDisplay()
     {
     	CardSlideActivity activity = new CardSlideActivity();
+    	PresetHelper.setPreset(new DBProxy(activity), PresetHelper.SELECT_BLACK);
+    	
     	Intent i = SelectionAndContextHelper.switchFromSelectionToDisplay(
-    			csa, activity, ViewContext.SELECT_BLACK,0);
+    			csa, activity, ViewContext.SELECT_BLACK,PresetHelper.man.getLastTurnID());
         Assert.assertThat(activity, new StartedMatcher(i));
     }
     
@@ -75,9 +68,10 @@ public class CardSlideActivityTransitionsTest {
     public void testTransitionWhiteSelectToDisplay()
     {
     	CardSlideActivity activity = new CardSlideActivity();
+    	PresetHelper.setPreset(new DBProxy(activity), PresetHelper.SELECT_WHITE);
 
     	Intent i = SelectionAndContextHelper.switchFromSelectionToDisplay(
-    			csa, activity, ViewContext.SELECT_WHITE,0);
+    			csa, activity, ViewContext.SELECT_WHITE,PresetHelper.man.getLastTurnID());
         Assert.assertThat(activity, new StartedMatcher(i));
     }
 

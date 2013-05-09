@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import test.util.PathTestRunner;
-import test.util.TestBundleCreator;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;

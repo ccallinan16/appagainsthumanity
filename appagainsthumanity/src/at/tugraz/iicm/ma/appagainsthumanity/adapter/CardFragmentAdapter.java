@@ -1,12 +1,10 @@
 package at.tugraz.iicm.ma.appagainsthumanity.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import at.tugraz.iicm.ma.appagainsthumanity.db.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;

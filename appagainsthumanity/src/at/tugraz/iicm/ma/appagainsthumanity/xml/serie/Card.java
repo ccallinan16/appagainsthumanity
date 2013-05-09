@@ -4,7 +4,6 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 
 import at.tugraz.iicm.ma.appagainsthumanity.R;
-import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract.BlackCard;
 
 public class Card {
 

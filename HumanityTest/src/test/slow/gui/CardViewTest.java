@@ -9,13 +9,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import test.util.PathTestRunner;
-import test.util.TestBundleCreator;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.FrameLayout;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
-import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
@@ -23,7 +20,6 @@ import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
  
 @RunWith(PathTestRunner.class)
 public class CardViewTest {

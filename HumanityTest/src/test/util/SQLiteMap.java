@@ -1,6 +1,7 @@
 package test.util;
 
 import java.sql.ResultSet;
+
 import com.xtremelabs.robolectric.util.DatabaseConfig.DatabaseMap;
 
 public class SQLiteMap implements DatabaseMap {
