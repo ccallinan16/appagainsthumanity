@@ -160,7 +160,10 @@ public class ServerConnector {
 
 	}
 
-	
+	public int getBlackCardForTurn(long turnID) {
+		return proxy.getter.getBlackCard(turnID);
+	}
+
 		
 	public void getPlayedCards(GameManager preset) {
 		
@@ -179,6 +182,8 @@ public class ServerConnector {
 		proxy.getDBSetter().updatePlayedWhiteCard(turn_id,chosen_card);
 		proxy.getDBSetter().updateScores(turn_id);
 	}
+
+
 
 
 

@@ -100,15 +100,15 @@ public class GetterProxy {
 	    		DBContract.Turn._ID + "=?", 
 	    		new String[] { String.valueOf(turnid) } , 
 	    		null, null, null);
-	        
-	    if (cursor == null)
-	    	return -1;
 	    	    
 	    int cardId = -1;
 	    
-	    cursor.moveToFirst();
-	    cardId = cursor.getInt(0);
-	    cursor.close();    
+	    if (cursor != null && cursor.getCount() > 0)
+	    {
+		    cursor.moveToFirst();
+		    cardId = cursor.getInt(0);
+		    cursor.close();    
+	    }
 	    return cardId;
 	}
 	

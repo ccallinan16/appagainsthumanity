@@ -70,23 +70,6 @@ public class CardCollection {
 		else throw new CardTypeException(type);
 	}
 
-	public void setSelected(Card c) {
-
-		//HashMap<Integer,Card> map = (c.getType().equals(CardType.WHITE))? white : black;
-		
-		//boolean tmp = c.isHighlighted();
-		
-		selectedId = -1;
-		
-		//for (Card card : map.values())
-		//	card.setHighlighted(false);
-				
-		//if (!tmp)
-		selectedId = c.getId();
-		
-		//c.setHighlighted(!tmp);
-	}
-
 	public void setBlackCard(int id)
 	{
 		//TODO: call to server / DB
@@ -103,8 +86,18 @@ public class CardCollection {
 		return selectedId;
 	}
 
+	public void setSelectedID(int currentCard, CardType type) {
+		selectedId = currentCard;			
+	}
+	
 	public Card getSelectedCard(CardType type) {
-		return getCard(selectedId, type);
+		
+		Card c = getCard(selectedId, type);
+		
+		if (c == null)
+			c = dealer.getCardFromID(type, selectedId); //is already added to Singleton //TODO: change
+
+		return c;
 	}
 
 	public void clearAll() {
@@ -155,12 +148,12 @@ public class CardCollection {
 			  break;
 			  
 		  case CONFIRM_SINGLE:
-			  setSelected(black);
+			  setSelectedID(black.getId(), black.getType());
 			  break;
 
 		  case CONFIRM_PAIR:
 			  setBlackCard(black.getId());
-			  setSelected(white);
+			  setSelectedID(white.getId(), white.getType());
 			  break;
 			  
 		  default:
@@ -238,5 +231,6 @@ public class CardCollection {
 	public void setDealer(MockDealer dealer) {
 		this.dealer = dealer;
 	}
+
 
 }

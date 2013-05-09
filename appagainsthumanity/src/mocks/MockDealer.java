@@ -31,17 +31,22 @@ public class MockDealer {
 	}
 
 	
+	public Card getCardFromID(CardType type, int cardID) {
+		String tmp = reader.getText(type, cardID);
+		if (tmp == null)
+			tmp = "couldn't read from xml";
+		
+		return CardCollection.instance.makeCard(cardID,tmp,type);
+	}
+
+	
 	public List<Card> getCardFromIDs(CardType type, List<Integer> cardIDs)
 	{
 		List<Card> cards = new ArrayList<Card>();
 		
 		for (Integer index : cardIDs)
 		{
-    		String tmp = reader.getText(type, index);
-    		if (tmp == null)
-    			tmp = "couldn't read from xml";
-    		
-    		cards.add(CardCollection.instance.makeCard(index,tmp,type));
+			cards.add(getCardFromID(type, index));
 		}
 		
 		return cards;
@@ -54,9 +59,7 @@ public class MockDealer {
 
 	
 	public List<Card> dealCards(ViewContext context) {
-					
-    	List<Card> cards = new ArrayList<Card>();
-    	
+					   	
     	CardType type = CardType.WHITE;
     	int numCards = 1;
     	
@@ -84,15 +87,7 @@ public class MockDealer {
     	
     	List<Integer> cardNumbers = db.assignCards(numCards);
     	
-    	for(Integer index : cardNumbers)
-    	{
-    		String tmp = reader.getText(type, index);
-    		if (tmp == null)
-    			tmp = "couldn't read from xml";
-    		
-    		cards.add(CardCollection.instance.makeCard(index,tmp,type));
-    	}
-		return cards;
+		return getCardFromIDs(type, cardNumbers);
 	}
 
 	public void setNumBlack(int numBlackCards) {
@@ -106,5 +101,6 @@ public class MockDealer {
 	public void setNumPlayers(int numPlayers) {
 		this.numPlayers = numPlayers;
 	}
+
 
 }

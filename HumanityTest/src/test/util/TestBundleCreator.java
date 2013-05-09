@@ -14,11 +14,6 @@ public class TestBundleCreator {
 
 	public static Bundle getSelectBlackTESTING(int numBlackCards) {
 		
-		//do what needs to be done to make assertions not fail
-	/*	AllCards.instance.clearAll();
-		AllCards.instance.fillWithCards(CardType.BLACK,numBlackCards,dealer);
-		*/
-		
 		//TODO: replace setupContextTesting with preset!
 			
 		dealer.setNumBlack(numBlackCards);

@@ -22,6 +22,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.gui.OnCardSelectionListener;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
+import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class CardSlideActivity extends FragmentActivity {
 	
@@ -156,7 +157,7 @@ public class CardSlideActivity extends FragmentActivity {
 		  case SELECT_WHITE:
 			  if (turnID > 0)
 				  cardIDs = serverConnector.getDealtCards(dealer,context.getCardType(),turnID);
-		    
+
 			  if (cardIDs == null) //obviously, we didn't get cards from the db
 			  {
 				  CardCollection.instance.setupContext(context, dealer);
@@ -167,6 +168,8 @@ public class CardSlideActivity extends FragmentActivity {
 		  case CONFIRM_SINGLE:
 		  case CONFIRM_PAIR:
 			  cardIDs.add(CardCollection.instance.getSelectedID());
+			  break;
+			  default:
 		  }
 		  		  
 		  //TODO: do something else for confirm views
@@ -198,8 +201,15 @@ public class CardSlideActivity extends FragmentActivity {
 				  context == ViewContext.SHOW_RESULT)
 			draw = true;
 		
-	      
-		Card black = CardCollection.instance.getBlackCard();
+	   
+		ServerConnector serverConnector = new ServerConnector(proxy);
+		int blackID = serverConnector.getBlackCardForTurn(turnID);
+		
+		MockDealer dealer = new MockDealer(this);
+		Card black = dealer.getCardFromID(CardType.BLACK, blackID);
+		
+		if (black == null)
+			black = CardCollection.instance.getBlackCard();
 		
 		if (black == null || !draw)
 		{

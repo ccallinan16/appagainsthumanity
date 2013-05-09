@@ -33,10 +33,11 @@ public class OnCardSelectionListener implements OnClickListener {
 		CardFragmentAdapter cfa = (CardFragmentAdapter)pager.getAdapter();
 		
 		int currentCard = cfa.getCardID(pager.getCurrentItem());
-			
-		 
-		Card c = CardCollection.instance.getCard(currentCard,type);
-		CardCollection.instance.setSelected(c);
+
+		CardCollection.instance.setSelectedID(currentCard,type);
+		
+		//Card c = CardCollection.instance.getCard(currentCard,type);
+		//CardCollection.instance.setSelected(c);
 		
   		createAndStartNewActivity(v,turnID);
 

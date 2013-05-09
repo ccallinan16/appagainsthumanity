@@ -61,6 +61,8 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 	  
 	  public int getCardID(int position)
 	  {
+		  if (cardIDs.size() <= position)
+			  return 0;
 		  return cardIDs.get(position);
 	  }
 	  
