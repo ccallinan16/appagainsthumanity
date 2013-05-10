@@ -1,7 +1,9 @@
 package at.tugraz.iicm.ma.appagainsthumanity.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,12 +11,14 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import at.tugraz.iicm.ma.appagainsthumanity.ChooseViewListener;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 
 public class TurnlistAdapter extends CursorAdapter {
 
 	private final LayoutInflater inflater;
 	private String username;
+	private Activity activity;
 	private OnClickListener black;
 	private OnClickListener white;
 	private OnClickListener winning;
@@ -22,14 +26,15 @@ public class TurnlistAdapter extends CursorAdapter {
 	
 	//other constructors would need api level 11 - our base-level is 8
 	@SuppressWarnings("deprecation") 
-	public TurnlistAdapter(Context context, Cursor c, String username, OnClickListener chooseBlackCardListener, OnClickListener chooseWhiteCardListener, OnClickListener chooseWinningCardListener, OnClickListener showResultListener) {
-		super(context, c);
-		inflater=LayoutInflater.from(context);
+	public TurnlistAdapter(Activity activity, Cursor c, String username) {
+		super(activity, c);
+		inflater=LayoutInflater.from(activity);
+		this.activity = activity;
 		this.username = username;
-		this.black = chooseBlackCardListener;
-		this.white = chooseWhiteCardListener;
-		this.winning = chooseWinningCardListener;
-		this.result = showResultListener;
+		this.black = new ChooseViewListener(activity, ViewContext.SELECT_BLACK,0);
+		this.white = new ChooseViewListener(activity, ViewContext.SELECT_WHITE,0);
+		this.winning = new ChooseViewListener(activity, ViewContext.SELECT_WHITE,0);
+		this.result = new ChooseViewListener(activity, ViewContext.SHOW_RESULT,0);
 	}
 
 	@Override
@@ -38,26 +43,33 @@ public class TurnlistAdapter extends CursorAdapter {
 		TextView round = (TextView)view.findViewById(R.id.tv_round);
 		TextView status = (TextView)view.findViewById(R.id.tv_status);
 		ImageView thumbnail = (ImageView)view.findViewById(R.id.thumbnail);
+		ImageView arrow = (ImageView)view.findViewById(R.id.arrow);
 		
 		//set roundnumber
 		round.setText("Round " + c.getString(1));
+		
+		//set arrow to visible if it was hidden before
+		arrow.setVisibility(View.VISIBLE);
 		
 		if (username.equals(c.getString(3)) && c.getLong(4) == 0) {
 			//case: choose black card
 			thumbnail.setImageResource(R.drawable.card_black);
 			status.setText(context.getString(R.string.game_overview_turns_text_chooseblack));
-			view.setOnClickListener(black);
+			view.setOnClickListener(
+					new ChooseViewListener(activity, ViewContext.SELECT_BLACK,c.getLong(0)));
 		} else if (!username.equals(c.getString(3)) && c.getInt(5) < (c.getInt(2) - 1)) {
 			//choose white card
 			thumbnail.setImageResource(R.drawable.card_white);
 			status.setText(context.getString(R.string.game_overview_turns_text_choosewhiteblack));
-			view.setOnClickListener(white);
+			view.setOnClickListener(
+					new ChooseViewListener(activity, ViewContext.SELECT_WHITE,c.getLong(0)));
 		} else if (username.equals(c.getString(3)) && c.getInt(5) == (c.getInt(2) - 1) && c.getString(6).equals(null)) {
 			//choose winning card
 			thumbnail.setImageResource(R.drawable.winner);
 			status.setText(context.getString(R.string.game_overview_turns_text_choosewinner));
-			view.setOnClickListener(winning);
-		} else if (!c.getString(6).equals(null)) {
+			view.setOnClickListener(
+					new ChooseViewListener(activity, ViewContext.SELECT_BLACK,c.getLong(0)));
+		} else if (! (c.getString(6) == null)) {
 			//show result
 			if (c.getString(6).equals(username)) {
 				thumbnail.setImageResource(R.drawable.star);
@@ -67,10 +79,14 @@ public class TurnlistAdapter extends CursorAdapter {
 				thumbnail.setImageResource(R.drawable.star_empty);
 				status.setText(context.getString(R.string.game_overview_turns_text_winner) + ": " + c.getString(6));
 			}
-			view.setOnClickListener(result);
+			view.setOnClickListener(
+					new ChooseViewListener(activity, ViewContext.SHOW_RESULT,c.getLong(0)));
 		} else {
+			//case: wait for other player action
 			thumbnail.setImageResource(R.drawable.time);
 			status.setText(context.getString(R.string.game_overview_turns_text_wait));
+			//hide arrow
+			arrow.setVisibility(View.INVISIBLE);
 			thumbnail.setEnabled(false);
 		}
 	}

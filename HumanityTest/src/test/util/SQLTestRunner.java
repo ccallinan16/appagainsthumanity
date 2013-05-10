@@ -8,9 +8,10 @@ import com.xtremelabs.robolectric.RobolectricConfig;
 
 public class SQLTestRunner extends PathTestRunner {
     private static final String DB_FILE = "/home/egetzner/appagainsthumanity/HumanityTest/testdata/test.db";
+    private static final String DB_FILE_2  = "C:/study/ss13/Mobile Applications/repository/HumanityTest/testdata/test.db";
     
     public SQLTestRunner(Class testClass) throws InitializationError {
-          super(testClass, new RobolectricConfig(new File(".")), new SQLiteMap(DB_FILE));
+          super(testClass, new RobolectricConfig(new File(".")), new SQLiteMap(DB_FILE_2));
     
     }
 }

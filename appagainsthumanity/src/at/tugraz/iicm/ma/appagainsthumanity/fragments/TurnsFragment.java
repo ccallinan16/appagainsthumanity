@@ -70,10 +70,9 @@ public class TurnsFragment extends Fragment {
 		
 		//retrieve game list
 		turnListCursor = dbProxy.readTurnlist(game_id);
-		DatabaseUtils.dumpCursor(turnListCursor);
 		
 		//create adapter
-		turnListAdapter = new TurnlistAdapter(getActivity(), turnListCursor, username, chooseBlackCardListener, chooseWhiteCardListener, chooseWinningCardListener, showResultListener);
+		turnListAdapter = new TurnlistAdapter(getActivity(), turnListCursor, username);
 
 		//set adapter
 		turnListView.setAdapter(turnListAdapter);
