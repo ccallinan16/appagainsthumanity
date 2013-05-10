@@ -54,11 +54,6 @@ public class CardSlideActivity extends FragmentActivity {
 	  
 	  turnID = getIntent().getExtras().getLong(BundleCreator.TURN_ID);
 	  	  
-      //TODO
-	  //MockDealer dealer = new MockDealer(this);
-      //CardCollection.instance.setupContext(context,dealer);
-      
-      //setup the ViewPager (to flip through cards) as well as the Top card
       initSlider();
       
       initTop();
