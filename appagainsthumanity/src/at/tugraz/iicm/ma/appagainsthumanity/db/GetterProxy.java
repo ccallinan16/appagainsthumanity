@@ -40,8 +40,10 @@ public class GetterProxy {
 	    Cursor cursor = db.getReadableDatabase().rawQuery(selectQuery, null);
 	   
 	    if (cursor != null)
-	        if (!cursor.moveToLast())
+	        if (!cursor.moveToLast()) {
+	        	cursor.close();
 	        	return -1;
+	        }
 	    
 	    int turnid = cursor.getInt(0);
 	    cursor.close();
@@ -59,10 +61,12 @@ public class GetterProxy {
 	        
 	    int gameID = -1;
 	    	    
-	    if (cursor != null && cursor.getCount() > 0)
+	    if (cursor != null)
 	    {
-		    cursor.moveToFirst();
-		    gameID = cursor.getInt(0);
+	    	if (cursor.getCount() > 0) {
+			    cursor.moveToFirst();
+			    gameID = cursor.getInt(0);
+	    	}
 		    cursor.close();    
 	    }
 	    return gameID;
@@ -86,6 +90,7 @@ public class GetterProxy {
 	    		cardIDs.add(cursor.getInt(0));
 	    		cursor.moveToNext();
 	    	}
+	    	cursor.close();
 	    	
 	    }
 	    
@@ -105,8 +110,10 @@ public class GetterProxy {
 	    
 	    if (cursor != null && cursor.getCount() > 0)
 	    {
-		    cursor.moveToFirst();
-		    cardId = cursor.getInt(0);
+	    	if (cursor.getCount() > 0) {
+			    cursor.moveToFirst();
+			    cardId = cursor.getInt(0);
+	    	}
 		    cursor.close();    
 	    }
 	    return cardId;
@@ -123,8 +130,9 @@ public class GetterProxy {
 	    if (cursor != null)
 	    {
 	        cursor.moveToLast();
-	        
-	        return cursor.getString(0);
+	        String tmp = cursor.getString(0);
+	        cursor.close();
+	        return tmp;
 	    }
 	    return null;
 	}
@@ -142,12 +150,8 @@ public class GetterProxy {
 	    {
 		    cursor.moveToFirst();
 		    numRows = cursor.getCount();
-		   
 		    cursor.close();    
 	    }    
 	    return (numRows > 0);
 	}
-
-
-
 }

@@ -59,7 +59,21 @@ public class CardSlideActivity extends FragmentActivity {
       initTop();
 
       initButtons();
-    }      
+    }     
+    
+    @Override
+    protected void onStop() {
+    	try {
+    		super.onStop();
+
+    		if (this.proxy != null) {
+    			this.proxy.onStop();
+    			this.proxy = null;
+    		}
+    	} catch (Exception error) {
+        /** Error Handler Code **/
+    	}// end try/catch (Exception error)
+    }
     	
 	private void initButtons() {
 		
@@ -123,7 +137,10 @@ public class CardSlideActivity extends FragmentActivity {
 	}     
 
 	protected void createAndStartMainActivity(View v) {
+		System.out.println("back to main");
 		Intent intent = new Intent(v.getContext(),MainActivity.class);
+		//add flag to get back to main activity and clean intermediate activities
+    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     	startActivity(intent);
 	}
 
