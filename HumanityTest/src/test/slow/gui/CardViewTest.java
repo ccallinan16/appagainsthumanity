@@ -11,7 +11,9 @@ import org.junit.runner.RunWith;
 import test.util.PathTestRunner;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
@@ -30,8 +32,9 @@ public class CardViewTest {
     public void setUp() throws Exception {
     	csa = new CardSlideActivity();
     	Intent i = new Intent();
-    	PresetHelper.setPreset(new DBProxy(csa), PresetHelper.SELECT_BLACK);
-    	
+    	DBProxy proxy = new DBProxy(csa);
+    	PresetHelper.setPreset(proxy, PresetHelper.SELECT_BLACK);
+    	csa.setProxy(proxy);
     	i.putExtras(BundleCreator.createBundle(ViewContext.SELECT_BLACK,
     			PresetHelper.man.getLastTurnID()));
 
@@ -41,6 +44,25 @@ public class CardViewTest {
  
     @After
     public void tearDown() throws Exception {
+    	
+    }
+    
+    @Test
+    public void testTextViewExists()
+    {    	
+    	csa.onCreate(null);
+    	
+    	TextView label = (TextView) csa.findViewById(R.id.cs_label);
+    	assertEquals(View.VISIBLE,label.getVisibility());
+    	assertEquals(csa.getResources().getString(R.string.cs_label_select_black),label.getText());
+    	
+    	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
+    	CardFragmentAdapter cfa = (CardFragmentAdapter) pager.getAdapter();
+    	assertEquals(cfa.getItem(0).getClass(),SingleCardFragment.class);
+    	
+    	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
+    	assertEquals(0,frame.getChildCount());
+
     	
     }
 

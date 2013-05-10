@@ -32,8 +32,7 @@ public class DBProxyTest {
 
     @After
     public void teardown() {
-        proxy.closeReadableDatabase();
-        proxy.closeWritableDatabase();
+		proxy.onStop();
     }
 
     @Test

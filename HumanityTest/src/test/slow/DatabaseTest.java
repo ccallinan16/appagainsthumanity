@@ -32,7 +32,7 @@ public class DatabaseTest {
 	@After
 	public void tearDown()
 	{
-
+		proxy.onStop();
 	}
 	
 	@Test

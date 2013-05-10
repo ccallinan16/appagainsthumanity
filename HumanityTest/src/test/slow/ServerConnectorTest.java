@@ -35,6 +35,7 @@ public class ServerConnectorTest {
 
     @After
     public void teardown() {
+		proxy.onStop();
     }
     
     /**

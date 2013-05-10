@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
@@ -54,6 +55,14 @@ public class CardSlideActivity extends FragmentActivity {
 	  
 	  turnID = getIntent().getExtras().getLong(BundleCreator.TURN_ID);
 	  	  
+	  if (context == ViewContext.CONFIRM_PAIR 
+			  || context == ViewContext.CONFIRM_SINGLE
+			  || context == ViewContext.SHOW_RESULT)
+	  {
+			TextView lbl = (TextView) findViewById(R.id.cs_label);
+			lbl.setVisibility(View.GONE);
+	  }
+	  
       initSlider();
       
       initTop();
@@ -92,6 +101,7 @@ public class CardSlideActivity extends FragmentActivity {
 		      case CONFIRM_PAIR:
 		      case CONFIRM_SINGLE:
 		    	  okButton.setText(R.string.menu_send);
+		    	  default:
 		      }
 		      
 		      Button cancelBtn = (Button) findViewById(R.id.cancelButton);
@@ -128,7 +138,8 @@ public class CardSlideActivity extends FragmentActivity {
 					default:
 						break;
 					}
-										
+				
+			    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				  	v.getContext().startActivity(intent);									
 				}
 			});
@@ -213,7 +224,13 @@ public class CardSlideActivity extends FragmentActivity {
 				  context == ViewContext.SHOW_RESULT)
 			draw = true;
 		
-	   
+		if (!draw)
+		{
+			FrameLayout v = (FrameLayout) findViewById(R.id.cs_display_frame);
+			v.setVisibility(View.GONE);
+			return;
+		}
+		
 		ServerConnector serverConnector = new ServerConnector(proxy);
 		int blackID = serverConnector.getBlackCardForTurn(turnID);
 		
