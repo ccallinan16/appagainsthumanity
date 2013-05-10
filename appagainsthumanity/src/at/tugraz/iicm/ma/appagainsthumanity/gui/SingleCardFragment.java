@@ -1,5 +1,6 @@
 package at.tugraz.iicm.ma.appagainsthumanity.gui;
 
+import mocks.IDToCardTranslator;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -48,8 +49,11 @@ public class SingleCardFragment extends Fragment {
 		 int cardId = getArguments().getInt(ID);
 		 View v = inflater.inflate(R.layout.single_card_view, container, false);
 
-		 Card card = CardCollection.instance.getCard(cardId, TYPE);
-
+		 //TODO: replace all occurences of this, as we only want to do this once!
+		 //IDToCardTranslator translator = new IDToCardTranslator(this.getActivity());
+		 
+		 Card card = CardCollection.instance.getCardSafe(cardId,TYPE);
+		 
 		 TextView messageTextView = (TextView)v.findViewById(R.id.cardText);
 		 messageTextView.setText(card.getText());
 		 messageTextView.setTextAppearance(v.getContext(), card.getTextAppearance());

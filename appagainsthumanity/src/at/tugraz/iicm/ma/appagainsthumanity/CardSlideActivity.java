@@ -4,7 +4,7 @@ package at.tugraz.iicm.ma.appagainsthumanity;
 import java.util.ArrayList;
 import java.util.List;
 
-import mocks.MockDealer;
+import mocks.IDToCardTranslator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -168,7 +168,7 @@ public class CardSlideActivity extends FragmentActivity {
 			  proxy = new DBProxy(this);
 		  
 		  ServerConnector serverConnector = new ServerConnector(proxy);
-		  MockDealer dealer = new MockDealer(this);
+		  IDToCardTranslator dealer = new IDToCardTranslator(this);
 		  
 		  List<Integer> cardIDs = new ArrayList<Integer>();
 
@@ -234,9 +234,10 @@ public class CardSlideActivity extends FragmentActivity {
 		ServerConnector serverConnector = new ServerConnector(proxy);
 		int blackID = serverConnector.getBlackCardForTurn(turnID);
 		
-		MockDealer dealer = new MockDealer(this);
+		IDToCardTranslator dealer = new IDToCardTranslator(this);
 		Card black = dealer.getCardFromID(CardType.BLACK, blackID);
 		
+		//for testing purposes only TODO
 		if (black == null)
 			black = CardCollection.instance.getBlackCard();
 		

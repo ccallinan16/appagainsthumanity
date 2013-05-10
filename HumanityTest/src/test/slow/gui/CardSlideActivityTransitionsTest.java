@@ -1,5 +1,7 @@
 package test.slow.gui;
 
+import mocks.IDToCardTranslator;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,6 +13,7 @@ import test.util.SelectionAndContextHelper;
 import android.content.Intent;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
@@ -27,6 +30,7 @@ public class CardSlideActivityTransitionsTest {
     	csa = new CardSlideActivity();
     	Intent i = new Intent();
     	csa.setIntent(i);
+    	CardCollection.instance.setTranslator(new IDToCardTranslator(csa));
 
     }
  

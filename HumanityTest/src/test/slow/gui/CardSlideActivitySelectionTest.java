@@ -3,6 +3,8 @@ package test.slow.gui;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import mocks.IDToCardTranslator;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +14,7 @@ import test.util.PathTestRunner;
 import test.util.SelectionAndContextHelper;
 import android.content.Intent;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
@@ -30,6 +33,8 @@ public class CardSlideActivitySelectionTest {
     	Intent i = new Intent();
     	csa.setIntent(i);
 
+    	CardCollection.instance.setTranslator(new IDToCardTranslator(csa));
+    	
     }
  
     @After

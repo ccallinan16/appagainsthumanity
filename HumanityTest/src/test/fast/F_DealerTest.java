@@ -4,8 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import mocks.MockDB;
-import mocks.MockDealer;
+import mocks.Shuffler;
+import mocks.IDToCardTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,8 +26,8 @@ public class F_DealerTest {
 	@Test
 	public void testCardToString()
 	{
-		Card card = CardCollection.instance.makeCard(1,"Hello World",CardType.WHITE);
-		Card card2 = CardCollection.instance.makeCard(5,"Good Day.",CardType.BLACK);
+		Card card = Card.makeCard(1,"Hello World",CardType.WHITE);
+		Card card2 = Card.makeCard(5,"Good Day.",CardType.BLACK);
 
 		assertEquals("(1) white \"Hello World\"",card.toString());
 		assertEquals("(5) black \"Good Day.\"",card2.toString());
@@ -37,7 +37,7 @@ public class F_DealerTest {
     @Test
     public void testMockDealerTop()
     {
-    	MockDealer dealer = new MockDealer("testdata/xml/raw/all_cards.xml");
+    	IDToCardTranslator dealer = new IDToCardTranslator("testdata/xml/raw/all_cards.xml");
     	int numCards = 7;
     	dealer.setNumWhiteCards(numCards);
     	
@@ -54,10 +54,9 @@ public class F_DealerTest {
     @Test
     public void testGettingNumsFromDB()
     {
-    	MockDB db = new MockDB();
-    	
+   	
     	int numCards = 4;
-    	List<Integer> cardNumbers = db.assignCards(numCards);
+    	List<Integer> cardNumbers = Shuffler.getRandomListOfInts(numCards);
     	assertEquals(numCards,cardNumbers.size());
     }
     

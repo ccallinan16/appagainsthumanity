@@ -4,29 +4,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import mocks.MockDealer;
+import mocks.IDToCardTranslator;
 
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 
+import android.annotation.SuppressLint;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardTypeException;
 
-@Root
 public class CardCollection {
 
 	public static CardCollection instance = new CardCollection();
 	
-	@ElementMap
 	private HashMap<Integer,Card> white;
-	
-	@ElementMap
 	private HashMap<Integer,Card> black; //possibly only one
 	
 	private int selectedId;
 	private int blackCardId;
-	private MockDealer dealer;
+	private IDToCardTranslator dealer;
 
 	private CardCollection() {
 		white = new HashMap<Integer,Card>();
@@ -36,40 +33,36 @@ public class CardCollection {
 		dealer = null;
 	}
 	
-	public Card getCard(int id, CardType type)
+	public Card getCardSafe(int id, CardType type)
 	{
+		Card card = null;
 		if (type.equals(CardType.WHITE))
-			return white.get(id);
+			card = white.get(id);
 		else if (type.equals(CardType.BLACK))
-			return black.get(id);
+			card = black.get(id);
 		
-		return null;
+		if (card == null)
+		{
+			card = dealer.getCardFromID(type, id);
+			//and, for now, add the card.
+			addCard(card);
+		}
+		
+		return card;
 	}
 
-	public Card makeCard(int id, String text, CardType type)
-	{
-		Card c = Card.makeCard(id, text, type);
-		switch(type){
+	public void addCard(Card c) {
+		switch(c.getType()){
 		case WHITE:
-			white.put(id,c);
+			white.put(c.getId(),c);
 			break;
 			
 		case BLACK:
-			black.put(id,c);
+			black.put(c.getId(),c);
 		}
 		
-		return c;
 	}
 	
-	public void makeAndAddCardFromText(CardType type, String text) throws CardTypeException
-	{
-		if (type.equals(CardType.WHITE))
-			makeCard(white.size()+1, text, type);
-		else if (type.equals(CardType.BLACK))
-			makeCard(black.size()+1, text, type);
-		else throw new CardTypeException(type);
-	}
-
 	public void setBlackCard(int id)
 	{
 		//TODO: call to server / DB
@@ -79,7 +72,7 @@ public class CardCollection {
 	public Card getBlackCard()
 	{
 		//TODO: call to server
-		return getCard(blackCardId,CardType.BLACK);
+		return getCardSafe(blackCardId,CardType.BLACK);
 	}
 	
 	public int getSelectedID() {
@@ -92,10 +85,10 @@ public class CardCollection {
 	
 	public Card getSelectedCard(CardType type) {
 		
-		Card c = getCard(selectedId, type);
+		Card c = getCardSafe(selectedId, type);
 		
 		if (c == null)
-			c = dealer.getCardFromID(type, selectedId); //is already added to Singleton //TODO: change
+			addCard(dealer.getCardFromID(type, selectedId));
 
 		return c;
 	}
@@ -120,7 +113,7 @@ public class CardCollection {
 		return 0;
 	}
 	
-	public void setupContext(ViewContext context, MockDealer ctxDealer) {
+	public void setupContext(ViewContext context, IDToCardTranslator ctxDealer) {
 				
 	  switch(context)
 	  {
@@ -146,14 +139,15 @@ public class CardCollection {
 	  if (dealer == null)
 		this.dealer = ctxDealer;
 
-	  dealer.dealCards(context); //already added to CardsInPlay, TODO: change
+	  for (Card c : dealer.dealCards(context))
+		  addCard(c); 
 
 	}
 
-	public void setCardsForPager(MockDealer dealer, List<Integer> list, CardType type)
+	public void setCards(List<Integer> list, CardType type)
 	{
-		dealer.getCardFromIDs(type, list);
-		//cards are already set... //TODO: change that
+		for(Card c : dealer.getCardFromIDs(type, list))
+			addCard(c);
 	}
 	
 	public List<Integer> getCardsForPager(ViewContext context) {
@@ -183,13 +177,14 @@ public class CardCollection {
 		  return cards;
 	}
 
-	public MockDealer getDealer() {
+	public IDToCardTranslator getTranslator() {
 		return dealer;
 	}
 
-	public void setDealer(MockDealer dealer) {
+	public void setTranslator(IDToCardTranslator dealer) {
 		this.dealer = dealer;
 	}
+
 
 
 }

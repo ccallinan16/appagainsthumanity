@@ -32,7 +32,6 @@ public class DBProxy {
 
 	
 	public DBProxy(Context context) {
-		System.out.println("new DBProxy and therefore new database");
 		this.context = context;
 		this.dbHelper = new DBHelper(context);
 		this.readableDatabase = null;

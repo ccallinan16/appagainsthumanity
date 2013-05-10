@@ -1,6 +1,6 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
-import mocks.MockDealer;
+import mocks.IDToCardTranslator;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -19,10 +19,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.GamelistAdapter;
-import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
-import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
 public class MainActivity extends Activity {
 
@@ -111,6 +109,10 @@ public class MainActivity extends Activity {
 		//retrieve game list
 		gamelistCursor = dbProxy.readGameList(username);
 		displayListView(gamelistCursor);
+		
+		//set the translator in the Singleton
+		CardCollection.instance.setTranslator(
+				new IDToCardTranslator(this.getApplicationContext()));
 	}
 	
     @Override

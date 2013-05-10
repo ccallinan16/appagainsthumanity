@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import mocks.MockDB;
+import mocks.Shuffler;
 
 public class GameManager {
 
@@ -83,10 +83,8 @@ public class GameManager {
 		
 		if (dealtCards == null || dealtCards.length == 0)
 		{
-			MockDB db = new MockDB();
-			List<Integer> dealt = db.assignCards(numCards);
-			
-			
+			List<Integer> dealt = Shuffler.getRandomListOfInts(numCards);
+						
 			dealtCards = new Integer[dealt.size()];
 			dealtCards = dealt.toArray(dealtCards);
 		}
@@ -99,8 +97,7 @@ public class GameManager {
 		
 		if (playedCards == null)
 		{
-			MockDB db = new MockDB();
-			List<Integer> dealt = db.assignCards(userIDs.size());
+			List<Integer> dealt = Shuffler.getRandomListOfInts(userIDs.size());
 			winnerCard = dealt.get(0);
 			
 			playedCards = new HashMap<Long,Integer>();

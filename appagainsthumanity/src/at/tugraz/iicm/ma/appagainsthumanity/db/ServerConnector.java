@@ -3,7 +3,7 @@ package at.tugraz.iicm.ma.appagainsthumanity.db;
 import java.util.List;
 import java.util.Map.Entry;
 
-import mocks.MockDealer;
+import mocks.IDToCardTranslator;
 import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
@@ -139,7 +139,7 @@ public class ServerConnector {
 		//get a list of cardNums from Server
 	}
 	
-	public List<Integer> getDealtCards(MockDealer dealer, CardType cardType, long turnID) {
+	public List<Integer> getDealtCards(IDToCardTranslator dealer, CardType cardType, long turnID) {
 
 		//the user getting the cards the server dealt 
 		
@@ -154,7 +154,7 @@ public class ServerConnector {
 			listIDs = dealer.getRandomBlackCardIDs(cardType); //TODO, tmp only
 						
 		//3. then sets it to the card collection
-		CardCollection.instance.setCardsForPager(dealer, listIDs, cardType);
+		CardCollection.instance.setCards(listIDs, cardType);
 		return listIDs;
 
 	}
@@ -181,10 +181,5 @@ public class ServerConnector {
 		proxy.getDBSetter().updatePlayedWhiteCard(turn_id,chosen_card);
 		proxy.getDBSetter().updateScores(turn_id);
 	}
-
-
-
-
-
 
 }

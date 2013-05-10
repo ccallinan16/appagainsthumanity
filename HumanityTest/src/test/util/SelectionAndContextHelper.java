@@ -69,7 +69,7 @@ public class SelectionAndContextHelper {
     {
     	ViewPager pager = (ViewPager) activity.findViewById(R.id.cs_card_slider);
     	CardFragmentAdapter cfa = (CardFragmentAdapter) pager.getAdapter();
-    	return CardCollection.instance.getCard(cfa.getCardID(0), type);
+    	return CardCollection.instance.getCardSafe(cfa.getCardID(0), type);
     }
     
     public static Card getTopCard(CardSlideActivity activity)

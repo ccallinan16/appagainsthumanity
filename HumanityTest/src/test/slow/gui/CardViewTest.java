@@ -1,7 +1,7 @@
 package test.slow.gui;
 
 import static org.junit.Assert.assertEquals;
-import mocks.MockDealer;
+import mocks.IDToCardTranslator;
 
 import org.junit.After;
 import org.junit.Before;
@@ -119,7 +119,7 @@ public class CardViewTest {
     {
 
     	int numCards = 9;
-    	MockDealer dealer = new MockDealer(csa);
+    	IDToCardTranslator dealer = new IDToCardTranslator(csa);
     	dealer.setNumWhiteCards(numCards);
             	
     	csa.onCreate(null);

@@ -4,7 +4,7 @@ import java.io.File;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
+import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardTypeException;
 
@@ -14,8 +14,7 @@ public class XMLCreator {
 	public static void createXMLFromString(String fileName, String[] white, String[] black) {
 		
     	Serializer serializer = new Persister();
-    	CardCollection cc = CardCollection.instance;
-    	cc.clearAll();
+    	CardCollection cc = new CardCollection();
     	try
     	{
     		if (white != null)
