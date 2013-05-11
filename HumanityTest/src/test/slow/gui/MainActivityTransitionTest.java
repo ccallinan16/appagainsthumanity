@@ -1,17 +1,22 @@
 package test.slow.gui;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import test.util.SQLTestRunner;
+import android.app.Activity;
 import android.content.Intent;
+import android.widget.Button;
 import android.widget.ListView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
+import at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.GamelistAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 
@@ -20,6 +25,12 @@ import com.xtremelabs.robolectric.matchers.StartedMatcher;
 @RunWith(SQLTestRunner.class)
 public class MainActivityTransitionTest {
 
+    @Before
+    public void setUp() throws Exception {
+    	DBProxy proxy = new DBProxy(new Activity());
+    	PresetHelper.setPreset(proxy, PresetHelper.SELECT_BLACK);
+    }
+	
 	/**
 	 * creates a test for the Activities: MainActivity (with ListClick), and
 	 * CardSlideActivity, running through the selection process.
@@ -76,6 +87,22 @@ public class MainActivityTransitionTest {
 		i = createListTransition(ViewContext.SELECT_WHITE);
 		
     	Assert.assertThat(newActivity, new StartedMatcher(i));
+
+	}
+	
+	@Test
+	public void testTransitionFromListToCreateGameActivity()
+	{
+    	//Intent i = SelectionAndContextHelper.switchFromDisplayToMain(
+    	//		activity, newActivity, ViewContext.CONFIRM_SINGLE,true);
+		
+		MainActivity activity = new MainActivity();
+		activity.onCreate(null);
+		activity.onStart();
+		
+		Button btn = (Button) activity.findViewById(R.id.button_creategame);
+		btn.performClick();
+    	Assert.assertThat(activity, new StartedMatcher(CreateGameActivity.class));
 
 	}
 	

@@ -20,6 +20,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.util.AutocompletePromptDialog;
 
 public class CreateGameActivity extends Activity {
@@ -69,7 +70,7 @@ public class CreateGameActivity extends Activity {
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	protected void onStart() {
+	public void onStart() {
 		super.onStart();
 		// Instanciate database proxy
 		dbProxy = new DBProxy(this.getApplicationContext());
@@ -158,8 +159,10 @@ public class CreateGameActivity extends Activity {
 			@Override
 			public boolean onOkClicked(String input) {
 				if (!input.equals("")) {
-					if (isValidEntry(input))
+					if (validateUser(input)){
 						inviteArrayAdapter.add(input);
+						inviteArrayAdapter.notifyDataSetChanged();
+					}
 					else 
 						Toast.makeText(CreateGameActivity.this, getString(R.string.create_game_toast_invalidentry), Toast.LENGTH_SHORT).show();
 				}
@@ -172,18 +175,20 @@ public class CreateGameActivity extends Activity {
 
 	
 	public void editPlayer(int position, String id) {
-		if (isValidEntry(id)) {
+		if (validateUser(id)) {
 			deletePlayer(position);
 			inviteArrayAdapter.insert(id, position);
+			inviteArrayAdapter.notifyDataSetChanged();
 		} else 
 			Toast.makeText(this, getString(R.string.create_game_toast_invalidentry), Toast.LENGTH_SHORT).show();
 	}
 	
 	public void deletePlayer(int position) {
 		inviteArrayAdapter.remove(inviteArrayAdapter.getItem(position));
+		inviteArrayAdapter.notifyDataSetChanged();
 	}
 	
-	private boolean isValidEntry(String input) {
+	private boolean validateUser(String input) {
 		//TODO: check if provided name is in database
 		//		if not query server and retrieve id
 		//		if not on server, return false
@@ -197,7 +202,46 @@ public class CreateGameActivity extends Activity {
 			if (inviteArrayAdapter.getItem(i).equals(input))
 				return false;
 		
-		return true;
+		//check if entry exists in userlist
+		boolean found = false;
+		
+		userCursor.moveToFirst();
+		do {
+			if(input.equals(userCursor.getString(1)))
+				found = true;
+		} while (userCursor.moveToNext());
+		
+		//if user was found in local list, return true
+		if (found)
+			return found;
+		
+		//else: check server information
+		ServerConnector connector = new ServerConnector(dbProxy);
+		if (connector.retrieveUserId(input) > 1) {
+			//update local cursor information
+			userCursor.close();
+			userCursor = dbProxy.readKnownOtherUsers(username);
+			userAdapter.changeCursor(userCursor);
+			//return success
+			return true;
+		}
+		//otherwise, user was not found
+		return false;
+	}
+	
+	private long retrieveUserId(String input) {
+		if (input.equals(username))
+			return -1;
+		
+		//check if entry exists in userlist
+		long found = -1;
+		userCursor.moveToFirst();
+		do { System.out.println("checking " + input + " against " + userCursor.getString(1));
+			if(input.equals(userCursor.getString(1)))
+				found = userCursor.getLong(0);
+		} while (userCursor.moveToNext());
+		
+		return found;
 	}
 	
 	/*
@@ -215,9 +259,16 @@ public class CreateGameActivity extends Activity {
     	Intent intent = new Intent(this, GameOptionsActivity.class);
     	
     	//compile list of invites
-	    String[] items = new String[inviteArrayAdapter.getCount()];
-	    for (int position = 0; position < inviteArrayAdapter.getCount(); position++)
-	    	items[position] = inviteArrayAdapter.getItem(position);
+	    long[] items = new long[inviteArrayAdapter.getCount()];
+	    for (int position = 0; position < inviteArrayAdapter.getCount(); position++) {
+	    	items[position] = retrieveUserId(inviteArrayAdapter.getItem(position));
+	    	System.out.println("id of user " +  inviteArrayAdapter.getItem(position) + " is " + items[position]);
+	    	if (! (items[position] > 1)) {
+	    		//something went wrong here
+	    		Toast.makeText(CreateGameActivity.this, getString(R.string.create_game_toast_invalidentry), Toast.LENGTH_SHORT).show();
+	    		return;
+	    	}
+	    }
 	    
 	    //put extra and start activity
     	intent.putExtra(EXTRA_INVITES, items);
