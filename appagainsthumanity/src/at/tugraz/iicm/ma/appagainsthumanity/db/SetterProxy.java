@@ -7,6 +7,8 @@ import android.database.Cursor;
 
 public class SetterProxy {
 	
+	public static final int NUM_POINTS_INCR = 1;
+	
 	 DBProxy db;
 	
 	public SetterProxy(DBProxy dbProxy) {
@@ -121,9 +123,64 @@ public class SetterProxy {
 
 	}
 	
-	public void updateScores(long turn_id) {
-		// TODO Auto-generated method stub
+	/**
+	 * 
+	 * @param turn_id
+	 * @return success
+	 */
+	public boolean updateScores(long turn_id) {
 		
+		/**
+		 * get the game id of the turn as well as the user id of the card that won
+		 */
+	    Cursor cursor = db.getReadableDatabase().rawQuery(
+	    		"SELECT g.game_id, g.user_id FROM participation g "+
+	    		"INNER JOIN turn t ON t.game_id=g.game_id " +
+	    		"INNER JOIN played_white_card p ON " +
+	    			"t._id=p.turn_id AND g.user_id=p.user_id " +
+	    		"WHERE t._id=? AND p.won"
+	    		,new String[]{String.valueOf(turn_id)});
+	    
+		long game_id = -1;
+		long user_id = -1;
+	    	    
+	    if (cursor != null && cursor.getCount() > 0 && cursor.getColumnCount() > 1)
+	    {
+		    cursor.moveToFirst();
+		    game_id = cursor.getLong(0);
+		    user_id = cursor.getLong(1);
+		    cursor.close();    
+	    }
+		
+	    if (game_id < 1 || user_id < 1)
+	    	return false;
+	    
+	    /**
+	     * get the old score of the player
+	     */
+	    long score = db.getter.getScore(game_id, user_id);
+				
+	    if (score < 0)
+	    	return false;
+	    
+	    
+	    /**
+	     * update the old score by an increment
+	     */
+		ContentValues values = new ContentValues();
+		values.put(DBContract.Participation.COLUMN_NAME_SCORE,
+				(score + NUM_POINTS_INCR));
+		
+		int affected = db.getWritableDatabase().update(
+				DBContract.Participation.TABLE_NAME, 
+				values, 
+				DBContract.Participation.COLUMN_NAME_GAME_ID + "=? AND " +
+				DBContract.Participation.COLUMN_NAME_USER_ID + "=?",
+				new String[] {
+						String.valueOf(game_id), 
+						String.valueOf(user_id)});
+				
+		return (affected > 0);		
 	}
 	
 	

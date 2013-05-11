@@ -259,6 +259,10 @@ public class DBProxy {
 
 		DebugPrinter printer = new DebugPrinter(db);
 		
+		printer.printTableWithOnlyInts(DBContract.Participation.TABLE_NAME);
+		System.out.println("\n----------------");
+
+		
 		printer.printTableWithOnlyInts(DBContract.Turn.TABLE_NAME);
 		System.out.println("\n----------------");
 

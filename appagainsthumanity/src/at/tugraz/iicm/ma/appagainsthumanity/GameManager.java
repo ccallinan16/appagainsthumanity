@@ -24,7 +24,7 @@ public class GameManager {
 	public long gameID;
 	public long czar;
 	private Integer[] dealtCards;
-	private HashMap<Long, Integer> playedCards;
+	private HashMap<Integer,Long> playedCards;
 	
 	private int winnerCard;
 	private long currentUserID;
@@ -92,7 +92,7 @@ public class GameManager {
 		return dealtCards;
 	}
 
-	public HashMap<Long,Integer> getPlayedCards() {
+	public HashMap<Integer,Long> getPlayedCards() {
 	
 		
 		if (playedCards == null)
@@ -100,11 +100,11 @@ public class GameManager {
 			List<Integer> dealt = Shuffler.getRandomListOfInts(userIDs.size());
 			winnerCard = dealt.get(0);
 			
-			playedCards = new HashMap<Long,Integer>();
+			playedCards = new HashMap<Integer,Long>();
 			int index = 0;
 			for(long user : userIDs.values())
 			{
-				playedCards.put(user, dealt.get(index++));
+				playedCards.put(dealt.get(index++),user);
 			}
 		}
 		
@@ -114,6 +114,11 @@ public class GameManager {
 	public int getWinnerCard() {
 				
 		return winnerCard;
+	}
+	
+	public long getUserIDForCard(int card)
+	{
+		return playedCards.get(card);
 	}
 
 	public void setCurrentUser(long addUser, String name)
