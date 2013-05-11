@@ -166,9 +166,9 @@ public class ServerConnector {
 		
 	public void getPlayedCards(GameManager preset) {
 		
-		for (Entry<Long, Integer> entry : preset.getPlayedCards().entrySet())
+		for (Entry<Integer,Long> entry : preset.getPlayedCards().entrySet())
 		{
-			proxy.getDBSetter().addPlayedWhiteCard(preset.getLastTurnID(), entry.getKey(), entry.getValue(), null);
+			proxy.getDBSetter().addPlayedWhiteCard(preset.getLastTurnID(), entry.getValue(), entry.getKey(), null);
 		}
 	}
 

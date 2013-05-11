@@ -73,6 +73,53 @@ public class GetterProxy {
 
 	}
 	
+	public long getScore(long game_id, long user_id) {
+
+	    Cursor cursor = db.getReadableDatabase().query(
+	    		DBContract.Participation.TABLE_NAME, 
+	    		new String[] { DBContract.Participation.COLUMN_NAME_SCORE }, 
+	    		DBContract.Participation.COLUMN_NAME_GAME_ID + "=? AND " +
+	    		DBContract.Participation.COLUMN_NAME_USER_ID + "=?", 
+	    		new String[] { String.valueOf(game_id), String.valueOf(user_id) } , 
+	    		null, null, null);
+	    	    
+	    long score = -1;
+	    
+	    if (cursor != null && cursor.getCount() > 0)
+	    {
+	    	cursor.moveToFirst();
+	    	score = cursor.getInt(0);
+	    	cursor.close();
+	    }
+	    return score;
+	}
+	
+	public long getUserOfWonCard(long turn_id)
+	{
+	    Cursor cursor = db.getReadableDatabase().query(DBContract.PlayedWhiteCard.TABLE_NAME, 
+	    		new String[] { DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID }, 
+	    		DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID + "=? AND " +
+	    		DBContract.PlayedWhiteCard.COLUMN_NAME_WON, 
+	    		new String[] { String.valueOf(getGameIDFromTurn(turn_id)) } , 
+	    		null, null, null);
+	    	    
+	    long userID = 0;
+	    
+	    if (cursor != null && cursor.getCount() > 0)
+	    {
+	    	cursor.moveToFirst();
+	    	//for (int index = 0; index < cursor.getCount(); index++)
+	    	{
+	    		userID = cursor.getInt(0);
+	    		//cursor.moveToNext();
+	    	}
+	    	cursor.close();
+	    	
+	    }
+
+	    return userID;
+	}
+	
 	public List<Integer> getDealtWhiteCards(long turn_id) {
 	    Cursor cursor = db.getReadableDatabase().query(DBContract.DealtWhiteCard.TABLE_NAME, 
 	    		new String[] { DBContract.DealtWhiteCard.COLUMN_NAME_WHITE_CARD_ID }, 
@@ -154,4 +201,6 @@ public class GetterProxy {
 	    }    
 	    return (numRows > 0);
 	}
+
 }
+	

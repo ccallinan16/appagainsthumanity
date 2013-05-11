@@ -1,4 +1,5 @@
 package test.slow;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Map.Entry;
@@ -136,12 +137,12 @@ public class ServerConnectorTest {
     	
     	connector.getPlayedCards(preset);
     	   	
-    	for (Entry<Long, Integer> entry : preset.getPlayedCards().entrySet())
+		for (Entry<Integer,Long> entry : preset.getPlayedCards().entrySet())
     	{
         	assertTrue(proxy.getter.checkEntryExistsWhere(DBContract.PlayedWhiteCard.TABLE_NAME, 
         			DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID+"="+preset.getLastTurnID()+" AND "+
-        	    	DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID+"="+entry.getKey()+" AND "+
-    				DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID+"="+entry.getValue()));
+        	    	DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID+"="+entry.getValue()+" AND "+
+    				DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID+"="+entry.getKey()));
     	}
 
     }
@@ -162,8 +163,50 @@ public class ServerConnectorTest {
     			+" AND "+
 				DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID+"="+preset.getWinnerCard() 
 				+ " AND " +
+				DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID+"="+preset.getUserIDForCard(preset.getWinnerCard())
+				+ " AND " +
     			DBContract.PlayedWhiteCard.COLUMN_NAME_WON
 				));
+    }
+    
+    @Test
+    public void getGameIDFromTurnID()
+    {
+    	connector.startGame(preset);
+    	connector.startRound(preset);
+    	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
+    	connector.getPlayedCards(preset);
+    	connector.selectWinner(preset.getLastTurnID(), preset.getWinnerCard());
+    	connector.updateScore(preset.getLastTurnID(), preset.getWinnerCard());
+
+    	assertEquals(preset.gameID,proxy.getter.getGameIDFromTurn(preset.getLastTurnID()));
+    }
+    
+    
+    @Test
+    public void updateScore()
+    {
+    	connector.startGame(preset);
+    	connector.startRound(preset);
+    	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
+    	connector.getPlayedCards(preset);
+    	connector.selectWinner(preset.getLastTurnID(), preset.getWinnerCard());
+    	
+    	connector.updateScore(preset.getLastTurnID(), preset.getWinnerCard());
+    	
+    	assertEquals(preset.getUserIDForCard(preset.getWinnerCard()),
+    			proxy.getter.getUserOfWonCard(preset.getLastTurnID()));
+    	
+    	assertTrue(proxy.getter.checkEntryExistsWhere(
+    			DBContract.Participation.TABLE_NAME, 
+    			DBContract.Participation.COLUMN_NAME_GAME_ID+"="+preset.gameID
+    			+" AND "+
+				DBContract.Participation.COLUMN_NAME_USER_ID+"="+
+    				preset.getUserIDForCard(preset.getWinnerCard())
+				+ " AND " +
+    			DBContract.Participation.COLUMN_NAME_SCORE+"=1"
+				));
+
     }
     
 }
