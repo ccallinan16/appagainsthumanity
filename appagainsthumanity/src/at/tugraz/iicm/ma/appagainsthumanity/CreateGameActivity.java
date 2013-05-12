@@ -209,11 +209,10 @@ public class CreateGameActivity extends Activity {
 		//check if entry exists in userlist
 		boolean found = false;
 		
-		userCursor.moveToFirst();
-		
-
 		if (userCursor.getCount() > 0)
 		{
+			userCursor.moveToFirst();
+
 			do {
 				if(input.equals(userCursor.getString(1)))
 					found = true;
@@ -221,7 +220,6 @@ public class CreateGameActivity extends Activity {
 
 		}
 		
-
 		//if user was found in local list, return true
 		if (found)
 			return found;
