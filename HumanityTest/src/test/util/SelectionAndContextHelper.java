@@ -16,12 +16,12 @@ import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class SelectionAndContextHelper {
 	
-    public static Intent switchFromSelectionToDisplay(
-    		CardSlideActivity origin, 
-    		CardSlideActivity activity, 
+	public static Card selectCardFromSelection(	
+			CardSlideActivity origin, 
     		ViewContext context,
     		long turnid)
-    {
+
+	{
    		origin.getIntent().putExtras(BundleCreator.createBundle(context,turnid));
     	origin.onCreate(null);
     	
@@ -31,7 +31,17 @@ public class SelectionAndContextHelper {
     			:CardType.WHITE);
     	    	
     	selectCardAndPerformClick(origin,c);
-    	    	
+    	
+    	return c;
+	}
+	
+    public static Intent switchFromSelectionToDisplay(
+    		CardSlideActivity origin, 
+    		CardSlideActivity activity, 
+    		ViewContext context,
+    		long turnid)
+    {
+    	
     	Intent i = new Intent(activity, CardSlideActivity.class);
     	
     	switch (context)

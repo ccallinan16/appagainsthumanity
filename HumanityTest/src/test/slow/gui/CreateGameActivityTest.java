@@ -30,13 +30,14 @@ public class CreateGameActivityTest {
     @Before
     public void setUp() throws Exception {
     	activity = new CreateGameActivity();
+		activity.onCreate(null);
+		activity.onStart();
+
     }
 	
     @Test
 	public void testInputUser()
 	{
-		activity.onCreate(null);
-		activity.onStart();
 		
 		//open prompt
 		Button btn = (Button) activity.findViewById(R.id.button_addplayer);

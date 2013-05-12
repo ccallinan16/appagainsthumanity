@@ -194,24 +194,34 @@ public class CreateGameActivity extends Activity {
 		//		if not query server and retrieve id
 		//		if not on server, return false
 		
+
 		//check if entry = username
 		if (input.equals(username))
 			return false;
 		
+
 		//check if entry exists in array
 		for (int i = 0; i < inviteArrayAdapter.getCount(); i++)
 			if (inviteArrayAdapter.getItem(i).equals(input))
 				return false;
 		
+
 		//check if entry exists in userlist
 		boolean found = false;
 		
 		userCursor.moveToFirst();
-		do {
-			if(input.equals(userCursor.getString(1)))
-				found = true;
-		} while (userCursor.moveToNext());
 		
+
+		if (userCursor.getCount() > 0)
+		{
+			do {
+				if(input.equals(userCursor.getString(1)))
+					found = true;
+			} while (userCursor.moveToNext());
+
+		}
+		
+
 		//if user was found in local list, return true
 		if (found)
 			return found;
@@ -219,9 +229,13 @@ public class CreateGameActivity extends Activity {
 		//else: check server information
 		ServerConnector connector = new ServerConnector(dbProxy);
 		if (connector.retrieveUserId(input) > 1) {
+			
 			//update local cursor information
+			
 			userCursor = dbProxy.readKnownOtherUsers(username);
-			userAdapter.changeCursor(userCursor);
+		
+			//userAdapter.changeCursor(userCursor);
+
 			return true;
 		}
 		//otherwise, user was not found
