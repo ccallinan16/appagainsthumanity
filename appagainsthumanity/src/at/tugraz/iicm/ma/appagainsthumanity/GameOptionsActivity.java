@@ -11,15 +11,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.ServerConnector;
 
 public class GameOptionsActivity extends Activity {
 
-	private String[] invites;
+	private long[] invites;
 	private TextView textViewRoundcap;
 	private TextView textViewScorecap;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game_options);
 		// Show the Up button in the action bar.
@@ -27,7 +29,7 @@ public class GameOptionsActivity extends Activity {
 		
 		//receive invite array from intent
 		Intent intent = getIntent();
-	    invites = intent.getStringArrayExtra(CreateGameActivity.EXTRA_INVITES);
+	    invites = intent.getLongArrayExtra(CreateGameActivity.EXTRA_INVITES);
 	    
 	    //define views
 	    textViewRoundcap = (TextView) findViewById(R.id.input_roundcap);
@@ -67,6 +69,13 @@ public class GameOptionsActivity extends Activity {
 			Toast.makeText(this, getString(R.string.game_options_toast_invalidselection), Toast.LENGTH_SHORT).show();
 			return;
 		}
+		
+		//update server information
+		DBProxy proxy = new DBProxy(this);
+		ServerConnector connector = new ServerConnector(proxy);
+		connector.initializeGame(invites, roundcap, scorecap);
+		proxy.onStop();
+		
 
 		//create intent
     	Intent intent = new Intent(this, MainActivity.class);

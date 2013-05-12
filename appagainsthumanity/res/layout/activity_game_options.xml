@@ -67,6 +67,7 @@
         style="@style/bar_button"
     	>
     	<Button
+    	    android:id="@+id/button_confirm"
 	  		style="@style/button"
 	        android:layout_width="fill_parent"
 	        android:text="@string/create_game_button_confirm"

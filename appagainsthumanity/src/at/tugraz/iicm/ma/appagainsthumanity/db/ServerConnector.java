@@ -27,14 +27,22 @@ public class ServerConnector {
 	/**
 	 * user initiated
 	 */
-	public void initializeGame() {
+	public void initializeGame(long[] invites, int roundCap, int scoreCap) {
+		//insert new game
+		long gameId = proxy.getDBSetter().addGame(roundCap, scoreCap);
 		
-		//tables affected:
+		//insert participation of invites
+		for(long userId : invites) {
+			proxy.getDBSetter().addParticipation(gameId, userId, 0);
+		}
 		
-		//users
-		//game 
+		//insert participation for player
+		long userId = proxy.getUserID();
+		proxy.getDBSetter().addParticipation(gameId,  userId, 0);
 		
-		//--> send to server
+		//add turn
+		proxy.getDBSetter().addTurn(gameId, 1, userId, null);
+		
 	}
 	
 	public void selectCardBlack(long turn_id, int id)
@@ -180,6 +188,16 @@ public class ServerConnector {
 		//participation / (scores)
 		proxy.getDBSetter().updatePlayedWhiteCard(turn_id,chosen_card);
 		proxy.getDBSetter().updateScores(turn_id);
+	}
+	
+	public long retrieveUserId(String username) {
+		//method called during invite process
+		//only called after local database already checked
+		//now: connect to server, if user exists: add to local database and return
+		
+		//TODO: change this
+		//in the meantine, just add user locally and return its id
+		return proxy.getDBSetter().addUser(username);
 	}
 
 }

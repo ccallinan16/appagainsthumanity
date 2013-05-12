@@ -19,7 +19,7 @@ public class DebugPrinter {
 	
 	
 	public void dumpTables() {
-		String[] projection = new String[]{};
+		String[] projection = null;
 		Cursor c;
 		
 		System.out.println("BEGIN DATABASE DUMP");
@@ -27,7 +27,7 @@ public class DebugPrinter {
 		System.out.println("table " + DBContract.Game.TABLE_NAME);
 		c = db.query(DBContract.Game.TABLE_NAME,
 			projection,null,new String[]{},null,null,null);
-		DatabaseUtils.dumpCursor(c);
+		System.out.println(DatabaseUtils.dumpCursorToString(c));
 		
 		//table participation
 		System.out.println("table " + DBContract.Participation.TABLE_NAME);
@@ -104,7 +104,7 @@ public class DebugPrinter {
 	    for (int row = -1; row < cursor.getCount(); row++)
 	    {
 	    	String line = row +"\t| ";
-		    for (int index = 0; index < cursor.getColumnCount()-1; index++)
+		    for (int index = 0; index < cursor.getColumnCount(); index++)
 		    {
 		    	if (row == -1)
 		    		line += cursor.getColumnName(index) + "\t| ";

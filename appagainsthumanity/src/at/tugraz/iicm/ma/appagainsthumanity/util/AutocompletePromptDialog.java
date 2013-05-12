@@ -33,6 +33,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
       setMessage(message);  
       
       input = new AutoCompleteTextView(context);  
+      input.setId(R.id.text1);
       input.setAdapter(adapter);
       input.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 	    	 @Override

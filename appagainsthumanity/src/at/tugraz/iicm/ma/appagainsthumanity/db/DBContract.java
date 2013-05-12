@@ -114,7 +114,7 @@ public abstract class DBContract {
 	    DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID + 		TYPE_INTEGER +		COMMA_SEP +
 	    DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID + 		TYPE_INTEGER + 		COMMA_SEP +
 	    DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID + 	TYPE_INTEGER +		COMMA_SEP + 
-	    DBContract.PlayedWhiteCard.COLUMN_NAME_WON + 			TYPE_BOOLEAN + 		" DEFAULT false" +  
+	    DBContract.PlayedWhiteCard.COLUMN_NAME_WON + 			TYPE_BOOLEAN + 		" DEFAULT 0" +  
 	    " )",
 	    
 	    //Table dealt_white_card
