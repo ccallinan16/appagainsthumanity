@@ -17,6 +17,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
+import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 
 import com.xtremelabs.robolectric.matchers.StartedMatcher;
  
@@ -63,6 +64,9 @@ public class CardSlideActivityTransitionsTest {
     	CardSlideActivity activity = new CardSlideActivity();
     	PresetHelper.setPreset(new DBProxy(activity), PresetHelper.SELECT_BLACK);
     	
+		SelectionAndContextHelper.selectCardFromSelection(
+				activity,ViewContext.SELECT_BLACK,PresetHelper.man.getLastTurnID());
+
     	Intent i = SelectionAndContextHelper.switchFromSelectionToDisplay(
     			csa, activity, ViewContext.SELECT_BLACK,PresetHelper.man.getLastTurnID());
         Assert.assertThat(activity, new StartedMatcher(i));
@@ -73,6 +77,9 @@ public class CardSlideActivityTransitionsTest {
     {
     	CardSlideActivity activity = new CardSlideActivity();
     	PresetHelper.setPreset(new DBProxy(activity), PresetHelper.SELECT_WHITE);
+
+		SelectionAndContextHelper.selectCardFromSelection(
+				activity,ViewContext.SELECT_WHITE,PresetHelper.man.getLastTurnID());
 
     	Intent i = SelectionAndContextHelper.switchFromSelectionToDisplay(
     			csa, activity, ViewContext.SELECT_WHITE,PresetHelper.man.getLastTurnID());

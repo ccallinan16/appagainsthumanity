@@ -62,7 +62,7 @@ public class CardSlideActivity extends FragmentActivity {
 			TextView lbl = (TextView) findViewById(R.id.cs_label);
 			lbl.setVisibility(View.GONE);
 	  }
-	  
+	 	  
       initSlider();
       
       initTop();
@@ -85,12 +85,17 @@ public class CardSlideActivity extends FragmentActivity {
     }
     	
 	private void initButtons() {
+		System.out.println("init btns select card white: " + null + ", turn: " + turnID);
+
 		
 		if (context == ViewContext.SELECT_BLACK ||
 				context == ViewContext.SELECT_WHITE)
 		{
 		      LinearLayout btns = (LinearLayout) findViewById(R.id.footer);
 		      btns.setVisibility(View.GONE);
+		      
+		      System.out.println("not visible: " + null + ", turn: " + turnID);
+
 		}
 		else
 		{
@@ -116,6 +121,9 @@ public class CardSlideActivity extends FragmentActivity {
 				}
 			});
 		      
+		      
+		      System.out.println("ok setting onklick: " + null + ", turn: " + turnID);
+
 		      okButton.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -133,6 +141,7 @@ public class CardSlideActivity extends FragmentActivity {
 						connector.selectCardBlack(turnID, id);
 						break;
 					case CONFIRM_PAIR:
+						System.out.println("select card white: " + id + ", turn: " + turnID);
 						connector.selectCardWhite(turnID, id); 
 						break;
 					default:

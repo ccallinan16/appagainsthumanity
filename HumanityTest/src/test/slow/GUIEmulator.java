@@ -38,13 +38,10 @@ public class GUIEmulator {
 	public Card createSelectionTransitionReturnSelected(ViewContext context, long turnid)
 	{
 		CardSlideActivity activity = new CardSlideActivity();
+		Card selected = SelectionAndContextHelper.selectCardFromSelection(activity,context,turnid);
+
 		SelectionAndContextHelper.switchFromSelectionToDisplay(csa, activity, context,turnid);
-				
-    	Card selected = SelectionAndContextHelper.getFirstCard(csa, 
-    			(context.equals(ViewContext.SELECT_BLACK))
-    			?CardType.BLACK
-    			:CardType.WHITE);
-		    	    	
+						    	    	
 		ViewContext follows = (context.equals(ViewContext.SELECT_BLACK)
 				?ViewContext.CONFIRM_SINGLE:ViewContext.CONFIRM_PAIR);
 		

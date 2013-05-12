@@ -206,7 +206,7 @@ public class ServerConnectorTest {
 				+ " AND " +
     			DBContract.Participation.COLUMN_NAME_SCORE+"=1"
 				));
-
+    	
     }
     
 }
