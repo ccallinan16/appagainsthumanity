@@ -72,12 +72,15 @@ public class CardSlideActivity extends FragmentActivity {
     
     @Override
     protected void onStop() {
+    	
+    	
     	try {
     		super.onStop();
 
     		if (this.proxy != null) {
     			this.proxy.onStop();
     			this.proxy = null;
+
     		}
     	} catch (Exception error) {
         /** Error Handler Code **/
@@ -85,7 +88,6 @@ public class CardSlideActivity extends FragmentActivity {
     }
     	
 	private void initButtons() {
-		System.out.println("init btns select card white: " + null + ", turn: " + turnID);
 
 		
 		if (context == ViewContext.SELECT_BLACK ||
@@ -94,7 +96,6 @@ public class CardSlideActivity extends FragmentActivity {
 		      LinearLayout btns = (LinearLayout) findViewById(R.id.footer);
 		      btns.setVisibility(View.GONE);
 		      
-		      System.out.println("not visible: " + null + ", turn: " + turnID);
 
 		}
 		else
@@ -122,8 +123,6 @@ public class CardSlideActivity extends FragmentActivity {
 			});
 		      
 		      
-		      System.out.println("ok setting onklick: " + null + ", turn: " + turnID);
-
 		      okButton.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -133,7 +132,9 @@ public class CardSlideActivity extends FragmentActivity {
 					
 			  		Intent intent = new Intent(v.getContext(),MainActivity.class);
 								
-					ServerConnector connector = new ServerConnector(new DBProxy(v.getContext()));
+			  		if (proxy == null)
+			  			proxy = new DBProxy(v.getContext());
+					ServerConnector connector = new ServerConnector(proxy);
 					
 					switch (context)
 					{
