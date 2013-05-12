@@ -188,6 +188,7 @@ public class CreateGameActivity extends Activity {
 		inviteArrayAdapter.notifyDataSetChanged();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private boolean validateUser(String input) {
 		//TODO: check if provided name is in database
 		//		if not query server and retrieve id
@@ -219,10 +220,8 @@ public class CreateGameActivity extends Activity {
 		ServerConnector connector = new ServerConnector(dbProxy);
 		if (connector.retrieveUserId(input) > 1) {
 			//update local cursor information
-			userCursor.close();
 			userCursor = dbProxy.readKnownOtherUsers(username);
 			userAdapter.changeCursor(userCursor);
-			//return success
 			return true;
 		}
 		//otherwise, user was not found
@@ -236,7 +235,7 @@ public class CreateGameActivity extends Activity {
 		//check if entry exists in userlist
 		long found = -1;
 		userCursor.moveToFirst();
-		do { System.out.println("checking " + input + " against " + userCursor.getString(1));
+		do { 
 			if(input.equals(userCursor.getString(1)))
 				found = userCursor.getLong(0);
 		} while (userCursor.moveToNext());
@@ -254,15 +253,15 @@ public class CreateGameActivity extends Activity {
 			Toast.makeText(this, getString(R.string.create_game_toast_notenoughplayers), Toast.LENGTH_SHORT).show();
 			return;
 		}
-
+		
 		//create intent
     	Intent intent = new Intent(this, GameOptionsActivity.class);
     	
+    	System.out.println("here i am");
     	//compile list of invites
 	    long[] items = new long[inviteArrayAdapter.getCount()];
 	    for (int position = 0; position < inviteArrayAdapter.getCount(); position++) {
 	    	items[position] = retrieveUserId(inviteArrayAdapter.getItem(position));
-	    	System.out.println("id of user " +  inviteArrayAdapter.getItem(position) + " is " + items[position]);
 	    	if (! (items[position] > 1)) {
 	    		//something went wrong here
 	    		Toast.makeText(CreateGameActivity.this, getString(R.string.create_game_toast_invalidentry), Toast.LENGTH_SHORT).show();

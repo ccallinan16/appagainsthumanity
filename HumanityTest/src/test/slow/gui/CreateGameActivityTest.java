@@ -139,7 +139,6 @@ public class CreateGameActivityTest {
 		//assert started activity
 		ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
 	    Intent startedIntent = shadowActivity.getNextStartedActivity();
-	    System.out.println(startedIntent.getComponent().getClassName());
 		assertTrue(GameOptionsActivity.class.getName().equals(startedIntent.getComponent().getClassName()));
 	}
 }

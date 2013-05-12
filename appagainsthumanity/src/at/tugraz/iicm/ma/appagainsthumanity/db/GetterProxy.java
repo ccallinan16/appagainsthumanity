@@ -99,8 +99,8 @@ public class GetterProxy {
 	    Cursor cursor = db.getReadableDatabase().query(DBContract.PlayedWhiteCard.TABLE_NAME, 
 	    		new String[] { DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID }, 
 	    		DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID + "=? AND " +
-	    		DBContract.PlayedWhiteCard.COLUMN_NAME_WON, 
-	    		new String[] { String.valueOf(getGameIDFromTurn(turn_id)) } , 
+	    		DBContract.PlayedWhiteCard.COLUMN_NAME_WON + " = 1", 
+	    		new String[] { String.valueOf(turn_id) } , 
 	    		null, null, null);
 	    	    
 	    long userID = 0;

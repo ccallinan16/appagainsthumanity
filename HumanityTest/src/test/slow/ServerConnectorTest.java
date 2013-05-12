@@ -191,7 +191,6 @@ public class ServerConnectorTest {
     	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
     	connector.getPlayedCards(preset);
     	connector.selectWinner(preset.getLastTurnID(), preset.getWinnerCard());
-    	
     	connector.updateScore(preset.getLastTurnID(), preset.getWinnerCard());
     	
     	assertEquals(preset.getUserIDForCard(preset.getWinnerCard()),

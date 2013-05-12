@@ -272,6 +272,10 @@ public class DBProxy {
 		printer.printPlayedWhiteCards();
 		printer.printUsers();
 	}
+	
+	public void dumpTables() {
+		new DebugPrinter(this.getReadableDatabase()).dumpTables();
+	}
 
 	public SetterProxy getDBSetter() {
 		return setter;

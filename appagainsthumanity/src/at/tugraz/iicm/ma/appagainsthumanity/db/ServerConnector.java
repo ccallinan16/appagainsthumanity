@@ -33,7 +33,6 @@ public class ServerConnector {
 		
 		//insert participation of invites
 		for(long userId : invites) {
-			System.out.println("addParticipation for user id: " + userId);
 			proxy.getDBSetter().addParticipation(gameId, userId, 0);
 		}
 		
