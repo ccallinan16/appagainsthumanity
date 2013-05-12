@@ -62,6 +62,8 @@ public class CardSlideActivityTransitionsTest {
     public void testTransitionBlackSelectToDisplay()
     {
     	CardSlideActivity activity = new CardSlideActivity();
+    	activity.setIntent(new Intent());
+    	
     	PresetHelper.setPreset(new DBProxy(activity), PresetHelper.SELECT_BLACK);
     	
 		SelectionAndContextHelper.selectCardFromSelection(
@@ -76,6 +78,8 @@ public class CardSlideActivityTransitionsTest {
     public void testTransitionWhiteSelectToDisplay()
     {
     	CardSlideActivity activity = new CardSlideActivity();
+    	activity.setIntent(new Intent());
+
     	PresetHelper.setPreset(new DBProxy(activity), PresetHelper.SELECT_WHITE);
 
 		SelectionAndContextHelper.selectCardFromSelection(

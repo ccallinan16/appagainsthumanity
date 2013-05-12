@@ -37,7 +37,10 @@ public class GUIEmulator {
 	
 	public Card createSelectionTransitionReturnSelected(ViewContext context, long turnid)
 	{
-		CardSlideActivity activity = new CardSlideActivity();
+		CardSlideActivity activity = new CardSlideActivity();		
+    	Intent i = new Intent();
+    	activity.setIntent(i);
+
 		Card selected = SelectionAndContextHelper.selectCardFromSelection(activity,context,turnid);
 
 		SelectionAndContextHelper.switchFromSelectionToDisplay(csa, activity, context,turnid);
