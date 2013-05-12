@@ -118,7 +118,7 @@ public class DBProxy {
 		    DBContract.Game.COLUMN_NAME_ROUND_CAP,
 		    DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_SCORE,
 		    DBContract.Game.COLUMN_NAME_SCORE_CAP,
-		    "COUNT(DISTINCT " + DBContract.Participation.TABLE_NAME + "2." + DBContract.Participation.COLUMN_NAME_USER_ID + " ) AS numplayers",
+		    "COUNT(DISTINCT participation2." + DBContract.Participation.COLUMN_NAME_USER_ID + " ) AS numplayers",
 		    DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " AS user_id",
 		    "t1." + DBContract.Turn.COLUMN_NAME_USER_ID + " AS czar_user_id",
 		    "t1." + DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID,
@@ -135,12 +135,12 @@ public class DBProxy {
 			" ON " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_GAME_ID + " = " + DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID +        
 			" INNER JOIN " + DBContract.User.TABLE_NAME + " ON " + 
 			DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " = " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_USER_ID +
-			" INNER JOIN " + DBContract.Participation.TABLE_NAME + " AS participation2 ON " + 
-			DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_GAME_ID + " = " + DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID +
 			" INNER JOIN " + DBContract.Turn.TABLE_NAME + " AS t1 ON " + 
 			DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID + " = " + "t1." + DBContract.Turn.COLUMN_NAME_GAME_ID + 
 			" LEFT OUTER JOIN " + DBContract.Turn.TABLE_NAME + " AS t2 ON " + 
 			" t2.game_id = t1.game_id AND t2.roundnumber > t1.roundnumber " + 
+			" INNER JOIN " + DBContract.Participation.TABLE_NAME + " AS participation2 ON " + 
+			"t1." + DBContract.Turn.COLUMN_NAME_GAME_ID + " = " + "participation2." + DBContract.Participation.COLUMN_NAME_GAME_ID +
 			" LEFT JOIN " + DBContract.PlayedWhiteCard.TABLE_NAME + " ON " +
 			"t1." + DBContract.Turn._ID + " = " + DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID,
 			
@@ -149,7 +149,7 @@ public class DBProxy {
 		    DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME + " = ? " + 
 		    "AND t2.game_id IS NULL",
 		    new String[]{username},                   // The values for the WHERE clause
-		    DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID,
+		    "t1." + DBContract.Turn.COLUMN_NAME_GAME_ID,
 		    "t1.roundnumber = MAX(t1.roundnumber)",                                    // don't filter by row groups
 		    sortOrder                                 // The sort order
 		    );
