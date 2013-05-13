@@ -47,14 +47,14 @@ public class CardSlideActivityTransitionsTest {
     	PresetHelper.setPreset(new DBProxy(newActivity), PresetHelper.SELECT_BLACK);
 
     	Intent i = SelectionAndContextHelper.switchFromDisplayToMain(
-    			csa, newActivity, ViewContext.CONFIRM_SINGLE,PresetHelper.man.getLastTurnID());
+    			csa, newActivity, ViewContext.CONFIRM_BLACK,PresetHelper.man.getLastTurnID());
     	Assert.assertThat(newActivity, new StartedMatcher(i));
 
     	newActivity = new MainActivity();
     	PresetHelper.setPreset(new DBProxy(newActivity), PresetHelper.SELECT_WHITE);
 
     	i = SelectionAndContextHelper.switchFromDisplayToMain(
-    			csa, newActivity, ViewContext.CONFIRM_PAIR,PresetHelper.man.getLastTurnID());
+    			csa, newActivity, ViewContext.CONFIRM_WHITE,PresetHelper.man.getLastTurnID());
     	Assert.assertThat(newActivity, new StartedMatcher(i)); 	
     }
     

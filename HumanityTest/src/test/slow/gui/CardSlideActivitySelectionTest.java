@@ -57,7 +57,7 @@ public class CardSlideActivitySelectionTest {
     	Card c = SelectionAndContextHelper.getFirstCard(csa, type);
     	SelectionAndContextHelper.selectCardAndPerformClick(csa,c);
 
-    	CardSlideActivity newActivity = SelectionAndContextHelper.createNewCSActivity(ViewContext.CONFIRM_SINGLE);
+    	CardSlideActivity newActivity = SelectionAndContextHelper.createNewCSActivity(ViewContext.CONFIRM_BLACK);
     	Card selectedCard = SelectionAndContextHelper.getFirstCard(newActivity, type);
 
     	assertTrue(c != null);
@@ -85,7 +85,7 @@ public class CardSlideActivitySelectionTest {
     	SelectionAndContextHelper.selectCardAndPerformClick(csa,c);
     	
     	CardSlideActivity activity = SelectionAndContextHelper.createNewCSActivity(
-    			ViewContext.CONFIRM_PAIR);
+    			ViewContext.CONFIRM_WHITE);
     	Card selected = SelectionAndContextHelper.getFirstCard(activity, CardType.WHITE);
     	
     	assertTrue(c != null);

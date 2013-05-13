@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import test.util.SQLTestRunner;
 import android.app.Activity;
 import android.content.Context;
+import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
@@ -26,6 +27,8 @@ public class DatabaseTest {
     
 	@Before
 	public void setUp() throws Exception {
+		MainActivity ma = new MainActivity();
+		ma.setUsername("elisabeth");
         Context c = new Activity();       
         proxy = new DBProxy(c);
         connector = new ServerConnector(proxy);
@@ -67,6 +70,8 @@ public class DatabaseTest {
 		Card origin = emulator.createSelectionTransitionReturnSelected(
 													ViewContext.SELECT_WHITE,turnid);
 		
-		assertEquals(origin.getId(),proxy.getter.getPlayedWhiteCard(turnid));
+		System.out.println(PresetHelper.man.getCurrentUserID());
+		assertEquals(PresetHelper.man.getCurrentUserID(),proxy.getUserID());		
+		assertEquals(origin.getId(),proxy.getter.getPlayedWhiteCard(turnid, proxy.getUserID()));
 	}	
 }

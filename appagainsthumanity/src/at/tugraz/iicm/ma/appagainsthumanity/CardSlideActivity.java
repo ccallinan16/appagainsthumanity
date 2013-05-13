@@ -55,8 +55,8 @@ public class CardSlideActivity extends FragmentActivity {
 	  
 	  turnID = getIntent().getExtras().getLong(BundleCreator.TURN_ID);
 	  	  
-	  if (context == ViewContext.CONFIRM_PAIR 
-			  || context == ViewContext.CONFIRM_SINGLE
+	  if (		 context == ViewContext.CONFIRM_WHITE 
+			  || context == ViewContext.CONFIRM_BLACK
 			  || context == ViewContext.SHOW_RESULT)
 	  {
 			TextView lbl = (TextView) findViewById(R.id.cs_label);
@@ -90,13 +90,12 @@ public class CardSlideActivity extends FragmentActivity {
 	private void initButtons() {
 
 		
-		if (context == ViewContext.SELECT_BLACK ||
-				context == ViewContext.SELECT_WHITE)
+		if (	context == ViewContext.SELECT_BLACK ||
+				context == ViewContext.SELECT_WHITE ||
+				context == ViewContext.SELECT_WINNER)
 		{
 		      LinearLayout btns = (LinearLayout) findViewById(R.id.footer);
 		      btns.setVisibility(View.GONE);
-		      
-
 		}
 		else
 		{
@@ -104,25 +103,16 @@ public class CardSlideActivity extends FragmentActivity {
 		      
 		      switch (context)
 		      {
-		      case CONFIRM_PAIR:
-		      case CONFIRM_SINGLE:
+		      case CONFIRM_WHITE:
+		      case CONFIRM_BLACK:
 		    	  okButton.setText(R.string.menu_send);
 		    	  default:
 		      }
 		      
+		      //this btn doesn't exist anymore
 		      Button cancelBtn = (Button) findViewById(R.id.cancelButton);
 		      cancelBtn.setVisibility(View.GONE);
-		      
-		      cancelBtn.setOnClickListener(new View.OnClickListener() {
-				
-				@Override 
-				public void onClick(View v) {
-					//do not add any entries to db
-					createAndStartMainActivity(v);
-				}
-			});
-		      
-		      
+		      	      
 		      okButton.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -134,16 +124,19 @@ public class CardSlideActivity extends FragmentActivity {
 								
 			  		if (proxy == null)
 			  			proxy = new DBProxy(v.getContext());
+			  		
 					ServerConnector connector = new ServerConnector(proxy);
-					
+										
 					switch (context)
 					{
-					case CONFIRM_SINGLE:
+					case CONFIRM_BLACK:
 						connector.selectCardBlack(turnID, id);
 						break;
-					case CONFIRM_PAIR:
-						System.out.println("select card white: " + id + ", turn: " + turnID);
+					case CONFIRM_WHITE:
 						connector.selectCardWhite(turnID, id); 
+						break;
+					case CONFIRM_WINNER:
+						connector.selectWinner(turnID, id);
 						break;
 					default:
 						break;
@@ -158,7 +151,6 @@ public class CardSlideActivity extends FragmentActivity {
 	}     
 
 	protected void createAndStartMainActivity(View v) {
-		System.out.println("back to main");
 		Intent intent = new Intent(v.getContext(),MainActivity.class);
 		//add flag to get back to main activity and clean intermediate activities
     	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -167,15 +159,17 @@ public class CardSlideActivity extends FragmentActivity {
 
 	private void initSlider()
 	{
-		
 		  boolean selectable = false;
 		  
 		  if (context == ViewContext.SELECT_BLACK || 
-			  context == ViewContext.SELECT_WHITE)
+			  context == ViewContext.SELECT_WHITE ||
+			  context == ViewContext.SELECT_WINNER)
 			  selectable = true;
 		  
 		  if (proxy == null)
-			  proxy = new DBProxy(this);
+		  {
+			  proxy = new DBProxy(this);		  
+		  }
 		  
 		  ServerConnector serverConnector = new ServerConnector(proxy);
 		  IDToCardTranslator dealer = new IDToCardTranslator(this);
@@ -197,9 +191,14 @@ public class CardSlideActivity extends FragmentActivity {
 				  cardIDs = CardCollection.instance.getCardsForPager(context);
 			  }
 			  break;
-			  
-		  case CONFIRM_SINGLE:
-		  case CONFIRM_PAIR:
+		  case SELECT_WINNER:
+		  case SHOW_RESULT:
+			  if (turnID > 0)
+				  cardIDs = serverConnector.getPlayedCards(turnID);
+			  break;
+		  case CONFIRM_BLACK:
+		  case CONFIRM_WHITE:
+		  case CONFIRM_WINNER:
 			  cardIDs.add(CardCollection.instance.getSelectedID());
 			  break;
 			  default:
@@ -210,7 +209,7 @@ public class CardSlideActivity extends FragmentActivity {
 	    		  getSupportFragmentManager(),
 	    		  cardIDs,
 	    		  selectable,
-	    		  context.getCardType(),
+	    		  context,
 	    		  turnID
 	    		  );
 	      
@@ -220,21 +219,16 @@ public class CardSlideActivity extends FragmentActivity {
 	      //pager.setPageTransformer(true, new ZoomOutPageTransformer());
 	      pager.setAdapter(pageAdapter);
 	      
-	      pager.setOnClickListener(new OnCardSelectionListener(context.getCardType(),turnID));
+	      pager.setOnClickListener(new OnCardSelectionListener(context,turnID));
 	
 	}
 	
 	
 	private void initTop()
 	{
-		boolean draw = false;
-				
-		if (	  context == ViewContext.CONFIRM_PAIR ||
-				  context == ViewContext.SELECT_WHITE ||
-				  context == ViewContext.SHOW_RESULT)
-			draw = true;
 		
-		if (!draw)
+		if (context == ViewContext.SELECT_BLACK ||
+			context == ViewContext.CONFIRM_BLACK)
 		{
 			FrameLayout v = (FrameLayout) findViewById(R.id.cs_display_frame);
 			v.setVisibility(View.GONE);
@@ -251,7 +245,7 @@ public class CardSlideActivity extends FragmentActivity {
 		if (black == null)
 			black = CardCollection.instance.getBlackCard();
 		
-		if (black == null || !draw)
+		if (black == null)
 		{
 			FrameLayout v = (FrameLayout) findViewById(R.id.cs_display_frame);
 			v.setVisibility(View.GONE);
@@ -261,7 +255,7 @@ public class CardSlideActivity extends FragmentActivity {
 		topCardId = black.getId();
 		
 		SingleCardFragment scv = SingleCardFragment.newInstance(
-				black.getId(),black.getType(),false,turnID);
+				black.getId(),ViewContext.SELECT_BLACK,false,turnID);
 
 		getSupportFragmentManager()
 		.beginTransaction()

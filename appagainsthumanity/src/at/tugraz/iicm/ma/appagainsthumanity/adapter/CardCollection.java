@@ -127,8 +127,8 @@ public class CardCollection {
 		  clearWhite();
 		  break;
 		  
-	  case CONFIRM_SINGLE:
-	  case CONFIRM_PAIR:
+	  case CONFIRM_BLACK:
+	  case CONFIRM_WHITE:
 		  assert(selectedId != -1);
 		  break;
 		  
@@ -165,8 +165,8 @@ public class CardCollection {
 			  cards.addAll(white.keySet());
 			  break;
 			  
-		  case CONFIRM_SINGLE:
-		  case CONFIRM_PAIR:
+		  case CONFIRM_BLACK:
+		  case CONFIRM_WHITE:
 			  cards.add(getSelectedID());
 			  break;
 			  

@@ -47,10 +47,10 @@ public class SelectionAndContextHelper {
     	switch (context)
     	{
     	case SELECT_WHITE:
-        	i.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_PAIR,turnid));
+        	i.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_WHITE,turnid));
         	break;
     	case SELECT_BLACK:
-        	i.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_SINGLE,turnid));
+        	i.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_BLACK,turnid));
         	break;
         	
         	default:

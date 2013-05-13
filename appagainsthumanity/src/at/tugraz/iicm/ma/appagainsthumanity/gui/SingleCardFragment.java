@@ -1,6 +1,5 @@
 package at.tugraz.iicm.ma.appagainsthumanity.gui;
 
-import mocks.IDToCardTranslator;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
@@ -25,13 +25,13 @@ public class SingleCardFragment extends Fragment {
 	 protected static final String TEXTSIZE = "TEXT_SIZE";
 	 protected static final String SELECTABLE = "SELECTABLE";
 
-	 protected CardType TYPE;
+	 protected ViewContext context;
 	 private long turnID;
 	     
-	public static SingleCardFragment newInstance(int cardID, CardType type, boolean selectable, long turnID) {
+	public static SingleCardFragment newInstance(int cardID, ViewContext type, boolean selectable, long turnID) {
 		
 		   SingleCardFragment f = new SingleCardFragment();
-		   f.TYPE = type;
+		   f.context = type;
 		   f.turnID = turnID;
 		   Bundle bdl = new Bundle();
 		   bdl.putInt(ID, cardID);
@@ -52,7 +52,7 @@ public class SingleCardFragment extends Fragment {
 		 //TODO: replace all occurences of this, as we only want to do this once!
 		 //IDToCardTranslator translator = new IDToCardTranslator(this.getActivity());
 		 
-		 Card card = CardCollection.instance.getCardSafe(cardId,TYPE);
+		 Card card = CardCollection.instance.getCardSafe(cardId,context.getCardType());
 		 
 		 TextView messageTextView = (TextView)v.findViewById(R.id.cardText);
 		 messageTextView.setText(card.getText());
@@ -61,7 +61,7 @@ public class SingleCardFragment extends Fragment {
 		 
 		 if (getArguments().getBoolean(SELECTABLE))
 		 {
-			 v.setOnClickListener(new OnCardSelectionListener(TYPE,turnID));
+			 v.setOnClickListener(new OnCardSelectionListener(context,turnID));
 		 }
 		 
 		 messageTextView.setTextSize(card.getRelativeTextSize(MAX_SIZE, MIN_SIZE));

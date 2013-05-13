@@ -93,18 +93,22 @@ public class GameManager {
 	}
 
 	public HashMap<Integer,Long> getPlayedCards() {
-	
-		
+			
 		if (playedCards == null)
 		{
-			List<Integer> dealt = Shuffler.getRandomListOfInts(userIDs.size());
+			List<Integer> dealt = Shuffler.getRandomListOfInts(userIDs.size()-1);
 			winnerCard = dealt.get(0);
 			
 			playedCards = new HashMap<Integer,Long>();
 			int index = 0;
+			
+			if (czar < 1)
+				czar = 1;
+			
 			for(long user : userIDs.values())
 			{
-				playedCards.put(dealt.get(index++),user);
+				if (user != czar)
+					playedCards.put(dealt.get(index++),user);
 			}
 		}
 		

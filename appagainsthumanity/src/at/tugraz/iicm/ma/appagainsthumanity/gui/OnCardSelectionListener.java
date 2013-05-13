@@ -13,11 +13,11 @@ import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class OnCardSelectionListener implements OnClickListener {
 	
-	CardType type;
+	ViewContext context;
 	long turnID;
 	
-	public OnCardSelectionListener(CardType type, long turnID) {
-		this.type = type;
+	public OnCardSelectionListener(ViewContext context, long turnID) {
+		this.context = context;
 		this.turnID = turnID;
 	}
 	
@@ -33,7 +33,7 @@ public class OnCardSelectionListener implements OnClickListener {
 		
 		int currentCard = cfa.getCardID(pager.getCurrentItem());
 
-		CardCollection.instance.setSelectedID(currentCard,type);
+		CardCollection.instance.setSelectedID(currentCard,context.getCardType());
 		
 		//Card c = CardCollection.instance.getCard(currentCard,type);
 		//CardCollection.instance.setSelected(c);
@@ -44,12 +44,21 @@ public class OnCardSelectionListener implements OnClickListener {
 
 	private void createAndStartNewActivity(View v,long turn_id) {
 	  	Intent intent = new Intent(v.getContext(),CardSlideActivity.class);
-	     	
-	  	if (type.equals(CardType.BLACK))
-	  		intent.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_SINGLE, turn_id));
-	  	else
-	  		intent.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_PAIR, turn_id));
-
+	    	  	
+	  	switch (context)
+	  	{
+	  	case SELECT_BLACK:
+	  		intent.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_BLACK, turn_id));
+	  		break;
+	  	case SELECT_WHITE:
+	  		intent.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_WHITE, turn_id));
+	  		break;
+	  	case SELECT_WINNER:
+	  		intent.putExtras(BundleCreator.createBundle(ViewContext.CONFIRM_WINNER, turn_id));
+	  		break;
+	  		default:
+	  	}
+	  	
 	  	v.getContext().startActivity(intent);
 	}
 	

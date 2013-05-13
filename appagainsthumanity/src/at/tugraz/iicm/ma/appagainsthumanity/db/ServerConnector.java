@@ -174,12 +174,17 @@ public class ServerConnector {
 		
 	public void getPlayedCards(GameManager preset) {
 		
+		//TODO: don't add a card for czar!
+		
 		for (Entry<Integer,Long> entry : preset.getPlayedCards().entrySet())
 		{
 			proxy.getDBSetter().addPlayedWhiteCard(preset.getLastTurnID(), entry.getValue(), entry.getKey(), null);
 		}
 	}
-
+	
+	public List<Integer> getPlayedCards(long turnID) {
+		return proxy.getter.getPlayedWhiteCards(turnID);
+	}
 	
 	public void updateScore(long turn_id, int chosen_card)
 	{

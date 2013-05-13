@@ -84,7 +84,7 @@ public class DBProxy {
 	public int getUserID()
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
-		
+
 	    //this should only happen in testenvironments
 	    if (getUsername().equals(""))
 	    	return -1;
@@ -95,10 +95,12 @@ public class DBProxy {
 	    		new String[] { getUsername() } , 
 	    		null, null, null);
 	        
+
 	    int userID = -1;
 	    
-	    if (cursor != null)
+	    if (cursor != null && cursor.getCount() > 0 )
 	    {
+
 		    cursor.moveToFirst();
 		    userID = cursor.getInt(0);
 		    cursor.close();    

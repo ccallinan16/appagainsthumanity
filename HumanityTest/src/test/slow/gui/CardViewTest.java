@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import at.tugraz.iicm.ma.appagainsthumanity.CardSlideActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
@@ -27,17 +28,19 @@ import at.tugraz.iicm.ma.appagainsthumanity.util.BundleCreator;
 public class CardViewTest {
  
 	CardSlideActivity csa;
+	DBProxy proxy;
 	
     @Before
     public void setUp() throws Exception {
     	csa = new CardSlideActivity();
     	Intent i = new Intent();
-    	DBProxy proxy = new DBProxy(csa);
+    	proxy = new DBProxy(csa);
     	PresetHelper.setPreset(proxy, PresetHelper.SELECT_BLACK);
     	csa.setProxy(proxy);
     	i.putExtras(BundleCreator.createBundle(ViewContext.SELECT_BLACK,
     			PresetHelper.man.getLastTurnID()));
 
+    	CardCollection.instance.setTranslator(new IDToCardTranslator(csa));
     	csa.setIntent(i);
 
     }
@@ -45,6 +48,26 @@ public class CardViewTest {
     @After
     public void tearDown() throws Exception {
     	
+    }
+    
+    @Test
+    public void testPagerShowResults()
+    {
+    	csa.getIntent().putExtras(BundleCreator.createBundle
+    			(ViewContext.SHOW_RESULT,PresetHelper.man.getLastTurnID()-1));
+    	csa.onCreate(null);
+    	
+    	proxy.printTables();
+    	
+    	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
+    	CardFragmentAdapter cfa = (CardFragmentAdapter) pager.getAdapter();
+    	
+    	//this user isn't in that list.
+    	assertEquals(PresetHelper.man.users.length,cfa.getCount());
+    	
+    	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
+    	assertEquals(1,frame.getChildCount());
+
     }
     
     @Test
@@ -62,8 +85,6 @@ public class CardViewTest {
     	
     	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
     	assertEquals(0,frame.getChildCount());
-
-    	
     }
 
 /*    @Test //can be tested again if we put the dealt black cards in db

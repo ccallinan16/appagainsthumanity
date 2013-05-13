@@ -15,21 +15,46 @@ public class GetterProxy {
 
 	}
 	
-	public int getPlayedWhiteCard(long turnid) {
-	    
+	public List<Integer> getPlayedWhiteCards(long turnid)
+	{
 	    Cursor cursor = db.getReadableDatabase().query(DBContract.PlayedWhiteCard.TABLE_NAME, 
 	    		new String[] { DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID }, 
 	    		DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID + "=?", 
 	    		new String[] { String.valueOf(turnid) } , 
 	    		null, null, null);
 	        
+	    List<Integer> list = new ArrayList<Integer>();
+	    
+	    if (cursor != null && cursor.moveToFirst())
+	    {
+	    	do
+	    	{
+			    list.add(cursor.getInt(0));
+	    	}
+	    	while (cursor.moveToNext());
+	    }
+	    cursor.close();
+	    
+	    return list;
+
+	}
+	 
+	public int getPlayedWhiteCard(long turnid, long user) {
+	    
+	    Cursor cursor = db.getReadableDatabase().query(DBContract.PlayedWhiteCard.TABLE_NAME, 
+	    		new String[] { DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID }, 
+	    		DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID + "=? AND " +
+	    		DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID + "=?", 
+	    		new String[] { String.valueOf(turnid), String.valueOf(user) } , 
+	    		null, null, null);
+	        
 	    int cardId = -1;
 	    
-	    if (cursor != null)
+	    if (cursor != null && cursor.getCount() > 0)
 	    {
 		    cursor.moveToFirst();
 		    cardId = cursor.getInt(0);
-		    cursor.close();    
+		    cursor.close();
 	    }
 	    return cardId;
 	}

@@ -46,7 +46,7 @@ public class GUIEmulator {
 		SelectionAndContextHelper.switchFromSelectionToDisplay(csa, activity, context,turnid);
 						    	    	
 		ViewContext follows = (context.equals(ViewContext.SELECT_BLACK)
-				?ViewContext.CONFIRM_SINGLE:ViewContext.CONFIRM_PAIR);
+				?ViewContext.CONFIRM_BLACK:ViewContext.CONFIRM_WHITE);
 		
 		MainActivity main = new MainActivity();
 		SelectionAndContextHelper.switchFromDisplayToMain(activity, main, follows,turnid);

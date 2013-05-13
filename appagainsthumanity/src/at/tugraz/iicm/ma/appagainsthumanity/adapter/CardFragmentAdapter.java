@@ -11,7 +11,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class CardFragmentAdapter extends FragmentPagerAdapter {
 	  private List<Integer> cardIDs;
-	  private CardType type;
+	  private ViewContext context;
 	  private boolean selectable;
 	  private long turnID;
 	  
@@ -31,10 +31,10 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 	  
 	  public CardFragmentAdapter(FragmentManager supportFragmentManager, 
 			  List<Integer> cardIDs,
-			  boolean selectable, CardType type, long turnID) {
+			  boolean selectable, ViewContext type, long turnID) {
 		    super(supportFragmentManager);
 		    
-		    this.type = type;
+		    this.context = type;
 		    this.selectable = selectable;
 		    this.turnID = turnID;
 		    this.cardIDs = cardIDs;
@@ -45,7 +45,7 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 	  public Fragment getItem(int position) {		  
 		  return SingleCardFragment.newInstance(
 				  cardIDs.get(position),
-				  type, 
+				  context, 
 				  selectable,
 				  turnID);
 	  }
@@ -64,7 +64,6 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 		  return cardIDs.get(position);
 	  }
 	  
-
 	  @Override
 	  public int getCount() {
 	    return this.cardIDs.size();
@@ -79,10 +78,5 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 			  this.cardIDs.add(c.getId());
 		  }
 	  }
-	  
-
-	public CardType getCardType() {
-		return type;
-	}
 }
 
