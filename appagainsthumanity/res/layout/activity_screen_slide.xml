@@ -14,12 +14,13 @@
     style="@style/text.black.large"
     android:text="@string/cs_label_select_black" />
     
-    
     <FrameLayout
-      android:id="@+id/cs_display_frame"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1" >
+        android:id="@+id/cs_display_frame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@style/bar_button" >
+
     </FrameLayout>
     
    
@@ -35,18 +36,10 @@
 		    android:layout_height="wrap_content" 
 		    android:orientation="horizontal"
         style="@style/bar_button">
-
-        <Button
-        android:id="@+id/cancelButton" 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:layout_weight="1"
-        style="@style/button"
-        android:text="@string/menu_cancel" />
     
         <Button
         android:id="@+id/okButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         style="@style/button"

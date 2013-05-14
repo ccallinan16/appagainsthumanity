@@ -108,11 +108,7 @@ public class CardSlideActivity extends FragmentActivity {
 		    	  okButton.setText(R.string.menu_send);
 		    	  default:
 		      }
-		      
-		      //this btn doesn't exist anymore
-		      Button cancelBtn = (Button) findViewById(R.id.cancelButton);
-		      cancelBtn.setVisibility(View.GONE);
-		      	      
+		      		      	      
 		      okButton.setOnClickListener(new View.OnClickListener() {
 				
 				@Override

@@ -1,5 +1,7 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
+import com.google.android.gcm.GCMRegistrar;
+
 import mocks.IDToCardTranslator;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -29,6 +31,7 @@ public class MainActivity extends Activity {
 	 */
 	public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
 	public static final String EXTRA_GAMEID = "EXTRA_GAMEID";
+	private static final String SENDER_ID = "AIzaSyClphHWMig6AY_bSun4RuWgVO3tAK5SYTg";
 	
 	/*
 	 * PRIVATE MEMBER VARIABLES
@@ -50,6 +53,26 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		/**
+		 * 
+		 */
+		try {
+			GCMRegistrar.checkDevice(this);
+			GCMRegistrar.checkManifest(this);
+			final String regId = GCMRegistrar.getRegistrationId(this);
+			if (regId.equals("")) {
+			  GCMRegistrar.register(this, SENDER_ID);
+			} else {
+			  System.out.println("Already registered");
+			}
+		} catch (Exception e)
+		{
+			//for the testcases, this does not matter right now.
+			System.err.println(e.getMessage());
+		}
+
+		
+		
 		//retrieve username flag
 		boolean flagUsernameExists = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getBoolean(getString(R.string.sharedpreferences_key_username_defined), false);
 		
