@@ -109,20 +109,7 @@ public class CardSlideActivity extends FragmentActivity {
 		    	  okButton.setText(R.string.menu_send);
 		    	  default:
 		      }
-		      
-		      Button cancelBtn = (Button) findViewById(R.id.cancelButton);
-		      cancelBtn.setVisibility(View.GONE);
-		      
-		      cancelBtn.setOnClickListener(new View.OnClickListener() {
-				
-				@Override 
-				public void onClick(View v) {
-					//do not add any entries to db
-					createAndStartMainActivity(v);
-				}
-			});
-		      
-		      
+	      
 		      okButton.setOnClickListener(new View.OnClickListener() {
 				
 				@Override

@@ -1,0 +1,32 @@
+User -> Server (getter)
+User <- Server (notification)
+
+für alle Functionen: userid / name muss bei requests an server mitgegeben werden
+
+		function	param			table			
+
+1) 	u: 	initGame	round, score, user[]	
+	s:	startGame	gid
+	u:	startGame	round, score, user[]	game, participation, users
+	s: 	startRound	tid			(da nur 2 ids evtl gleich czarid mit)
+	u:	startRound	czarid			turn	(init local getBlackCard if czar = me)
+	-------------------------------------------------------- wait 
+2)	u: (cz)	setBlackCard	tid,cardid
+	s:	getBlackCard	tid
+	u:	getBlackCard	blackid			turn update
+	s:	getDealtWhite	tid			
+	u:	getDealtWhite	cardid[]		dealt_white_card
+	-------------------------------------------------------- wait
+3)	u:	setWhiteCard	tid,cardid		
+	-------------------------------------------------------- wait
+	s:	allWhiteSet	tid
+	u: (cz)	getPlayedCards	tid			played_white_card
+	-------------------------------------------------------- wait
+4)	u: (cz)	selectWinner	tid,cardid		
+	s:	updateScore	tid			
+	u:	getPlayedCards	tid			played_white_card
+	u: 	updateScore	tid			participation
+	u: 	setWinningCard	tid			played_white_card
+	s:	startRound	tid,czarid		turn (da nur 2 ids evtl gleich mit notify)
+	-------------------------------------------------------- wait
+5)	s:	setEnd		gid	
