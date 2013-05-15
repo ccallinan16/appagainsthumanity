@@ -1,6 +1,7 @@
 package at.tugraz.iicm.ma.appagainsthumanity.db;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.database.Cursor;
@@ -202,5 +203,36 @@ public class GetterProxy {
 	    return (numRows > 0);
 	}
 
+	public HashMap<String, String> getGameInfoList() {
+		String selectQuery = DBContract.User.TABLE_NAME +
+				" INNER JOIN " + DBContract.Participation.TABLE_NAME + 
+				" ON " + DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " = " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_USER_ID +
+				" INNER JOIN " + DBContract.Game.TABLE_NAME + 
+				" ON " + DBContract.Participation.TABLE_NAME + "." + DBContract.Participation.COLUMN_NAME_GAME_ID + " = " + DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID;
+		
+		String[] projection = new String[] {
+			DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID,
+			DBContract.Game.TABLE_NAME + "." + DBContract.Game.COLUMN_NAME_UPDATED
+		};
+		
+	    Cursor cursor = db.getReadableDatabase().query(selectQuery,
+	    		projection, 
+	    		DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME + "=?", 
+	    		new String[] { db.getUsername() } , 
+	    		null, null, null);
+	    
+	    HashMap<String, String> data = new HashMap<String, String>();
+	    
+	    if (cursor != null)
+	    {
+	    	if (cursor.moveToFirst())
+	    		do {
+	    			data.put(cursor.getString(0), cursor.getString(1).replace("-", "").replace(" ", "T").replace(":", ":"));
+	    		} while (cursor.moveToNext());
+	    	cursor.close();
+	    }
+	    return data;
+	}	
+	
 }
 	

@@ -1,48 +1,66 @@
-package at.tugraz.iicm.ma.appagainsthumanity.db;
+package at.tugraz.iicm.ma.appagainsthumanity.connection;
 
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.xmlrpc.android.XMLRPCException;
+
 import mocks.IDToCardTranslator;
 import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
+
+/*
+ * Class which handles active communication requests to server
+ */
 
 public class ServerConnector {
 
 	private DBProxy proxy;
+	private static boolean isRobolectricTestrun = false;
 
-	/**
-	 * TODO: use Google Cloud Messaging to send push notifications if there
-	 * are any developments in the game. this way, we can implement all 
-	 * functions that communicate with the server here.
-	 */
+	public static void setRobolectricTestrun() {
+		isRobolectricTestrun = true;
+	}
 	
 	public ServerConnector(DBProxy proxy) {
 		// TODO Auto-generated constructor stub
 		this.proxy = proxy;
 	}
 	
-	
 	/**
 	 * user initiated
 	 */
-	public void initializeGame(long[] invites, int roundCap, int scoreCap) {
-		//insert new game
-		long gameId = proxy.getDBSetter().addGame(roundCap, scoreCap);
-		
-		//insert participation of invites
-		for(long userId : invites) {
-			proxy.getDBSetter().addParticipation(gameId, userId, 0);
+	public boolean initializeGame(long[] invites, int roundCap, int scoreCap) {
+		if (isRobolectricTestrun) {
+			//insert new game
+			long gameId = proxy.getDBSetter().addGame(roundCap, scoreCap);
+			
+			//insert participation of invites
+			for(long userId : invites) {
+				proxy.getDBSetter().addParticipation(gameId, userId, 0);
+			}
+			
+			//insert participation for player
+			long userId = proxy.getUserID();
+			proxy.getDBSetter().addParticipation(gameId,  userId, 0);
+			
+			//add turn
+			proxy.getDBSetter().addTurn(gameId, 1, userId, null);
+			
+			return true;
+		} else {
+			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+			
+			//check connection
+			if (!serverProxy.isConnected())
+				return false;
+			
+			//query server
+			return serverProxy.createGame(proxy.getUsername(), invites, roundCap, scoreCap);
 		}
-		
-		//insert participation for player
-		long userId = proxy.getUserID();
-		proxy.getDBSetter().addParticipation(gameId,  userId, 0);
-		
-		//add turn
-		proxy.getDBSetter().addTurn(gameId, 1, userId, null);
-		
 	}
 	
 	public void selectCardBlack(long turn_id, int id)
@@ -191,13 +209,47 @@ public class ServerConnector {
 	}
 	
 	public long retrieveUserId(String username) {
-		//method called during invite process
-		//only called after local database already checked
-		//now: connect to server, if user exists: add to local database and return
-		
-		//TODO: change this
-		//in the meantine, just add user locally and return its id
-		return proxy.getDBSetter().addUser(username);
+		if (isRobolectricTestrun) {
+			return proxy.getDBSetter().addUser(username);
+		} else {
+			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+	
+			//retrieve id of user from server
+			int id = serverProxy.getUserId(username);
+			
+			//check connection
+			if (!serverProxy.isConnected())
+				return 0;
+			
+			//if id is valid, insert entry in local database
+			if (id > 0)
+				proxy.getDBSetter().addUser(id, username);
+			
+			//return success
+			return id;
+		}
+	}
+
+	public boolean registerUser(String username) {
+		if (isRobolectricTestrun) {
+			return (proxy.getDBSetter().addUser(username) > 0);
+		} else {
+			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+			
+			//check connection
+			if (!serverProxy.isConnected())
+				return false;
+			
+			//retrieve user id from server
+			int id = serverProxy.signupUser(username);
+			
+			//if id is valid, insert entry in local database
+			if (id > 0)
+				proxy.getDBSetter().addUser(id, username);
+			
+			//return success
+			return (id > 0);
+		}
 	}
 
 }

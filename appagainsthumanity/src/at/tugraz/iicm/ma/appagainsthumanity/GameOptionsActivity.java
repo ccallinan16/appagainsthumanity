@@ -11,8 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
-import at.tugraz.iicm.ma.appagainsthumanity.db.ServerConnector;
 
 public class GameOptionsActivity extends Activity {
 
@@ -73,7 +73,11 @@ public class GameOptionsActivity extends Activity {
 		//update server information
 		DBProxy proxy = new DBProxy(this);
 		ServerConnector connector = new ServerConnector(proxy);
-		connector.initializeGame(invites, roundcap, scorecap);
+		if (!connector.initializeGame(invites, roundcap, scorecap)) {
+			//connection error
+			Toast.makeText(this, getString(R.string.game_options_toast_connectionerror), Toast.LENGTH_SHORT).show();
+			return;
+		}
 		proxy.onStop();
 		
 

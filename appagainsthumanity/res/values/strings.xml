@@ -18,6 +18,7 @@
     <string name="game_options_text_roundcap">Round cap</string>
     <string name="game_options_hint_roundcap">0: no lim</string>
     <string name="game_options_toast_invalidselection">ERROR: invalid selection</string>
+    <string name="game_options_toast_connectionerror">ERROR: connection to server failed</string>
     <string name="game_overview_text_turns">Rounds</string>
     <string name="game_overview_text_players">Players</string>
     <string name="game_overview_text_options">Options</string>

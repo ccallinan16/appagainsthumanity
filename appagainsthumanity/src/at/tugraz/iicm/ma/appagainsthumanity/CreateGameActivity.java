@@ -18,9 +18,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
-import at.tugraz.iicm.ma.appagainsthumanity.db.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.util.AutocompletePromptDialog;
 
 public class CreateGameActivity extends Activity {
@@ -107,6 +107,7 @@ public class CreateGameActivity extends Activity {
 		}
 		});
 		
+		dbProxy.dumpTables();
 	}
 	
 	@Override
@@ -226,7 +227,7 @@ public class CreateGameActivity extends Activity {
 		
 		//else: check server information
 		ServerConnector connector = new ServerConnector(dbProxy);
-		if (connector.retrieveUserId(input) > 1) {
+		if (connector.retrieveUserId(input) >= 1) {
 			
 			//update local cursor information
 			
@@ -269,12 +270,11 @@ public class CreateGameActivity extends Activity {
 		//create intent
     	Intent intent = new Intent(this, GameOptionsActivity.class);
     	
-    	System.out.println("here i am");
     	//compile list of invites
 	    long[] items = new long[inviteArrayAdapter.getCount()];
 	    for (int position = 0; position < inviteArrayAdapter.getCount(); position++) {
 	    	items[position] = retrieveUserId(inviteArrayAdapter.getItem(position));
-	    	if (! (items[position] > 1)) {
+	    	if (! (items[position] >= 1)) {
 	    		//something went wrong here
 	    		Toast.makeText(CreateGameActivity.this, getString(R.string.create_game_toast_invalidentry), Toast.LENGTH_SHORT).show();
 	    		return;

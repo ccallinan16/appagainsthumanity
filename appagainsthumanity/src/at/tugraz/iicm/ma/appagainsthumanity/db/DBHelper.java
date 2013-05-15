@@ -61,7 +61,7 @@ public class DBHelper extends SQLiteOpenHelper {
     		db.execSQL(query);
     	for (String query : DBContract.SQL_CREATE_ENTRIES) 
     		db.execSQL(query);
-    	addDefaultEntries(db);
+    	//addDefaultEntries(db);
     }
     
     

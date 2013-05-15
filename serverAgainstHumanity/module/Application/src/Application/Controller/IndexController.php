@@ -18,13 +18,14 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-    	//$this->_helper->viewRenderer->setNoRenderer();
     	$server = new Server();
     	$rpc = new Rpc($this->getServiceLocator());
-    	$server->setClass($rpc, 'cf');
+    	$server->setClass($rpc, 'aah');
     	
-    	echo $rpc->signupUser("testuser8");
-    	//echo $server->handle();
+
+      
+    	//echo $rpc->createGame($username, $data);
+    	echo $server->handle();
 		return $this->getResponse();
     }
     

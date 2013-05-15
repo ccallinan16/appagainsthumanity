@@ -37,6 +37,13 @@ public class SetterProxy {
 		return insertIgnoreOverwrite(DBContract.User.TABLE_NAME, DBContract.User._ID, values);
 	}
 	
+	public long addUser(int id, String username) {
+		ContentValues values = new ContentValues();
+		values.put(DBContract.User._ID, id);
+		values.put(DBContract.User.COLUMN_NAME_USERNAME, username);
+		return insertIgnoreOverwrite(DBContract.User.TABLE_NAME, DBContract.User._ID, values);
+	}
+	
 	public long addGame(int roundCap, int scoreCap) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.Game.COLUMN_NAME_ROUND_CAP, roundCap);

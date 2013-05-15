@@ -19,6 +19,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.GamelistAdapter;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.NotificationHandler;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 
@@ -113,6 +116,20 @@ public class MainActivity extends Activity {
 		//set the translator in the Singleton
 		CardCollection.instance.setTranslator(
 				new IDToCardTranslator(this.getApplicationContext()));
+		
+		//check connection
+		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+		System.out.println(serverProxy.isConnected());
+		
+		//register user
+		//TODO: in production, check in sharedPref-entry whether registration has already happened
+		//      in the meantime register all over in case the database was dropped 
+		ServerConnector connector = new ServerConnector(dbProxy);
+		connector.registerUser(username);
+		
+		//check and process notifications
+		NotificationHandler handler = new NotificationHandler(dbProxy);
+		handler.checkAndHandleUpdates();
 	}
 	
     @Override

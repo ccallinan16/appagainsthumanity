@@ -15,6 +15,10 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
 //model-related
+use Application\Model\Participation;
+use Application\Model\ParticipationTable;
+use Application\Model\Game;
+use Application\Model\GameTable;
 use Application\Model\User;
 use Application\Model\UserTable;
 use Zend\Db\ResultSet\ResultSet;

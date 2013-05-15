@@ -13,9 +13,9 @@ import test.util.SQLTestRunner;
 import android.app.Activity;
 import android.content.Context;
 import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
-import at.tugraz.iicm.ma.appagainsthumanity.db.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 @RunWith(SQLTestRunner.class)
