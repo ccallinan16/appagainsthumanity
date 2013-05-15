@@ -40,9 +40,11 @@ class ParticipationTable
         $id = (int)$participation->id;
         if ($id == 0) {
             $this->tableGateway->insert($data);
+            return $this->tableGateway->lastInsertValue;
         } else {
             if ($this->getParticipation($id)) {
                 $this->tableGateway->update($data, array('id' => $id));
+                return $id;
             } else {
                 throw new \Exception('Form id does not exist');
             }

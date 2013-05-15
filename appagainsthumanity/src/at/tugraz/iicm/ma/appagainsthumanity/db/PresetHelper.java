@@ -1,6 +1,7 @@
 package at.tugraz.iicm.ma.appagainsthumanity.db;
 
 import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class PresetHelper {
@@ -53,7 +54,7 @@ public class PresetHelper {
 			//connector.updateScore(manager.getLastTurnID(), manager.getWinnerCard());
 			break;
 		case NO_GAMES:
-			connector.startGame(manager); //adds users
+			//connector.startGame(manager); //adds users
 			break;
 		default:
 			break;

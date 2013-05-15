@@ -48,9 +48,11 @@ class UserTable
         $id = (int)$user->id;
         if ($id == 0) {
             $this->tableGateway->insert($data);
+            return $this->tableGateway->lastInsertValue;
         } else {
             if ($this->getUser($id)) {
                 $this->tableGateway->update($data, array('id' => $id));
+                return $id;
             } else {
                 throw new \Exception('Form id does not exist');
             }

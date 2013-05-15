@@ -19,7 +19,40 @@ class ClientController extends AbstractActionController
     {
     	$client = new Client('http://localhost/');
         try {
-            $data = $client->call('cf.test');
+            $data = $client->call('aah.checkConnection');
+            $this->layout( 'layout/xml-layout' );
+            
+			return new ViewModel(array(
+            	'data' => $data
+        	));
+
+        } catch (Zend_XmlRpc_Client_HttpException $e) {
+            require_once 'Zend/Exception.php';
+            throw new Zend_Exception($e);
+        } catch (Zend_XmlRpc_Client_FaultException $e) {
+            require_once 'Zend/Exception.php';
+                throw new Zend_Exception($e);
+        }
+    }
+    
+    public function creategameAction()
+    {
+    	$client = new Client('http://localhost/');
+        try {
+            $username = "testuser1";
+            $data = array(
+              "roundcap" => 5,
+              "scorecap" => 5,
+              "invites" => array(
+                "1" => 1,
+                "5" => 5,
+                "7" => 7  
+              )
+            );
+              
+            
+        
+            $data = $client->call('aah.createGame', array($username, $data));
             $this->layout( 'layout/xml-layout' );
             
 			return new ViewModel(array(

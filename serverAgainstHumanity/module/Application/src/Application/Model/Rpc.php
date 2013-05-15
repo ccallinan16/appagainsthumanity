@@ -5,27 +5,47 @@ namespace Application\Model;
 
 class Rpc
 {
-	protected $userTable;
+	  protected $userTable;
+    protected $gameTable;
+    protected $participationTable;
     protected $sm; //serviceLocator
     
     public function __construct($serviceLocator) {
       $this->sm = $serviceLocator;    
     }
+    
+    public function getUserTable()
+    {
+        if (!$this->userTable) {
+            $this->userTable = $this->sm->get('Application\Model\UserTable');
+        }
+        return $this->userTable;
+    }
+    
+    public function getGameTable()
+    {
+        if (!$this->gameTable) {
+            $this->gameTable = $this->sm->get('Application\Model\GameTable');
+        }
+        return $this->gameTable;
+    }
+    
+    public function getParticipationTable()
+    {
+        if (!$this->participationTable) {
+            $this->participationTable = $this->sm->get('Application\Model\ParticipationTable');
+        }
+        return $this->participationTable;
+    }
 
     /**
-     * Test method
+     * Test method wich only returns true
      *
-     * @return string
+     * @return bool
      */
-    public function test()
-    {
-    	$users = $this->getUserTable()->fetchAll();
-    	$string = "";
-    	foreach($users as $user) {
-    		$string .= " " . $user->id . " " . $user->username . "\n";
-    	}
-    	
-    	return $string;
+    public function checkConnection()
+    {  	
+    	return true;
     }
     
   	/**
@@ -54,17 +74,46 @@ class Rpc
           
         //otherwise add new user
         $user = new User();
-        $user->setUsername($username);
         $user->setId(0);
-  	    $this->getUserTable()->saveUser($user);
-        return $this->getUserTable()->getUserId($username);
+        $user->setUsername($username);
+
+  	    return $this->getUserTable()->saveUser($user);
   	}
     
-    public function getUserTable()
-    {
-        if (!$this->userTable) {
-            $this->userTable = $this->sm->get('Application\Model\UserTable');
+    /**
+  	 * adds a new game
+  	 *
+     * @param string $username
+     * @param struct|array $data          
+  	 * @return bool success
+  	 */
+  	public function createGame($username, $data)
+  	{    
+        //retrieve id of user
+        $user_id = $this->getUserTable()->getUserId($username);
+        
+        //create new game
+        $game = new Game();
+        $game->setId(0);
+        $game->setRoundcap($data['roundcap']);
+        $game->setScorecap($data['scorecap']);        
+        $gid = $this->getGameTable()->saveGame($game);
+        
+        //add participation of creating player
+        $participation = new Participation();
+        $participation->setId(0);
+        $participation->setGameId($gid);  
+        $participation->setUserId($user_id);
+        $participation->setScore(0);
+        $this->getParticipationTable()->saveParticipation($participation);
+        
+        //add participation of invited users
+        foreach($data['invites'] as $id) {
+          $participation->setUserId($id);
+          $this->getParticipationTable()->saveParticipation($participation);
         }
-        return $this->userTable;
-    }
+        
+        //return id of new game
+        return true;
+  	}
 }

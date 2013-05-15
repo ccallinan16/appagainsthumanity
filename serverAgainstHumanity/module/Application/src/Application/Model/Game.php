@@ -15,4 +15,18 @@ class Game
         $this->scorecap  = (isset($data['scorecap'])) ? $data['scorecap'] : null;
         $this->updated   = (isset($data['updated']))  ? $data['updated']  : null;
     }
+    
+    public function setId($new_id) {
+        $this->id = $new_id;
+    }
+    
+    public function setRoundcap($new_roundcap) {
+        $this->roundcap = $new_roundcap;
+    }
+    
+    public function setScorecap($new_scorecap) {
+        $this->scorecap = $new_scorecap;
+    }
+    
+    
 }
