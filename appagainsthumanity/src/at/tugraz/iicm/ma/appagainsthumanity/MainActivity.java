@@ -132,10 +132,6 @@ public class MainActivity extends Activity {
 		// Instanciate database proxy
 		dbProxy = new DBProxy(this.getApplicationContext());
 		
-		//retrieve game list
-		gamelistCursor = dbProxy.readGameList(username);
-		displayListView(gamelistCursor);
-		
 		//set the translator in the Singleton
 		CardCollection.instance.setTranslator(
 				new IDToCardTranslator(this.getApplicationContext()));
@@ -153,6 +149,10 @@ public class MainActivity extends Activity {
 		//check and process notifications
 		NotificationHandler handler = new NotificationHandler(dbProxy);
 		handler.checkAndHandleUpdates();
+		
+		//retrieve game list
+		gamelistCursor = dbProxy.readGameList(username);
+		displayListView(gamelistCursor);
 	}
 	
     @Override

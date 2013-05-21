@@ -31,6 +31,16 @@ public class SetterProxy {
 		
 	}
 	
+	public long addDealtBlackCard(long id, long game_id, long player_id, long black_card_id) {
+		ContentValues values = new ContentValues();
+		values.put(DBContract.DealtBlackCard._ID, id);
+		values.put(DBContract.DealtBlackCard.COLUMN_NAME_GAME_ID, game_id);
+		values.put(DBContract.DealtBlackCard.COLUMN_NAME_PLAYER_ID, player_id);
+		values.put(DBContract.DealtBlackCard.COLUMN_NAME_BLACK_CARD_ID, black_card_id);
+
+		return insertIgnoreOverwrite(DBContract.DealtBlackCard.TABLE_NAME, DBContract.DealtBlackCard._ID, values);
+	}
+	
 	public long addUser(String username) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.User.COLUMN_NAME_USERNAME, username);
@@ -51,12 +61,28 @@ public class SetterProxy {
 		return insertIgnoreOverwrite(DBContract.Game.TABLE_NAME, DBContract.Game._ID, values);
 	}
 	
+	public long addGame(int id, int roundCap, int scoreCap) {
+		ContentValues values = new ContentValues();
+		values.put(DBContract.Game._ID, id);
+		values.put(DBContract.Game.COLUMN_NAME_ROUND_CAP, roundCap);
+		values.put(DBContract.Game.COLUMN_NAME_SCORE_CAP, scoreCap);
+		return insertIgnoreOverwrite(DBContract.Game.TABLE_NAME, DBContract.Game._ID, values);
+	}
+	
 	public long addParticipation(long game_id, long user_id, int score) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.Participation.COLUMN_NAME_GAME_ID, game_id);
 		values.put(DBContract.Participation.COLUMN_NAME_USER_ID, user_id);
 		values.put(DBContract.Participation.COLUMN_NAME_SCORE, score);
-		
+		return insertIgnoreOverwrite(DBContract.Participation.TABLE_NAME, DBContract.Participation._ID, values);
+	}
+	
+	public long addParticipation(long id, long game_id, long user_id, int score) {
+		ContentValues values = new ContentValues();
+		values.put(DBContract.Participation._ID, id);
+		values.put(DBContract.Participation.COLUMN_NAME_GAME_ID, game_id);
+		values.put(DBContract.Participation.COLUMN_NAME_USER_ID, user_id);
+		values.put(DBContract.Participation.COLUMN_NAME_SCORE, score);
 		return insertIgnoreOverwrite(DBContract.Participation.TABLE_NAME, DBContract.Participation._ID, values);
 	}
 	
@@ -71,6 +97,16 @@ public class SetterProxy {
 		//as card IDs start with 1, we can set 0 instead of null. this allows us
 		//to check the values with =? syntax, instead of IS NULL. 
 		
+		return insertIgnoreOverwrite(DBContract.Turn.TABLE_NAME, DBContract.Turn._ID, values);
+	}
+	
+	public long addTurn(long id, long game_id, int roundnumber, long user_id, Integer black_id) {
+		ContentValues values = new ContentValues();
+		values.put(DBContract.Turn._ID, id);
+		values.put(DBContract.Turn.COLUMN_NAME_GAME_ID, game_id);
+		values.put(DBContract.Turn.COLUMN_NAME_ROUNDNUMBER, roundnumber);
+		values.put(DBContract.Turn.COLUMN_NAME_USER_ID, user_id);
+		values.put(DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID, black_id);
 		return insertIgnoreOverwrite(DBContract.Turn.TABLE_NAME, DBContract.Turn._ID, values);
 	}
 	

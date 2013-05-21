@@ -170,7 +170,7 @@ public class DBProxy {
 			DBContract.User.TABLE_NAME,		// The table to query
 		    projection,                     // The columns to return
 		    DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_NAME_USERNAME + " != ? AND +" +
-		    DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " > 1",	// The WHERE clause
+		    DBContract.User.TABLE_NAME + "." + DBContract.User._ID + " >= 1",	// The WHERE clause
 		    new String[]{username},         // The values for the WHERE clause
 		    null,                           // don't group the rows
 		    null,                           // don't filter by row groups

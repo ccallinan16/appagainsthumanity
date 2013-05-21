@@ -16,6 +16,15 @@ class Game
         $this->updated   = (isset($data['updated']))  ? $data['updated']  : null;
     }
     
+    public function toArray() {
+        $data = array();
+        $data['id']       = $this->id;
+        $data['roundcap'] = $this->roundcap;
+        $data['scorecap'] = $this->scorecap;
+        $data['updated']  = $this->updated;
+        return $data;
+    }
+    
     public function setId($new_id) {
         $this->id = $new_id;
     }
@@ -27,6 +36,4 @@ class Game
     public function setScorecap($new_scorecap) {
         $this->scorecap = $new_scorecap;
     }
-    
-    
 }

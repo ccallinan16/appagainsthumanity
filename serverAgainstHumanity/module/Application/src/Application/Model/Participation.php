@@ -16,6 +16,15 @@ class Participation
         $this->score  = (isset($data['score'])) ? $data['score'] : null;
     }
     
+    public function toArray() {
+        $data = array();
+        $data['id']      = $this->id;
+        $data['game_id'] = $this->game_id;
+        $data['user_id'] = $this->user_id;
+        $data['score']   = $this->score;
+        return $data;
+    }
+    
     public function setId($new_id) {
         $this->id = $new_id;
     }

@@ -15,6 +15,13 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
 //model-related
+
+use Application\Model\DealtBlackCard;
+use Application\Model\DealtBlackCardTable;
+use Application\Model\Notification;
+use Application\Model\NotificationTable;
+use Application\Model\Turn;
+use Application\Model\TurnTable;
 use Application\Model\Participation;
 use Application\Model\ParticipationTable;
 use Application\Model\Game;
@@ -89,6 +96,39 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Participation());
                     return new TableGateway('participation', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\TurnTable' =>  function($sm) {
+                    $tableGateway = $sm->get('TurnTableGateway');
+                    $table = new TurnTable($tableGateway);
+                    return $table;
+                },
+                'TurnTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Turn());
+                    return new TableGateway('turn', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\NotificationTable' =>  function($sm) {
+                    $tableGateway = $sm->get('NotificationTableGateway');
+                    $table = new NotificationTable($tableGateway);
+                    return $table;
+                },
+                'NotificationTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Notification());
+                    return new TableGateway('notification', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\DealtBlackCardTable' =>  function($sm) {
+                    $tableGateway = $sm->get('DealtBlackCardTableGateway');
+                    $table = new DealtBlackCardTable($tableGateway);
+                    return $table;
+                },
+                'DealtBlackCardTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new DealtBlackCard());
+                    return new TableGateway('dealt_black_card', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

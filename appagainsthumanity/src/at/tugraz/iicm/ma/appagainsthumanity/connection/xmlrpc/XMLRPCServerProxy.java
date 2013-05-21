@@ -10,6 +10,17 @@ import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerProxy;
 
 public class XMLRPCServerProxy extends ServerProxy{
 
+	//TODO: read these informations from a config file / common prefs
+	private static final String SERVER_URI 						= "http://10.0.0.3/";
+	private static final String NAMESPACE_RPC 					= "aah.";
+	private static final String NAMESPACE_NOTIFICATION 			= "notification.";
+	private static final String FUNCTIONNAME_CHECKCONNECTION 	= "checkConnection";
+	private static final String FUNCTIONNAME_SIGNUPUSER 		= "signupUser";
+	private static final String FUNCTIONNAME_GETUSERID 			= "getUserId";
+	private static final String FUNCTIONNAME_CREATEGAME			= "createGame";
+	private static final String FUNCTIONNAME_GETNOTIFICATIONS	= "getNotifications";
+	private static final String FUNCTIONNAME_GETUPDATE 			= "getUpdate";
+	
 	private XMLRPCClient client;
     private URI uri;
 	
@@ -20,14 +31,14 @@ public class XMLRPCServerProxy extends ServerProxy{
 	}
 	
 	private XMLRPCServerProxy() {
-		 uri = URI.create("http://10.0.0.3/");
+		 uri = URI.create(SERVER_URI);
 	     client = new XMLRPCClient(uri);
 	}
 	
 	@Override
 	public boolean checkConnection() {
 		try{
-			Boolean b = (Boolean) client.call("aah.checkConnection");
+			Boolean b = (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CHECKCONNECTION);
 			setConnected();
 			return b;
 		} catch (XMLRPCException e) {
@@ -39,7 +50,7 @@ public class XMLRPCServerProxy extends ServerProxy{
 	@Override
 	public int signupUser(String username) {
 		try{
-			Object o = client.call("aah.signupUser", username);
+			Object o = client.call(NAMESPACE_RPC + FUNCTIONNAME_SIGNUPUSER, username);
 			int id = Integer.parseInt(o.toString());
 			return id;
 		} catch (XMLRPCException e) {
@@ -51,7 +62,7 @@ public class XMLRPCServerProxy extends ServerProxy{
 	@Override
 	public int getUserId(String username) {
 		try{
-			Object o = client.call("aah.getUserId", username);
+			Object o = client.call(NAMESPACE_RPC + FUNCTIONNAME_GETUSERID, username);
 			int id = Integer.parseInt(o.toString());
 			return id;
 		} catch (XMLRPCException e) {
@@ -61,7 +72,7 @@ public class XMLRPCServerProxy extends ServerProxy{
 	}
 
 	@Override
-	public boolean createGame(String username, long[] invites, int roundcap, int scorecap) {
+	public boolean createGame(int userId, long[] invites, int roundcap, int scorecap) {
 		//prepare data
 		HashMap<String, Object> data = new HashMap<String, Object>();
 		data.put("roundcap", roundcap);
@@ -73,7 +84,7 @@ public class XMLRPCServerProxy extends ServerProxy{
 		
 		//query
 		try{
-			Boolean b = (Boolean) client.call("aah.createGame", username, data);
+			Boolean b = (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CREATEGAME, userId, data);
 			return b;
 		} catch (XMLRPCException e) {
 			setDisconnected();
@@ -81,15 +92,27 @@ public class XMLRPCServerProxy extends ServerProxy{
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public HashMap<String, String> checkUpdates(String username, HashMap<String, String> info) {
+	public HashMap<String, String> getNotifications(int userId) {
 		try{
-			Object o = client.call("aah.checkUpdates", username, info);
-			return (HashMap<String, String>) o;
+			Object o = client.call(NAMESPACE_NOTIFICATION + FUNCTIONNAME_GETNOTIFICATIONS, userId);
+			if (HashMap.class.isInstance(o))
+				return (HashMap<String, String>) o;
+			return null;
 		} catch (XMLRPCException e) {
 			setDisconnected();
 			return null;
 		}
 	}
 
+	@Override
+	public Object getUpdate(int notificationId) {
+		try{
+			return client.call(NAMESPACE_NOTIFICATION + FUNCTIONNAME_GETUPDATE, notificationId);
+		} catch (XMLRPCException e) {
+			setDisconnected();
+			return null;
+		}
+	}
 }

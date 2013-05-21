@@ -59,7 +59,7 @@ public class ServerConnector {
 				return false;
 			
 			//query server
-			return serverProxy.createGame(proxy.getUsername(), invites, roundCap, scoreCap);
+			return serverProxy.createGame(proxy.getUserID(), invites, roundCap, scoreCap);
 		}
 	}
 	

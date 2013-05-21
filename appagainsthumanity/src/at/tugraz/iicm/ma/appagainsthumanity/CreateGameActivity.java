@@ -78,8 +78,6 @@ public class CreateGameActivity extends Activity {
 		//retrieve user list
 		userCursor = dbProxy.readKnownOtherUsers(username);
 		
-		DatabaseUtils.dumpCursor(userCursor);
-		
 		this.userAdapter = new SimpleCursorAdapter(this, 
 		        android.R.layout.simple_list_item_1, 
 		        userCursor,
@@ -106,7 +104,6 @@ public class CreateGameActivity extends Activity {
 				dlg.show();
 		}
 		});
-		
 		dbProxy.dumpTables();
 	}
 	
