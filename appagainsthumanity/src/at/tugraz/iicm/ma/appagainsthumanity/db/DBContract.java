@@ -55,15 +55,14 @@ public abstract class DBContract {
 	    public static final String COLUMN_NAME_PLAYER_ID = "player_id";
 	}
 	
-	//table describing white cards
-	public static abstract class WhiteCard implements BaseColumns {
-	    public static final String TABLE_NAME = "white_card";
+	//table describing dealt black cards
+	public static abstract class DealtBlackCard implements BaseColumns {
+	    public static final String TABLE_NAME = "dealt_black_card";
+	    public static final String COLUMN_NAME_GAME_ID = "game_id";
+	    public static final String COLUMN_NAME_BLACK_CARD_ID = "black_card_id";
+	    public static final String COLUMN_NAME_PLAYER_ID = "player_id";
 	}
 	
-	//table describing black cards
-	public static abstract class BlackCard implements BaseColumns {
-	    public static final String TABLE_NAME = "black_card";
-	}
 	
 	//default queries
 	
@@ -125,14 +124,12 @@ public abstract class DBContract {
 	    DBContract.DealtWhiteCard.COLUMN_NAME_PLAYER_ID + 		TYPE_INTEGER +
 	    " )",
 	    
-	    //Table white_card
-	    "CREATE TABLE " + DBContract.WhiteCard.TABLE_NAME + " (" +
-	    DBContract.WhiteCard._ID + TYPE_PRIMARY_KEY +
-	    " )",
-	    
-	    //Table black_card
-	    "CREATE TABLE " + DBContract.BlackCard.TABLE_NAME + " (" +
-	    DBContract.BlackCard._ID + TYPE_PRIMARY_KEY +	    
+	    //Table dealt_black_card
+	    "CREATE TABLE " + DBContract.DealtBlackCard.TABLE_NAME + " (" +
+	    DBContract.DealtBlackCard._ID + 						TYPE_PRIMARY_KEY + 	COMMA_SEP +
+	    DBContract.DealtBlackCard.COLUMN_NAME_GAME_ID + 		TYPE_INTEGER +		COMMA_SEP +
+	    DBContract.DealtBlackCard.COLUMN_NAME_BLACK_CARD_ID + 	TYPE_INTEGER + 		COMMA_SEP +
+	    DBContract.DealtBlackCard.COLUMN_NAME_PLAYER_ID + 		TYPE_INTEGER +
 	    " )"
 	    };
 	
@@ -150,10 +147,8 @@ public abstract class DBContract {
 	    "DROP TABLE IF EXISTS " + DBContract.PlayedWhiteCard.TABLE_NAME,
 	    //Table DealtWhiteCard
 	    "DROP TABLE IF EXISTS " + DBContract.DealtWhiteCard.TABLE_NAME,
-	    //Table WhiteCard
-	    "DROP TABLE IF EXISTS " + DBContract.WhiteCard.TABLE_NAME,
-	    //Table WhiteCard
-	    "DROP TABLE IF EXISTS " + DBContract.BlackCard.TABLE_NAME
+	    //Table DealtBlackCard
+	    "DROP TABLE IF EXISTS " + DBContract.DealtBlackCard.TABLE_NAME,
 	};
 	
 	//private constructor - don't construct this!

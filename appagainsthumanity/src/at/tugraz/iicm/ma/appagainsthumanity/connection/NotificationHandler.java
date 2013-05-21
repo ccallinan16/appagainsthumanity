@@ -1,6 +1,7 @@
 package at.tugraz.iicm.ma.appagainsthumanity.connection;
 
 import java.util.HashMap;
+import java.util.TreeSet;
 
 import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
@@ -11,6 +12,15 @@ import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 
 public class NotificationHandler {
 
+    public static final int NOTIFICATION_NEW_GAME      = 0;  //important notification
+    public static final int NOTIFICATION_NEW_ROUND     = 1;  //important notification
+    public static final int NOTIFICATION_CHOOSE_BLACK  = 2;  //important notification
+    public static final int NOTIFICATION_CHOSEN_BLACK  = 3;
+    public static final int NOTIFICATION_CHOOSE_WHITE  = 4;  //important notification
+    public static final int NOTIFICATION_CHOSEN_WHITE  = 5;
+    public static final int NOTIFICATION_CHOOSE_WINNER = 6;  //important notification
+    public static final int NOTIFICATION_CHOSEN_WINNER = 7;  //important notification
+	
 	private DBProxy dbProxy;
 
 	/**
@@ -20,7 +30,6 @@ public class NotificationHandler {
 	 */
 	
 	public NotificationHandler(DBProxy proxy) {
-		// TODO Auto-generated constructor stub
 		this.dbProxy = proxy;
 	}
 	
@@ -35,12 +44,133 @@ public class NotificationHandler {
 		if (!serverProxy.isConnected())
 			return;
 		
-		//retrieve list of known games and update time information
-		HashMap<String, String> info = dbProxy.getter.getGameInfoList();
-
-		//query server
-		//HashMap<String, String> result = serverProxy.checkUpdates(dbProxy.getUsername(), info);
+		//retrieve notifications
+		HashMap<String, String> result = serverProxy.getNotifications(dbProxy.getUserID());
+		
+		//if result == null, nothing to do here
+		if (result == null)
+			return;
+		
+		//otherwise iterate through notifications and invoke necessary callbacks
+		for(String notificationIdString: new TreeSet<String>(result.keySet())) {
+			int notificationId = Integer.parseInt(notificationIdString);
+			int type = Integer.parseInt(result.get(notificationIdString));
+			
+			System.out.println("got notification of type: " + type + " with id: " + notificationId);
+			
+			switch (type) {
+			case NOTIFICATION_NEW_GAME:
+				callbackNewGame(notificationId);
+				break;
+			case NOTIFICATION_NEW_ROUND:
+				callbackNewRound(notificationId);
+				break;
+			case NOTIFICATION_CHOOSE_BLACK:
+				callbackChooseBlack(notificationId);
+				break;	
+			case NOTIFICATION_CHOSEN_BLACK:
+				callbackChosenBlack(notificationId);
+				break;
+			case NOTIFICATION_CHOOSE_WHITE:
+				callbackChooseWhite(notificationId);
+				break;
+			case NOTIFICATION_CHOSEN_WHITE:
+				callbackChosenWhite(notificationId);
+				break;
+			case NOTIFICATION_CHOOSE_WINNER:
+				callbackChooseWinner(notificationId);
+				break;
+			case NOTIFICATION_CHOSEN_WINNER:
+				callbackChosenWinner(notificationId);
+				break;
+			}
+		}
 	}
-	
-	
+
+	private void callbackChosenWinner(int notificationId) {
+
+		
+	}
+
+	private void callbackChooseWinner(int notificationId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void callbackChosenWhite(int notificationId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void callbackChooseWhite(int notificationId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void callbackChosenBlack(int notificationId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	private void callbackChooseBlack(int notificationId) {
+		//check if server connection is established, otherwise abort
+		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+		if (!serverProxy.isConnected())
+			return;
+		
+		//query server
+		Object[] blackCards = (Object[]) serverProxy.getUpdate(notificationId);
+		for(Object o : blackCards) {
+			HashMap<String, String> blackCard = (HashMap<String, String>) o;
+			//add turn entry
+			dbProxy.getDBSetter().addDealtBlackCard(Integer.parseInt(blackCard.get("id")), Integer.parseInt(blackCard.get("game_id")), 
+													Integer.parseInt(blackCard.get("user_id")), Integer.parseInt(blackCard.get("black_card_id")));
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void callbackNewRound(int notificationId) {
+		//check if server connection is established, otherwise abort
+		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+		if (!serverProxy.isConnected())
+			return;
+		
+		//query server
+		HashMap<String, String> turn = (HashMap<String, String>) serverProxy.getUpdate(notificationId);
+		
+		//add turn entry
+		dbProxy.getDBSetter().addTurn(Integer.parseInt(turn.get("id")), Integer.parseInt(turn.get("game_id")), Integer.parseInt(turn.get("roundnumber")),
+									  Integer.parseInt(turn.get("user_id")), Integer.parseInt(turn.get("black_card_id")));
+	}
+
+	@SuppressWarnings("unchecked")
+	private void callbackNewGame(int notificationId) {
+		//check if server connection is established, otherwise abort
+		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+		if (!serverProxy.isConnected())
+			return;
+		
+		//query server
+		HashMap<String, Object> result = (HashMap<String, Object>) serverProxy.getUpdate(notificationId);
+		
+		//add game entry
+		HashMap<String, String> game = (HashMap<String, String>) result.get("game");
+		dbProxy.getDBSetter().addGame(Integer.parseInt(game.get("id")), Integer.parseInt(game.get("roundcap")), Integer.parseInt(game.get("scorecap")));
+		
+		//add user entries
+		Object[] userArray = (Object[]) result.get("user");
+		for (Object o : userArray) {
+			HashMap<String, String> user = (HashMap<String, String>) o;
+			dbProxy.getDBSetter().addUser(Integer.parseInt(user.get("id")), user.get("username"));
+		}
+		
+		//add participation entries
+		Object[] participationArray = (Object[]) result.get("participation");
+		for (Object o : participationArray) {
+			HashMap<String, String> participation = (HashMap<String, String>) o;
+			dbProxy.getDBSetter().addParticipation(Integer.parseInt(participation.get("id")), Integer.parseInt(participation.get("game_id")), 
+												   Integer.parseInt(participation.get("user_id")), Integer.parseInt(participation.get("score")));
+		}
+	}
 }

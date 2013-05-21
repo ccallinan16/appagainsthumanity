@@ -59,6 +59,12 @@ public class DebugPrinter {
 			projection,null,new String[]{},null,null,null);
 		DatabaseUtils.dumpCursor(c);
 		
+		//table dealt_black_card
+		System.out.println("table " + DBContract.DealtBlackCard.TABLE_NAME);
+		c = db.query(DBContract.DealtBlackCard.TABLE_NAME,
+			projection,null,new String[]{},null,null,null);
+		DatabaseUtils.dumpCursor(c);
+		
 		System.out.println("END DATABASE DUMP");
 	}
 	

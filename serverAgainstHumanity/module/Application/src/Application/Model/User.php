@@ -12,6 +12,13 @@ class User
         $this->username  = (isset($data['username'])) ? $data['username'] : null;
     }
     
+    public function toArray() {
+        $data = array();
+        $data['id']       = $this->id;
+        $data['username'] = $this->username;
+        return $data;
+    }
+    
     public function setId($new_id) {
         $this->id = $new_id;
     }

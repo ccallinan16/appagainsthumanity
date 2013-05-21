@@ -55,4 +55,33 @@ class ParticipationTable
     {
         $this->tableGateway->delete(array('id' => $id));
     }
+    
+    /*
+    * get participants of game in compressed form
+    */    
+    public function getParticipants($gameId) {
+      //get table entries with game id
+      $result = $this->tableGateway->select(array('game_id' => $gameId));  
+      //initialize empty participants array
+      $participants = array();            
+      //add participant ids to array
+      foreach ($result as $column)
+        $participants[] = $column->user_id;
+      return $participants;
+    }
+    
+    /*
+     * get complete data-set of participations of a given game-id
+     */     
+    public function getParticipationOfGame($game_id) {
+      //get table entries for game
+      $result = $this->tableGateway->select(array('game_id' => $game_id));  
+      //prepare data
+      $data = array();
+      //append data
+      foreach($result as $participation)
+        $data[] = $participation->toArray();
+        
+      return $data;
+    }
 }

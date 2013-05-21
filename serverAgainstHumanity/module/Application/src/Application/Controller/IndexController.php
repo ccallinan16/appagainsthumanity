@@ -10,22 +10,41 @@
 namespace Application\Controller;
 
 use Application\Model\Rpc;
+use Application\Model\NotificationHandler;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\XmlRpc\Server;
 
 class IndexController extends AbstractActionController
 {
+    const NAMESPACE_RPC           = "aah";
+    const NAMESPACE_NOTIFICATION  = "notification";
+
     public function indexAction()
     {
     	$server = new Server();
     	$rpc = new Rpc($this->getServiceLocator());
-    	$server->setClass($rpc, 'aah');
-    	
-
+    	$server->setClass($rpc, IndexController::NAMESPACE_RPC);
+      $notificationHandler = new NotificationHandler($this->getServiceLocator());
+      $server->setClass($notificationHandler, IndexController::NAMESPACE_NOTIFICATION);
       
-    	//echo $rpc->createGame($username, $data);
-    	echo $server->handle();
+    	
+                  $username = "testuser";
+            $data = array(
+              "roundcap" => 5,
+              "scorecap" => 5,
+              "invites" => array(
+                "5" => 5,
+                "7" => 7,
+                "8" => 8  
+              )
+            );
+      
+    	//echo $rpc->createGame(14, $data);
+    	//print_r( $notificationHandler->getNotifications(14));
+      //print_r( $notificationHandler->getUpdate(155));
+      echo $server->handle();
+      
 		return $this->getResponse();
     }
     
