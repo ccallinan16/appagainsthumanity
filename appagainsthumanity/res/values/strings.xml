@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string name="app_name2">App Against Humanity</string>
     <string name="app_name">App Against Humanity</string>
-    <string name="action_settings">Settings</string>
     
+    <string name="action_settings">Settings</string>
     <string name="main_text_create_game">Create game</string>
     <string name="main_button_set">Set</string>
     <string name="main_button_gallery">Gallery</string>
     <string name="main_key_game_list">GAME_LIST</string>
-    
     <string name="create_game_title_create_game">Create game</string>
     <string name="create_game_button_add_player">add player</string>
     <string name="create_game_button_confirm">Confirm</string>
@@ -28,27 +29,20 @@
     <string name="game_overview_turns_text_youwon">you won!</string>
     <string name="game_overview_turns_text_winner">winner</string>
     <string name="game_overview_turns_text_wait">waiting for other player</string>
-    
     <string name="prompt_new_invite_title">Invite player</string>
     <string name="prompt_new_invite_comment">Player-ID</string>
     <string name="prompt_edit_invite_title">Invite player</string>
     <string name="prompt_edit_invite_comment">Player-ID</string>
-    
     <string name="cs_label_select_black">Tap on a Card to select it.</string>
     <string name="confirmation_dialog">confirm to select current card</string>
-		<string name="menu_ok">OK</string>
-		<string name="menu_send">Send</string>
-		<string name="menu_cancel">Cancel</string>
-		
+    <string name="menu_ok">OK</string>
+    <string name="menu_send">Send</string>
+    <string name="menu_cancel">Cancel</string>
     <string name="pop_title_select">Select a card</string>
-		<string name="pop_text_select">Please make a selection by tapping on a card</string>
-
-    
+    <string name="pop_text_select">Please make a selection by tapping on a card</string>
     <string name="title_activity_gallery">GalleryActivity</string>
-    <string name="hello_world">Hello world!</string>    
     <string name="title_activity_my_gallery">MyGallery</string>
     <string name="title_activity_card_slide">CardSlideActivity</string>
-
     <string name="gamelist_round">Round</string>
     <string name="gamelist_score">Score</string>
     <string name="gamelist_numplayers">NumPlayers</string>
@@ -58,5 +52,28 @@
     <string name="title_activity_game_options">GameOptions</string>
     <string name="title_activity_game_overview">GameOverviewActivity</string>
     <string name="listitem_turnlist_text_turn">Round</string>
+
+    <!-- gcm trials strings -->
+    <string name="menu_settings">Settings</string>
+    <string name="hello_world">Hello World!</string>
+    <string name="title_activity_main">Push Notifications</string>
+    <string name="error_config">Please set the %1$s constant and recompile the app.</string>
+    <string name="already_registered">Device is already registered on server.</string>
+    <string name="gcm_registered">From GCM: device successfully registered!</string>
+    <string name="gcm_unregistered">From GCM: device successfully unregistered!</string>
+    <string name="gcm_message">From GCM: you got message!</string>
+    <string name="gcm_error">From GCM: error (%1$s).</string>
+    <string name="gcm_recoverable_error">From GCM: recoverable error (%1$s).</string>
+    <string name="gcm_deleted">From GCM: server deleted %1$d pending messages!</string>
+    <string name="server_registering">Trying (attempt %1$d/%2$d) to register device on Demo Server.</string>
+    <string name="server_registered">From Demo Server: successfully added device!</string>
+    <string name="server_unregistered">From Demo Server: successfully removed device!</string>
+    <string name="server_register_error">Could not register device on Demo Server after %1$d attempts.</string>
+    <string name="server_unregister_error">Could not unregister device on Demo Server (%1$s).</string>
+    <string name="options_register">Register</string>
+    <string name="options_unregister">Unregister</string>
+    <string name="options_clear">Clear</string>
+    <string name="options_exit">Exit</string>
+    <string name="title_activity_register">RegisterActivity</string>
 
 </resources>

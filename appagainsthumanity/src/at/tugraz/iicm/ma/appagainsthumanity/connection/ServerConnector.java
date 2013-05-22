@@ -3,8 +3,6 @@ package at.tugraz.iicm.ma.appagainsthumanity.connection;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.xmlrpc.android.XMLRPCException;
-
 import mocks.IDToCardTranslator;
 import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
