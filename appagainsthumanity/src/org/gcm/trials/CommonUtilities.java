@@ -6,11 +6,11 @@ import android.content.Intent;
 public final class CommonUtilities {
      
     // give your server registration url here
-    public static final String SERVER_URL = "http://sah/serverAgainstHumanity/module/register.php";
+    public static final String SERVER_URL = "http://192.168.1.120/serverAgainstHumanity/module/Application/src/Application/Model/gcm/register.php";
     //"http://10.0.2.2/gcm_server_php/register.php";
  
     // Google project id
-    public static final String SENDER_ID = "903913289319";
+    public static final String SENDER_ID = "803533367860";
  
     /**
      * Tag used on log messages.
