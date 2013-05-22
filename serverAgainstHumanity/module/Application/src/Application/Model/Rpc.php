@@ -174,6 +174,36 @@ class Rpc
 
   	    return $this->getUserTable()->saveUser($user);
   	}
+
+	/**
+	* funciton similar to signupUser, but with the GCM id
+	**/
+	public function registerUser($username,$gcmid)
+	{
+
+	//TODO: use already defined getUserTable...
+
+	$result = mysql_query("INSERT INTO gcm_users(name, gcm_regid) VALUES('$username','$gcmid')");
+        // check for successful store
+        echo "false";
+
+	if ($result) {
+		echo "true";
+
+            // get user details
+            $id = mysql_insert_id(); // last inserted id
+            $result = mysql_query("SELECT * FROM gcm_users WHERE id = $id") or die(mysql_error());
+            // return user details
+            if (mysql_num_rows($result) > 0) {
+                return mysql_fetch_array($result);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+	}
     
     /**
   	 * adds a new game

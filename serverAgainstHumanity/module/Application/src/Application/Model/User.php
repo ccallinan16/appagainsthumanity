@@ -26,4 +26,9 @@ class User
     public function setUsername($new_username) {
         $this->username = $new_username;
     }
+    
+    public function __toString()
+    {
+    	return "User: ".$this->id.", name: ".$this->username;
+    }
 }
