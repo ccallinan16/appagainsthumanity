@@ -55,7 +55,10 @@ public class MainActivity extends Activity {
 	private GamelistAdapter gamelistAdapter;
 	public DBProxy dbProxy;
 	public static String username;
+	private String regId;
 	private ProgressBar bar;
+	
+	private Context context = this;
 	
 	//database
 	private Cursor gamelistCursor;
@@ -91,13 +94,7 @@ public class MainActivity extends Activity {
 				} else
 					username = list[0].name;
 			}
-			
-			//supply username to shared preferences for other activities
-			SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).edit();
-			editor.putString(getString(R.string.sharedpreferences_key_username), username);
-			//set flag
-			editor.putBoolean(getString(R.string.sharedpreferences_key_username_defined), true);
-			editor.commit();
+			setUsername(username);
 		} else {
 			username = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getString(getString(R.string.sharedpreferences_key_username), "");
 		}
@@ -122,6 +119,8 @@ public class MainActivity extends Activity {
 						getString(R.string.sharedpreferences_filename), 
 						Context.MODE_PRIVATE).edit();
 		editor.putString(getString(R.string.sharedpreferences_key_username), name);
+		//set flag
+		editor.putBoolean(getString(R.string.sharedpreferences_key_username_defined), true);
 		editor.commit();
 	}
 	
@@ -137,7 +136,22 @@ public class MainActivity extends Activity {
 		
 		//prepare xmlrpc connection
 		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
-				
+	
+		// Make sure the device has the proper dependencies.
+		GCMRegistrar.checkDevice(this);
+
+		// Make sure the manifest was properly set - comment out this line
+		// while developing the app, then uncomment it when it's ready.
+		GCMRegistrar.checkManifest(this);
+
+		registerReceiver(mHandleMessageReceiver, new IntentFilter(
+				DISPLAY_MESSAGE_ACTION));
+		
+		// Get GCM registration id
+		regId = GCMRegistrar.getRegistrationId(this);
+
+		System.out.println("in Main: " + XMLRPCServerProxy.getInstance().isConnected());
+		
 		//check for updates
         bar = (ProgressBar) findViewById(R.id.progressBar);
         new ProgressTask().execute();
@@ -263,21 +277,11 @@ public class MainActivity extends Activity {
 	 * 2. get username
 	 * 3. check if already registered
 	 * 4. if not -> register.
+	 * 
+	 * returns the gcm reg id
 	 */
 	private void handleRegistrationWithGCM()
 	{	
-		// Make sure the device has the proper dependencies.
-		GCMRegistrar.checkDevice(this);
-
-		// Make sure the manifest was properly set - comment out this line
-		// while developing the app, then uncomment it when it's ready.
-		GCMRegistrar.checkManifest(this);
-
-		registerReceiver(mHandleMessageReceiver, new IntentFilter(
-				DISPLAY_MESSAGE_ACTION));
-		
-		// Get GCM registration id
-		final String regId = GCMRegistrar.getRegistrationId(this);
 
 		// Check if regid already presents
 		if (regId.equals("")) {
@@ -303,7 +307,6 @@ public class MainActivity extends Activity {
 						// On server creates a new user
 				//		XMLRPCServerProxy.getInstance().signupUser(username, regId);
 
-						ServerUtilities.register(context, username, null, regId);
 						return null;
 					}
 
@@ -356,13 +359,47 @@ public class MainActivity extends Activity {
 	    @Override
 	    protected Void doInBackground(Void... arg0) {   
 	    	 XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+	    	 
+ 			System.out.println("connected: " + serverProxy.isConnected());
+	    	 
 		        if (serverProxy.isConnected()) {
+		        	
+	    			System.out.println("regid: " + regId);
+
+		        	
+		    		if (regId.equals("")) 
+		    			System.out.println("no regid");
+		    			
+		        	/*
+		    		// Check if regid already presents
+		    		if (regId.equals("")) {
+		    			// Registration is not present, register now with GCM			
+		    			GCMRegistrar.register(context, SENDER_ID);
+		    		} else {
+		    			// Device is already registered on GCM
+		    			if (GCMRegistrar.isRegisteredOnServer(context)) {
+		    				// Skips registration.				
+		    				Toast.makeText(getApplicationContext(), "Already registered with GCM", Toast.LENGTH_LONG).show();
+		    				ServerUtilities.unregister(context,regId);
+		    			} else {
+		    				ServerUtilities.register(context, username, null, regId);
+		    			}
+		    		}*/
+
+		        	
 					//register user
 					//TODO: in production, check in sharedPref-entry whether registration has already happened
 					//      in the meantime register all over in case the database was dropped 
 					ServerConnector connector = new ServerConnector(dbProxy);
-					connector.registerUser(username);
+					boolean success = connector.registerUser(username,regId);
 					
+					if (!success)
+						runOnUiThread(new Runnable() {
+							public void run() {
+								Toast.makeText(MainActivity.this, getString(R.string.main_toast_connectionerror), Toast.LENGTH_SHORT).show();
+							    }
+							});
+
 					//handleRegistrationWithGCM();
 					
 					//check and process notifications

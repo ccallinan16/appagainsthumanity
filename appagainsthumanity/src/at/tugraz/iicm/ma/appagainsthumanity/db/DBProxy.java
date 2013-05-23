@@ -100,11 +100,13 @@ public class DBProxy {
 	    
 	    if (cursor != null && cursor.getCount() > 0 )
 	    {
-
 		    cursor.moveToFirst();
 		    userID = cursor.getInt(0);
-		    cursor.close();    
 	    }
+	    
+	    if (cursor != null)
+		    cursor.close();    
+
 	    return userID;
 	}
 	

@@ -251,19 +251,22 @@ public class ServerConnector {
 		}
 	}
 
-	public boolean registerUser(String username) {
+	public boolean registerUser(String username,String regid) {
 		if (isRobolectricTestrun) {
 			return (proxy.getDBSetter().addUser(username) > 0);
 		} else {
 			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 			
+			System.out.println("server Proxy connection: " + serverProxy.isConnected());
 			//check connection
 			if (!serverProxy.isConnected())
 				return false;
 			
+			System.out.println("registerUser in ServerConnector called, username: " + username);
 			//retrieve user id from server
-			int id = serverProxy.signupUser(username,null);
+			int id = serverProxy.signupUser(username,regid);
 			
+			System.err.println("got back id: " + id);
 			//if id is valid, insert entry in local database
 			if (id > 0)
 				proxy.getDBSetter().addUser(id, username);

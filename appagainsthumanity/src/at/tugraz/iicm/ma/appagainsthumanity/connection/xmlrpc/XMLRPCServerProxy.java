@@ -11,7 +11,6 @@ import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerProxy;
 public class XMLRPCServerProxy extends ServerProxy{
 
 	//TODO: read these informations from a config file / common prefs
-	private static final String SERVER_URI 						= "http://192.168.1.120/serverAgainstHumanity/public/";
 	private static final String NAMESPACE_RPC 					= "aah.";
 	private static final String NAMESPACE_NOTIFICATION 			= "notification.";
 	private static final String FUNCTIONNAME_CHECKCONNECTION 	= "checkConnection";

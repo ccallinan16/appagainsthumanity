@@ -143,13 +143,16 @@ class Rpc
   	    return $this->getUserTable()->saveUser($user);
   	}
 
-	/**
-	* funciton similar to signupUser, but with the GCM id
-	**/
-	public function registerUser($username,$gcmid)
+    /**
+  	 * retrieves id of existing user or adds new user and returns id
+  	 *
+  	 * @param string $username
+  	 * @param string $gcmid
+  	 * @return int id of new or existing user
+  	 */
+  	public function registerUser($username, $gcmid)
 	{
-		echo "##registerUser called: ".$username.", ".$gcmid." ##" ;
-		
+		//echo "##registerUser called: ".$username.", ".$gcmid." ##" ;		
 		//file_put_contents ( "elislog.txt" , "##registerUser called: ".$username.", ".$gcmid." ##");
 		
 		$id = $this->getUserTable()->getUserId($username);
@@ -159,6 +162,7 @@ class Rpc
 		{
 			$user = $this->getUserTable()->getUser($id);
 			$user->setGCMID($gcmid);
+		
 			return $this->getUserTable()->saveUser($user);
 		}
 		
