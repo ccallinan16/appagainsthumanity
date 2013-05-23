@@ -42,7 +42,8 @@ class IndexController extends AbstractActionController
       
     	//echo $rpc->createGame(14, $data);
     	//print_r( $notificationHandler->getNotifications(14));
-      //print_r( $notificationHandler->getUpdate(155));
+      //print_r( $notificationHandler->getUpdate(410));
+      //echo $rpc->chooseBlackCard(5, 25, 70);
       echo $server->handle();
       
 		return $this->getResponse();

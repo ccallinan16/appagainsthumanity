@@ -47,6 +47,8 @@ public abstract class ServerProxy {
 	public abstract boolean createGame(int userId, long[] invites, int roundcap, int scorecap);
 	public abstract HashMap<String, String> getNotifications(int userId);
 	public abstract Object getUpdate(int notificationId);
+	public abstract boolean selectBlackCard(int userId, int turnId, int cardId);
+
 	
 	
 }

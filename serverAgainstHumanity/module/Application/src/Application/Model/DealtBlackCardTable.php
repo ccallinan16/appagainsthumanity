@@ -57,6 +57,11 @@ class DealtBlackCardTable
         $this->tableGateway->delete(array('id' => $id));
     }
     
+    public function dropDealtCards($gameId, $userId) {
+        $this->tableGateway->delete(array('game_id' => $gameId,
+                                          'user_id' => $userId));
+    }
+    
     public function dealCards($gameId, $czarId, $cards) {
         $card = new DealtBlackCard();
         $card->setId(0);
@@ -75,5 +80,19 @@ class DealtBlackCardTable
         foreach($result as $dealtBlackCard)
           $data[] = $dealtBlackCard->toArray();
         return $data;
+    }
+    
+    public function isDealtBlackCard($game_id, $black_card_id, $user_id) {
+        $game_id  = (int) $game_id;
+        $black_card_id  = (int) $black_card_id;
+        $user_id  = (int) $user_id;
+        $rowset = $this->tableGateway->select(array('game_id' => $game_id,
+                                                    'black_card_id' => $black_card_id,
+                                                    'user_id' => $user_id ));
+        $row = $rowset->current();
+        if (!$row) {
+            return false;
+        }
+        return true;
     }
 }

@@ -66,12 +66,19 @@ public class ServerConnector {
 	public void selectCardBlack(long turn_id, int id)
 	{		
 		//Czar selects a black card, CardType.BLACK
-		CardCollection.instance.setBlackCard(id);
-		
-		//tables affected: (locally)
-		//turn
-		proxy.getDBSetter().setBlackCardID(turn_id, id);
-		//TODO: send info to server!
+		if (isRobolectricTestrun) {
+			CardCollection.instance.setBlackCard(id);
+			proxy.getDBSetter().setBlackCardID(turn_id, id);
+		} else {
+			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+			
+			//check connection
+			if (!serverProxy.isConnected())
+				return;
+			
+			//query server
+		//	return serverProxy.createGame(proxy.getUserID(), invites, roundCap, scoreCap);
+		}
 		
 	}
 	
@@ -177,7 +184,8 @@ public class ServerConnector {
 		if (cardType.equals(CardType.WHITE))
 			listIDs = proxy.getter.getDealtWhiteCards(turnID);
 		else
-			listIDs = dealer.getRandomBlackCardIDs(cardType); //TODO, tmp only
+			listIDs = proxy.getter.getDealtBlackCards(turnID);
+		//	listIDs = dealer.getRandomBlackCardIDs(cardType); old method to deal randomized cards
 						
 		//3. then sets it to the card collection
 		CardCollection.instance.setCards(listIDs, cardType);

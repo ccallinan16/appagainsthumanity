@@ -12,14 +12,12 @@ import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 
 public class NotificationHandler {
 
-    public static final int NOTIFICATION_NEW_GAME      = 0;  //important notification
-    public static final int NOTIFICATION_NEW_ROUND     = 1;  //important notification
-    public static final int NOTIFICATION_CHOOSE_BLACK  = 2;  //important notification
-    public static final int NOTIFICATION_CHOSEN_BLACK  = 3;
-    public static final int NOTIFICATION_CHOOSE_WHITE  = 4;  //important notification
-    public static final int NOTIFICATION_CHOSEN_WHITE  = 5;
-    public static final int NOTIFICATION_CHOOSE_WINNER = 6;  //important notification
-    public static final int NOTIFICATION_CHOSEN_WINNER = 7;  //important notification
+    public static final int NOTIFICATION_NEW_GAME       = 0;
+    public static final int NOTIFICATION_NEW_ROUND      = 1;
+    public static final int NOTIFICATION_NEW_ROUND_CZAR = 2;
+    public static final int NOTIFICATION_CHOSEN_BLACK   = 3;
+    public static final int NOTIFICATION_CHOSEN_WHITE   = 4;
+    public static final int NOTIFICATION_CHOSEN_WINNER  = 5; 
 	
 	private DBProxy dbProxy;
 
@@ -65,20 +63,14 @@ public class NotificationHandler {
 			case NOTIFICATION_NEW_ROUND:
 				callbackNewRound(notificationId);
 				break;
-			case NOTIFICATION_CHOOSE_BLACK:
-				callbackChooseBlack(notificationId);
+			case NOTIFICATION_NEW_ROUND_CZAR:
+				callbackNewRoundCzar(notificationId);
 				break;	
 			case NOTIFICATION_CHOSEN_BLACK:
 				callbackChosenBlack(notificationId);
 				break;
-			case NOTIFICATION_CHOOSE_WHITE:
-				callbackChooseWhite(notificationId);
-				break;
 			case NOTIFICATION_CHOSEN_WHITE:
 				callbackChosenWhite(notificationId);
-				break;
-			case NOTIFICATION_CHOOSE_WINNER:
-				callbackChooseWinner(notificationId);
 				break;
 			case NOTIFICATION_CHOSEN_WINNER:
 				callbackChosenWinner(notificationId);
@@ -92,17 +84,7 @@ public class NotificationHandler {
 		
 	}
 
-	private void callbackChooseWinner(int notificationId) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	private void callbackChosenWhite(int notificationId) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void callbackChooseWhite(int notificationId) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -113,19 +95,30 @@ public class NotificationHandler {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void callbackChooseBlack(int notificationId) {
+	private void callbackNewRoundCzar(int notificationId) {
 		//check if server connection is established, otherwise abort
 		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 		if (!serverProxy.isConnected())
 			return;
 		
 		//query server
-		Object[] blackCards = (Object[]) serverProxy.getUpdate(notificationId);
-		for(Object o : blackCards) {
+		HashMap<String, Object> result = (HashMap<String, Object>) serverProxy.getUpdate(notificationId);
+		
+		//add turn entry
+		HashMap<String, String> turn = (HashMap<String, String>) result.get("turn");
+		dbProxy.getDBSetter().addTurn(Integer.parseInt(turn.get("id")), Integer.parseInt(turn.get("game_id")), Integer.parseInt(turn.get("roundnumber")),
+				  Integer.parseInt(turn.get("user_id")), Integer.parseInt(turn.get("black_card_id")));
+		
+		//update black cards
+			//remove remaining cards
+		dbProxy.getDBSetter().dropDealtBlackCards(Integer.parseInt(turn.get("game_id")));
+			//add new black cards
+		Object[] cardArray = (Object[]) result.get("cards");
+		for(Object o : cardArray) {
 			HashMap<String, String> blackCard = (HashMap<String, String>) o;
-			//add turn entry
+			//add card
 			dbProxy.getDBSetter().addDealtBlackCard(Integer.parseInt(blackCard.get("id")), Integer.parseInt(blackCard.get("game_id")), 
-													Integer.parseInt(blackCard.get("user_id")), Integer.parseInt(blackCard.get("black_card_id")));
+													Integer.parseInt(blackCard.get("user_id")), Integer.parseInt(blackCard.get("white_card_id")));
 		}
 	}
 
@@ -137,11 +130,24 @@ public class NotificationHandler {
 			return;
 		
 		//query server
-		HashMap<String, String> turn = (HashMap<String, String>) serverProxy.getUpdate(notificationId);
+		HashMap<String, Object> result = (HashMap<String, Object>) serverProxy.getUpdate(notificationId);
 		
 		//add turn entry
+		HashMap<String, String> turn = (HashMap<String, String>) result.get("turn");
 		dbProxy.getDBSetter().addTurn(Integer.parseInt(turn.get("id")), Integer.parseInt(turn.get("game_id")), Integer.parseInt(turn.get("roundnumber")),
-									  Integer.parseInt(turn.get("user_id")), Integer.parseInt(turn.get("black_card_id")));
+				  Integer.parseInt(turn.get("user_id")), Integer.parseInt(turn.get("black_card_id")));
+		
+		//update white cards
+			//remove remaining cards
+		dbProxy.getDBSetter().dropDealtWhiteCards(Integer.parseInt(turn.get("game_id")));
+			//add new white cards
+		Object[] cardArray = (Object[]) result.get("cards");
+		for(Object o : cardArray) {
+			HashMap<String, String> whiteCard = (HashMap<String, String>) o;
+			//add card
+			dbProxy.getDBSetter().addDealtWhiteCard(Integer.parseInt(whiteCard.get("id")), Integer.parseInt(whiteCard.get("game_id")), 
+													Integer.parseInt(whiteCard.get("user_id")), Integer.parseInt(whiteCard.get("white_card_id")));
+		}
 	}
 
 	@SuppressWarnings("unchecked")

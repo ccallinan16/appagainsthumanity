@@ -31,6 +31,28 @@ public class SetterProxy {
 		
 	}
 	
+	public void dropDealtWhiteCards(long game_id) {
+		db.getWritableDatabase().delete(DBContract.DealtWhiteCard.TABLE_NAME, 
+										DBContract.DealtWhiteCard.COLUMN_NAME_GAME_ID + " = ?",
+										new String[]{String.valueOf(game_id)});
+	}
+	
+	public long addDealtWhiteCard(long id, long game_id, long player_id, long white_card_id) {
+		ContentValues values = new ContentValues();
+		values.put(DBContract.DealtWhiteCard._ID, id);
+		values.put(DBContract.DealtWhiteCard.COLUMN_NAME_GAME_ID, game_id);
+		values.put(DBContract.DealtWhiteCard.COLUMN_NAME_PLAYER_ID, player_id);
+		values.put(DBContract.DealtWhiteCard.COLUMN_NAME_WHITE_CARD_ID, white_card_id);
+
+		return insertIgnoreOverwrite(DBContract.DealtWhiteCard.TABLE_NAME, DBContract.DealtWhiteCard._ID, values);
+	}
+	
+	public void dropDealtBlackCards(long game_id) {
+		db.getWritableDatabase().delete(DBContract.DealtBlackCard.TABLE_NAME, 
+										DBContract.DealtBlackCard.COLUMN_NAME_GAME_ID + " = ?",
+										new String[]{String.valueOf(game_id)});
+	}
+	
 	public long addDealtBlackCard(long id, long game_id, long player_id, long black_card_id) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.DealtBlackCard._ID, id);
