@@ -111,6 +111,7 @@ public class MainActivity extends Activity {
 		
 		//bind gameListView
 		gameListView = (ListView) findViewById(R.id.game_list_view);
+        bar = (ProgressBar) findViewById(R.id.progressBar);
 	}
 	
 	public void setUsername(String name)
@@ -137,16 +138,12 @@ public class MainActivity extends Activity {
 		//prepare xmlrpc connection
 		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
 		
-		//check connection
-		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
-		System.out.println(serverProxy.isConnected());
-		
 		//if (!checkConnection())
 		//	return;
 		//handleRegistrationWithGCM();
 		
 		//check for updates
-        bar = (ProgressBar) findViewById(R.id.progressBar);
+
         new ProgressTask().execute();
 	}
 	
