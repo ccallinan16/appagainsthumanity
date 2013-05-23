@@ -1,7 +1,5 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
-import com.google.android.gcm.GCMRegistrar;
-
 import mocks.IDToCardTranslator;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -10,18 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
@@ -39,7 +32,6 @@ public class MainActivity extends Activity {
 	 */
 	public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
 	public static final String EXTRA_GAMEID = "EXTRA_GAMEID";
-	private static final String SENDER_ID = "AIzaSyClphHWMig6AY_bSun4RuWgVO3tAK5SYTg";
 	
 	/*
 	 * PRIVATE MEMBER VARIABLES
@@ -52,6 +44,11 @@ public class MainActivity extends Activity {
 	
 	//database
 	private Cursor gamelistCursor;
+	
+	/**
+	 * gcm
+	 */
+	AsyncTask<Void, Void, Void>	mRegisterTask;
 	
 	/*
 	 * LIFECYCLE METHODS
@@ -142,6 +139,14 @@ public class MainActivity extends Activity {
 		CardCollection.instance.setTranslator(
 				new IDToCardTranslator(this.getApplicationContext()));
 		
+		//check connection
+		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+		System.out.println(serverProxy.isConnected());
+		
+		if (!checkConnection())
+			return;
+		handleRegistrationWithGCM();
+
 		//prepare xmlrpc connection
 		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
 		
@@ -168,6 +173,22 @@ public class MainActivity extends Activity {
     	}// end try/catch (Exception error)
     }
 
+   @Override
+	protected void onDestroy() {
+		
+		if (mRegisterTask != null) {
+			mRegisterTask.cancel(true);
+		}
+		try {
+			unregisterReceiver(mHandleMessageReceiver);
+			GCMRegistrar.onDestroy(this);
+		} catch (Exception e) {
+			Log.e("UnRegister Receiver Error", "> " + e.getMessage());
+		}
+		super.onDestroy();
+
+	} 
+    
 	/*
 	 * UTILITY METHODS
 	 */
@@ -227,7 +248,116 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+
+	/**
+	 * checks if mobile device has internet switched on.
+	 */
+	private boolean checkConnection()
+	{
+		ConnectionDetector cd = new ConnectionDetector(getApplicationContext());
+
+		// Check if Internet present
+		if (!cd.isConnectingToInternet()) {
+			AlertDialogManager alert = new AlertDialogManager();
+			// Internet Connection is not present
+			alert.showAlertDialog(MainActivity.this,
+					"Internet Connection Error",
+					"Please connect to working Internet connection", false);
+			// stop executing code by return
+			return false;
+		}
+		return true;
+	}
 	
+	/**
+	 * GCM Handling 
+	 * 
+	 * 2. get username
+	 * 3. check if already registered
+	 * 4. if not -> register.
+	 */
+	private void handleRegistrationWithGCM()
+	{	
+		// Make sure the device has the proper dependencies.
+		GCMRegistrar.checkDevice(this);
+
+		// Make sure the manifest was properly set - comment out this line
+		// while developing the app, then uncomment it when it's ready.
+		GCMRegistrar.checkManifest(this);
+
+		registerReceiver(mHandleMessageReceiver, new IntentFilter(
+				DISPLAY_MESSAGE_ACTION));
+		
+		// Get GCM registration id
+		final String regId = GCMRegistrar.getRegistrationId(this);
+
+		// Check if regid already presents
+		if (regId.equals("")) {
+			// Registration is not present, register now with GCM			
+			GCMRegistrar.register(this, SENDER_ID);
+		} else {
+			// Device is already registered on GCM
+			if (GCMRegistrar.isRegisteredOnServer(this)) {
+				// Skips registration.				
+				Toast.makeText(getApplicationContext(), "Already registered with GCM", Toast.LENGTH_LONG).show();
+				ServerUtilities.unregister(this,regId);
+			} else {
+				// Try to register again, but not in the UI thread.
+				// It's also necessary to cancel the thread onDestroy(),
+				// hence the use of AsyncTask instead of a raw thread.
+				final Context context = this;
+				// Asyntask
+				mRegisterTask = new AsyncTask<Void, Void, Void>() {
+
+					@Override
+					protected Void doInBackground(Void... params) {
+						// Register on our server
+						// On server creates a new user
+						XMLRPCServerProxy.getInstance().signupUser(username, regId);
+
+						ServerUtilities.register(context, username, null, regId);
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void result) {
+						mRegisterTask = null;
+					}
+
+				};
+				mRegisterTask.execute(null, null, null);
+			}
+		}
+
+
+	}
+	
+	/**
+	 * Receiving push messages
+	 * */
+	private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String newMessage = intent.getExtras().getString(EXTRA_MESSAGE);
+			// Waking up mobile if it is sleeping
+			WakeLocker.acquire(getApplicationContext());
+			
+			/**
+			 * Take appropriate action on this message
+			 * depending upon your app requirement
+			 * For now i am just displaying it on the screen
+			 * */
+			
+			// Showing received message
+//			lblMessage.append(newMessage + "\n");			
+			Toast.makeText(getApplicationContext(), "New Message: " + newMessage, Toast.LENGTH_LONG).show();
+			
+			// Releasing wake lock
+			WakeLocker.release();
+		}
+	};
+	
+
 	private class ProgressTask extends AsyncTask <Void,Void,Void>{
 	    @Override
 	    protected void onPreExecute(){
@@ -270,4 +400,5 @@ public class MainActivity extends Activity {
 			displayListView(gamelistCursor);
 	    }
 	}
+
 }

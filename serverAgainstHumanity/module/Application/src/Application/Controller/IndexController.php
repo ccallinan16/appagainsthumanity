@@ -25,29 +25,31 @@ class IndexController extends AbstractActionController
     	$server = new Server();
     	$rpc = new Rpc($this->getServiceLocator());
     	$server->setClass($rpc, IndexController::NAMESPACE_RPC);
-      $notificationHandler = new NotificationHandler($this->getServiceLocator());
-      $server->setClass($notificationHandler, IndexController::NAMESPACE_NOTIFICATION);
+	$notificationHandler = new NotificationHandler($this->getServiceLocator());
+	$server->setClass($notificationHandler, IndexController::NAMESPACE_NOTIFICATION);
       
     	
-                  $username = "testuser";
-            $data = array(
-              "roundcap" => 5,
-              "scorecap" => 5,
-              "invites" => array(
-                "5" => 5,
-                "7" => 7,
-                "8" => 8  
-              )
-            );
+	$username = "testuser";
+	$data = array(
+		"roundcap" => 5,
+		"scorecap" => 5,
+		"invites" => array(
+			"5" => 5,
+			"7" => 7,
+			"8" => 8  
+		)
+	);
       
-      //echo $rpc->checkConnection();
+	//echo "hello!";
+	echo $rpc->registerUser($username,123);
+	//print " FieldCount: ".$rpc->getUserTable()->fetchAll()->getFieldCount();
+	
+	//print "\n User: ".$rpc->getUserTable()->fetchAll()->current();
+	
     	//echo $rpc->createGame(14, $data);
     	//print_r( $notificationHandler->getNotifications(14));
-      //print_r( $notificationHandler->getUpdate(22));
-      //echo $rpc->chooseBlackCard(5, 2, 70);
-      //echo $rpc->chooseWhiteCard(5, 53, 210);
-      
-      echo $server->handle();
+        //print_r( $notificationHandler->getUpdate(155));
+      //echo $server->handle();
       
 		return $this->getResponse();
     }

@@ -41,10 +41,8 @@ class UserTable
 
     public function saveUser(User $user)
     {
-        $data = array(
-            'username'  => $user->username,
-        );
-
+    	$data = $user->toArray();
+    	
         $id = (int)$user->id;
         if ($id == 0) {
             $this->tableGateway->insert($data);

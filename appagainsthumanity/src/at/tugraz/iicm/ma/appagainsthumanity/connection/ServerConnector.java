@@ -3,8 +3,6 @@ package at.tugraz.iicm.ma.appagainsthumanity.connection;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.xmlrpc.android.XMLRPCException;
-
 import mocks.IDToCardTranslator;
 import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
@@ -264,7 +262,7 @@ public class ServerConnector {
 				return false;
 			
 			//retrieve user id from server
-			int id = serverProxy.signupUser(username);
+			int id = serverProxy.signupUser(username,null);
 			
 			//if id is valid, insert entry in local database
 			if (id > 0)

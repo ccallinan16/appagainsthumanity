@@ -142,6 +142,35 @@ class Rpc
 
   	    return $this->getUserTable()->saveUser($user);
   	}
+
+	/**
+	* funciton similar to signupUser, but with the GCM id
+	**/
+	public function registerUser($username,$gcmid)
+	{
+		echo "##registerUser called: ".$username.", ".$gcmid." ##" ;
+		
+		//file_put_contents ( "elislog.txt" , "##registerUser called: ".$username.", ".$gcmid." ##");
+		
+		$id = $this->getUserTable()->getUserId($username);
+		
+		//entry already exists, but we should probably add the gcmid.
+		if ($id > 0)
+		{
+			$user = $this->getUserTable()->getUser($id);
+			$user->setGCMID($gcmid);
+			return $this->getUserTable()->saveUser($user);
+		}
+		
+		//otherwise add new user
+		$user = new User();
+		$user->setId(0);
+		$user->setGCMID($gcmid);
+		$user->setUsername($username);
+		
+		return $this->getUserTable()->saveUser($user);
+				
+	}
     
     /**
   	 * adds a new game
