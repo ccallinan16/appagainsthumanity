@@ -41,10 +41,10 @@ class IndexController extends AbstractActionController
 	);
       
 	//echo "hello!";
-	echo $rpc->registerUser($username,1);
-	print " FieldCount: ".$rpc->getUserTable()->fetchAll()->getFieldCount();
+	echo $rpc->registerUser($username,123);
+	//print " FieldCount: ".$rpc->getUserTable()->fetchAll()->getFieldCount();
 	
-	print "\n User: ".$rpc->getUserTable()->fetchAll()->current();
+	//print "\n User: ".$rpc->getUserTable()->fetchAll()->current();
 	
     	//echo $rpc->createGame(14, $data);
     	//print_r( $notificationHandler->getNotifications(14));

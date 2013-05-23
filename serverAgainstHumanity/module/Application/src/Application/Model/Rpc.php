@@ -180,29 +180,28 @@ class Rpc
 	**/
 	public function registerUser($username,$gcmid)
 	{
-
-	//TODO: use already defined getUserTable...
-
-	$result = mysql_query("INSERT INTO gcm_users(name, gcm_regid) VALUES('$username','$gcmid')");
-        // check for successful store
-        echo "false";
-
-	if ($result) {
-		echo "true";
-
-            // get user details
-            $id = mysql_insert_id(); // last inserted id
-            $result = mysql_query("SELECT * FROM gcm_users WHERE id = $id") or die(mysql_error());
-            // return user details
-            if (mysql_num_rows($result) > 0) {
-                return mysql_fetch_array($result);
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-
+		echo "##registerUser called: ".$username.", ".$gcmid." ##" ;
+		
+		//file_put_contents ( "elislog.txt" , "##registerUser called: ".$username.", ".$gcmid." ##");
+		
+		$id = $this->getUserTable()->getUserId($username);
+		
+		//entry already exists, but we should probably add the gcmid.
+		if ($id > 0)
+		{
+			$user = $this->getUserTable()->getUser($id);
+			$user->setGCMID($gcmid);
+			return $this->getUserTable()->saveUser($user);
+		}
+		
+		//otherwise add new user
+		$user = new User();
+		$user->setId(0);
+		$user->setGCMID($gcmid);
+		$user->setUsername($username);
+		
+		return $this->getUserTable()->saveUser($user);
+				
 	}
     
     /**

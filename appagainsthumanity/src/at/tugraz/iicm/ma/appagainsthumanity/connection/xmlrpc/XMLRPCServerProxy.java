@@ -11,11 +11,11 @@ import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerProxy;
 public class XMLRPCServerProxy extends ServerProxy{
 
 	//TODO: read these informations from a config file / common prefs
-	private static final String SERVER_URI 						= "http://10.0.0.3/";
+	private static final String SERVER_URI 						= "http://192.168.1.120/serverAgainstHumanity/public/";
 	private static final String NAMESPACE_RPC 					= "aah.";
 	private static final String NAMESPACE_NOTIFICATION 			= "notification.";
 	private static final String FUNCTIONNAME_CHECKCONNECTION 	= "checkConnection";
-	private static final String FUNCTIONNAME_SIGNUPUSER 		= "signupUser";
+	private static final String FUNCTIONNAME_REGISTERUSER 		= "registerUser";
 	private static final String FUNCTIONNAME_GETUSERID 			= "getUserId";
 	private static final String FUNCTIONNAME_CREATEGAME			= "createGame";
 	private static final String FUNCTIONNAME_GETNOTIFICATIONS	= "getNotifications";
@@ -48,9 +48,9 @@ public class XMLRPCServerProxy extends ServerProxy{
 	}
 	
 	@Override
-	public int signupUser(String username) {
+	public int signupUser(String username, String gcmid) {
 		try{
-			Object o = client.call(NAMESPACE_RPC + FUNCTIONNAME_SIGNUPUSER, username);
+			Object o = client.call(NAMESPACE_RPC + FUNCTIONNAME_REGISTERUSER, username,gcmid);
 			int id = Integer.parseInt(o.toString());
 			return id;
 		} catch (XMLRPCException e) {

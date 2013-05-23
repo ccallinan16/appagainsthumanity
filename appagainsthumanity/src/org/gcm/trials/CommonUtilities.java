@@ -6,7 +6,8 @@ import android.content.Intent;
 public final class CommonUtilities {
      
     // give your server registration url here
-    public static final String SERVER_URL = "http://192.168.1.120/serverAgainstHumanity/module/Application/src/Application/Model/gcm/register.php";
+    public static final String SERVER_URL = 
+    		"http://192.168.1.120/serverAgainstHumanity/module/Application/src/Application/Model/gcm/register.php";
     //"http://10.0.2.2/gcm_server_php/register.php";
  
     // Google project id

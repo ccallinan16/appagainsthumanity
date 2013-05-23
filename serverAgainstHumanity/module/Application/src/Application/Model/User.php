@@ -4,18 +4,28 @@ namespace Application\Model;
 class User
 {
     public $id;
+    public $gcm_id;
     public $username;
 
+    
     public function exchangeArray($data)
     {
         $this->id     = (isset($data['id'])) ? $data['id'] : null;
         $this->username  = (isset($data['username'])) ? $data['username'] : null;
+        $this->gcm_id  = (isset($data['gcm_id'])) ? $data['gcm_id'] : null;
     }
     
     public function toArray() {
         $data = array();
-        $data['id']       = $this->id;
-        $data['username'] = $this->username;
+        if ($this->id != null && $this->id > 0)
+        	$data['id']       = $this->id;
+        
+        if ($this->username != null)
+       		$data['username'] = $this->username;
+        	        
+        if ($this->gcm_id != null)
+        	$data['gcm_id']       = $this->gcm_id;
+        
         return $data;
     }
     
@@ -27,8 +37,25 @@ class User
         $this->username = $new_username;
     }
     
+    public function setGCMID($gcm_id) {
+    	$this->gcm_id = $gcm_id;
+    }
+    
     public function __toString()
     {
-    	return "User: ".$this->id.", name: ".$this->username;
+    	$string = "[User: ";
+    	
+    	if ($this->id != null)
+    		$string .= " id: ".$this->id;
+    	
+    	if ($this->username != null)
+    		$string .= " name: ".$this->username;
+    		    		
+    	if ($this->gcm_id != null)
+    		$string .= " gcm_id: ".$this->gcm_id;
+    	
+    	$string .= "]\n";
+    		    	 
+    	return $string;
     }
 }

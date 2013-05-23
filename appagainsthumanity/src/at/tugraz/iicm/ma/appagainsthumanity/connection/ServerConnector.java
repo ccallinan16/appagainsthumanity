@@ -239,7 +239,7 @@ public class ServerConnector {
 				return false;
 			
 			//retrieve user id from server
-			int id = serverProxy.signupUser(username);
+			int id = serverProxy.signupUser(username,null);
 			
 			//if id is valid, insert entry in local database
 			if (id > 0)

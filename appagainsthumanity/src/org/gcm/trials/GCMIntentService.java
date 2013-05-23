@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.util.Log;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 
 import static org.gcm.trials.CommonUtilities.displayMessage;
 
@@ -28,8 +29,9 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onRegistered(Context context, String registrationId) {
         Log.i(TAG, "Device registered: regId = " + registrationId);
         displayMessage(context, "Your device registred with GCM");
-        Log.d("NAME", MainActivity.name);
-        ServerUtilities.register(context, MainActivity.name, MainActivity.email, registrationId);
+        Log.d("NAME", MainActivity.username);
+        XMLRPCServerProxy.getInstance().signupUser(MainActivity.username, registrationId);
+        //ServerUtilities.register(context, MainActivity.name, MainActivity.email, registrationId);
     }
  
     /**
