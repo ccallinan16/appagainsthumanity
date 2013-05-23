@@ -10,6 +10,7 @@ class NotificationHandler
     protected $notificationTable;
     protected $dealtBlackCardTable;
     protected $dealtWhiteCardTable;
+    protected $playedWhiteCardTable;
     protected $sm; //serviceLocator
     
     public function __construct($serviceLocator) {
@@ -76,6 +77,14 @@ class NotificationHandler
         return $this->dealtWhiteCardTable;
     }
     
+    public function getPlayedWhiteCardTable()
+    {
+        if (!$this->playedWhiteCardTable) {
+            $this->playedWhiteCardTable = $this->sm->get('Application\Model\PlayedWhiteCardTable');
+        }
+        return $this->playedWhiteCardTable;
+    }
+    
     /*
      *  private helper functions
      */
@@ -136,6 +145,21 @@ class NotificationHandler
       return $data;
     }
     
+    private function getChosenBlackUpdate($user_id, $turn_id) {
+      //fetch turn data
+      $turn = $this->getTurnTable()->getTurn($turn_id);
+      $turnData = $turn->toArray();
+      
+      return $turnData;
+    }
+    
+    private function getChosenWhiteUpdate($user_id, $turn_id) {      
+      //fetch played white cards for turn
+      $data = $this->getPlayedWhiteCardTable()->getCardsOfTurn($turn_id);
+      
+      return $data;
+    }
+    
     /*
      *  public rpc functions
      */
@@ -172,7 +196,13 @@ class NotificationHandler
             break;    
           case Notification::notification_new_round_czar :
             $data = $this->getNewRoundCzarUpdate($notification->user_id, $notification->content_id);
-            break;              
+            break;         
+          case Notification::notification_chosen_black :
+            $data = $this->getChosenBlackUpdate($notification->user_id, $notification->content_id);
+            break;    
+          case Notification::notification_chosen_white :
+            $data = $this->getChosenWhiteUpdate($notification->user_id, $notification->content_id);
+            break;          
                 
           
           

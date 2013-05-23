@@ -55,6 +55,9 @@ public class SingleCardFragment extends Fragment {
 		 Card card = CardCollection.instance.getCardSafe(cardId,TYPE);
 		 
 		 TextView messageTextView = (TextView)v.findViewById(R.id.cardText);
+		 
+		 System.out.println(card.getId() + " " + card.getText());
+		 
 		 messageTextView.setText(card.getText());
 		 messageTextView.setTextAppearance(v.getContext(), card.getTextAppearance());
 		 //messageTextView.setTextColor(card.getType().getTextColor());

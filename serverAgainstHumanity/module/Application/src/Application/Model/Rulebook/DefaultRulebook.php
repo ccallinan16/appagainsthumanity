@@ -96,19 +96,40 @@ class DefaultRulebook extends Rulebook {
   /**
    * called after newly created game and participation entries are already added
    *     
-   * @param int $gameId id of newly created game
-   * @param int $userId id of user who created the game
+   * @param int $game_id id of newly created game
+   * @param int $user_id id of user who created the game
    * @return void      
-   */       
-  
-  public function onCreateGame($gameId, $userId) {
-    $this->addTurn($gameId);
+   */         
+  public function onCreateGame($game_id, $user_id) {
+    $this->addTurn($game_id);
   }
-  
+
+  /**
+   * called after black card entry in turn is updated and card id is removed in dealt black card table
+   *  
+   * @param int $user_id      
+   * @param int $turn_id
+   * @param int $card_id
+   * @return void      
+   */   
   public function onBlackCardChosen($user_id, $turn_id, $card_id) {
     //get turn object
     $turn = $this->getTurnTable()->getTurn($turn_id);
-
+  
+    //drop remaining dealt black cards for czar
+    $this->getDealtBlackCardTable()->dropDealtCards($turn->game_id, $user_id);
+  }
+  
+  /**
+   * called after white card was inserted into playedWhiteCard table
+   *  
+   * @param int $user_id      
+   * @param int $turn_id
+   * @param int $card_id
+   * @return void      
+   */   
+  public function onWhiteCardChosen($user_id, $turn_id, $card_id) {
+    //do nothing for now
   }
   
   

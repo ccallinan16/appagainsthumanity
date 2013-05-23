@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
@@ -90,13 +91,11 @@ public class CardSlideActivity extends FragmentActivity {
 	private void initButtons() {
 
 		
-		if (context == ViewContext.SELECT_BLACK ||
-				context == ViewContext.SELECT_WHITE)
+		if (context == ViewContext.SELECT_BLACK || 
+			context == ViewContext.SELECT_WHITE)
 		{
 		      LinearLayout btns = (LinearLayout) findViewById(R.id.footer);
 		      btns.setVisibility(View.GONE);
-		      
-
 		}
 		else
 		{
@@ -136,21 +135,28 @@ public class CardSlideActivity extends FragmentActivity {
 			  			proxy = new DBProxy(v.getContext());
 					ServerConnector connector = new ServerConnector(proxy);
 					
+					boolean success = false;
+					
 					switch (context)
 					{
 					case CONFIRM_SINGLE:
-						connector.selectCardBlack(turnID, id);
+						success = connector.selectCardBlack(turnID, id);
 						break;
 					case CONFIRM_PAIR:
 						System.out.println("select card white: " + id + ", turn: " + turnID);
-						connector.selectCardWhite(turnID, id); 
+						success = connector.selectCardWhite(turnID, id); 
 						break;
 					default:
 						break;
 					}
 				
+					if (success) {
+						Toast.makeText(CardSlideActivity.this, getString(R.string.card_slide_toast_connectionerror), Toast.LENGTH_SHORT).show();
+						return;
+					}
+					
 			    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				  	v.getContext().startActivity(intent);									
+				  	v.getContext().startActivity(intent);		
 				}
 			});
 
@@ -243,6 +249,7 @@ public class CardSlideActivity extends FragmentActivity {
 		
 		ServerConnector serverConnector = new ServerConnector(proxy);
 		int blackID = serverConnector.getBlackCardForTurn(turnID);
+		
 		
 		IDToCardTranslator dealer = new IDToCardTranslator(this);
 		Card black = dealer.getCardFromID(CardType.BLACK, blackID);

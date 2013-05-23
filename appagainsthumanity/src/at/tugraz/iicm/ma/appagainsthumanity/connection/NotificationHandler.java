@@ -84,14 +84,37 @@ public class NotificationHandler {
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	private void callbackChosenWhite(int notificationId) {
-		// TODO Auto-generated method stub
+		//check if server connection is established, otherwise abort
+		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+		if (!serverProxy.isConnected())
+			return;
 		
+		//query server
+		Object[] result = (Object[]) serverProxy.getUpdate(notificationId);
+		
+		for(Object o : result) {
+			HashMap<String, String> playedWhiteCard = (HashMap<String, String>) o;
+			//update turn entry
+			dbProxy.getDBSetter().addPlayedWhiteCard(Integer.parseInt(playedWhiteCard.get("turn_id")), Integer.parseInt(playedWhiteCard.get("user_id")), 
+													 Integer.parseInt(playedWhiteCard.get("white_card_id")), Boolean.parseBoolean(playedWhiteCard.get("won")));
+		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void callbackChosenBlack(int notificationId) {
-		// TODO Auto-generated method stub
+		//check if server connection is established, otherwise abort
+		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+		if (!serverProxy.isConnected())
+			return;
 		
+		//query server
+		HashMap<String, String> turn = (HashMap<String, String>) serverProxy.getUpdate(notificationId);
+		
+		//update turn entry
+		dbProxy.getDBSetter().updateTurn(Integer.parseInt(turn.get("id")), Integer.parseInt(turn.get("game_id")), Integer.parseInt(turn.get("roundnumber")),
+				  Integer.parseInt(turn.get("user_id")), Integer.parseInt(turn.get("black_card_id")));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -118,7 +141,7 @@ public class NotificationHandler {
 			HashMap<String, String> blackCard = (HashMap<String, String>) o;
 			//add card
 			dbProxy.getDBSetter().addDealtBlackCard(Integer.parseInt(blackCard.get("id")), Integer.parseInt(blackCard.get("game_id")), 
-													Integer.parseInt(blackCard.get("user_id")), Integer.parseInt(blackCard.get("white_card_id")));
+													Integer.parseInt(blackCard.get("user_id")), Integer.parseInt(blackCard.get("black_card_id")));
 		}
 	}
 

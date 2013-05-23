@@ -19,6 +19,8 @@ public class XMLRPCServerProxy extends ServerProxy{
 	private static final String FUNCTIONNAME_CREATEGAME			= "createGame";
 	private static final String FUNCTIONNAME_GETNOTIFICATIONS	= "getNotifications";
 	private static final String FUNCTIONNAME_GETUPDATE 			= "getUpdate";
+	private static final String FUNCTIONNAME_CHOOSEBLACKCARD	= "chooseBlackCard";
+	private static final String FUNCTIONNAME_CHOOSEWHITECARD	= "chooseWhiteCard";
 	
 	private XMLRPCClient client;
     private URI uri;
@@ -35,7 +37,6 @@ public class XMLRPCServerProxy extends ServerProxy{
 	private XMLRPCServerProxy(String hostname) {
 		 uri = URI.create(hostname);
 	     client = new XMLRPCClient(uri);
-	     System.out.println("setting up hostname " + hostname);
 	}
 	
 	@Override
@@ -121,7 +122,21 @@ public class XMLRPCServerProxy extends ServerProxy{
 	
 	@Override
 	public boolean selectBlackCard(int userId, int turnId, int cardId) {
-
-		return false;
+		try{
+			return (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CHOOSEBLACKCARD, userId, turnId, cardId);
+		} catch (XMLRPCException e) {
+			setDisconnected();
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean selectWhiteCard(int userId, int turnId, int cardId) {
+		try{
+			return (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CHOOSEWHITECARD, userId, turnId, cardId);
+		} catch (XMLRPCException e) {
+			setDisconnected();
+			return false;
+		}
 	}
 }

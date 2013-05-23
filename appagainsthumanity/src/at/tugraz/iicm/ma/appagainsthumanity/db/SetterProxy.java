@@ -130,7 +130,20 @@ public class SetterProxy {
 		values.put(DBContract.Turn.COLUMN_NAME_USER_ID, user_id);
 		values.put(DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID, black_id);
 		return insertIgnoreOverwrite(DBContract.Turn.TABLE_NAME, DBContract.Turn._ID, values);
+	
 	}
+	
+	public void updateTurn(long id, long game_id, int roundnumber, long user_id, Integer black_id) {
+		ContentValues values = new ContentValues();
+		values.put(DBContract.Turn.COLUMN_NAME_GAME_ID, game_id);
+		values.put(DBContract.Turn.COLUMN_NAME_ROUNDNUMBER, roundnumber);
+		values.put(DBContract.Turn.COLUMN_NAME_USER_ID, user_id);
+		values.put(DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID, black_id);
+		db.getWritableDatabase().update(DBContract.Turn.TABLE_NAME, values, 
+									  	DBContract.Turn._ID + " = ?", 
+									  	new String[]{String.valueOf(id)});
+	}
+	
 	
 	public long addPlayedWhiteCard(long turn_id, long user_id, long white_card_id, Boolean won) {
 		ContentValues values = new ContentValues();

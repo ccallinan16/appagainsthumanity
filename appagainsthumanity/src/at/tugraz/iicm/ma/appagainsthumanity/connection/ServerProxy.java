@@ -48,7 +48,6 @@ public abstract class ServerProxy {
 	public abstract HashMap<String, String> getNotifications(int userId);
 	public abstract Object getUpdate(int notificationId);
 	public abstract boolean selectBlackCard(int userId, int turnId, int cardId);
-
-	
+	public abstract boolean selectWhiteCard(int userId, int turnId, int cardId);
 	
 }

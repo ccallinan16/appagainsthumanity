@@ -15,6 +15,8 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
 //model-related
+use Application\Model\PlayedWhiteCard;
+use Application\Model\PlayedWhiteCardTable;
 use Application\Model\DealtWhiteCard;
 use Application\Model\DealtWhiteCardTable;
 use Application\Model\DealtBlackCard;
@@ -141,7 +143,18 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new DealtWhiteCard());
                     return new TableGateway('dealt_white_card', $dbAdapter, null, $resultSetPrototype);
-                },                
+                },              
+                'Application\Model\PlayedWhiteCardTable' =>  function($sm) {
+                    $tableGateway = $sm->get('PlayedWhiteCardTableGateway');
+                    $table = new PlayedWhiteCardTable($tableGateway);
+                    return $table;
+                },
+                'PlayedWhiteCardTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new PlayedWhiteCard());
+                    return new TableGateway('played_white_card', $dbAdapter, null, $resultSetPrototype);
+                },          
             ),
         );
     }

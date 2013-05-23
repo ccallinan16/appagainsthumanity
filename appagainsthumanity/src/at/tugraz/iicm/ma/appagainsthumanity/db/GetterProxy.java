@@ -16,7 +16,7 @@ public class GetterProxy {
 
 	}
 	
-	public int getPlayedWhiteCard(long turnid) {
+	public int getPlayedWhiteCards(long turnid) {
 	    
 	    Cursor cursor = db.getReadableDatabase().query(DBContract.PlayedWhiteCard.TABLE_NAME, 
 	    		new String[] { DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID }, 
@@ -33,6 +33,22 @@ public class GetterProxy {
 		    cursor.close();    
 	    }
 	    return cardId;
+	}
+	
+	public List<Integer> getPlayedWhiteCardOfTurn(long turnid) {
+	    
+	    Cursor cursor = db.getReadableDatabase().query(DBContract.PlayedWhiteCard.TABLE_NAME, 
+	    		new String[] { DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID}, 
+	    		DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID + "=?", 
+	    		new String[] { String.valueOf(turnid) } , 
+	    		null, null, null);
+	    
+	    List<Integer> list = new ArrayList<Integer>();
+	    if (cursor != null && cursor.moveToFirst())
+	    	do{
+	    		list.add(cursor.getInt(0));
+	    	} while (cursor.moveToNext());
+	    return list;
 	}
 	
 	public int getLastTurnID()
