@@ -15,7 +15,8 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
 //model-related
-
+use Application\Model\DealtWhiteCard;
+use Application\Model\DealtWhiteCardTable;
 use Application\Model\DealtBlackCard;
 use Application\Model\DealtBlackCardTable;
 use Application\Model\Notification;
@@ -130,6 +131,17 @@ class Module
                     $resultSetPrototype->setArrayObjectPrototype(new DealtBlackCard());
                     return new TableGateway('dealt_black_card', $dbAdapter, null, $resultSetPrototype);
                 },
+                'Application\Model\DealtWhiteCardTable' =>  function($sm) {
+                    $tableGateway = $sm->get('DealtWhiteCardTableGateway');
+                    $table = new DealtWhiteCardTable($tableGateway);
+                    return $table;
+                },
+                'DealtWhiteCardTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new DealtWhiteCard());
+                    return new TableGateway('dealt_white_card', $dbAdapter, null, $resultSetPrototype);
+                },                
             ),
         );
     }

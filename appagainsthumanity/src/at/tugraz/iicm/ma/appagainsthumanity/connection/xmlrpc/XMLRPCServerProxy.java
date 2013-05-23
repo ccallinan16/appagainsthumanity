@@ -11,7 +11,6 @@ import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerProxy;
 public class XMLRPCServerProxy extends ServerProxy{
 
 	//TODO: read these informations from a config file / common prefs
-	private static final String SERVER_URI 						= "http://10.0.0.3/";
 	private static final String NAMESPACE_RPC 					= "aah.";
 	private static final String NAMESPACE_NOTIFICATION 			= "notification.";
 	private static final String FUNCTIONNAME_CHECKCONNECTION 	= "checkConnection";
@@ -24,15 +23,19 @@ public class XMLRPCServerProxy extends ServerProxy{
 	private XMLRPCClient client;
     private URI uri;
 	
+	public static XMLRPCServerProxy createInstance(String hostname) {
+		instance = new XMLRPCServerProxy(hostname);
+		return (XMLRPCServerProxy) instance;
+	}
+    
 	public static XMLRPCServerProxy getInstance() {
-		if (instance == null)
-			instance = new XMLRPCServerProxy();
 		return (XMLRPCServerProxy) instance;
 	}
 	
-	private XMLRPCServerProxy() {
-		 uri = URI.create(SERVER_URI);
+	private XMLRPCServerProxy(String hostname) {
+		 uri = URI.create(hostname);
 	     client = new XMLRPCClient(uri);
+	     System.out.println("setting up hostname " + hostname);
 	}
 	
 	@Override
@@ -91,7 +94,7 @@ public class XMLRPCServerProxy extends ServerProxy{
 			return false;
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public HashMap<String, String> getNotifications(int userId) {
@@ -114,5 +117,11 @@ public class XMLRPCServerProxy extends ServerProxy{
 			setDisconnected();
 			return null;
 		}
+	}
+	
+	@Override
+	public boolean selectBlackCard(int userId, int turnId, int cardId) {
+
+		return false;
 	}
 }

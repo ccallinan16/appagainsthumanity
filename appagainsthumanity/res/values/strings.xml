@@ -55,6 +55,7 @@
     <string name="sharedpreferences_filename">sharedpref</string>
     <string name="sharedpreferences_key_username">username</string>
     <string name="sharedpreferences_key_username_defined">username_defined</string>
+    <string name="sharedpreferences_key_xmlrpc_hostname">pref_xml_host</string>
     <string name="title_activity_game_options">GameOptions</string>
     <string name="title_activity_game_overview">GameOverviewActivity</string>
     <string name="listitem_turnlist_text_turn">Round</string>

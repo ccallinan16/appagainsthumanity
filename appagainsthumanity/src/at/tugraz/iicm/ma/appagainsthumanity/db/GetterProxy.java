@@ -171,6 +171,31 @@ public class GetterProxy {
 	        
 	}	
 	
+	public List<Integer> getDealtBlackCards(long turn_id) {
+	    Cursor cursor = db.getReadableDatabase().query(DBContract.DealtBlackCard.TABLE_NAME, 
+	    		new String[] { DBContract.DealtBlackCard.COLUMN_NAME_BLACK_CARD_ID }, 
+	    		DBContract.DealtBlackCard.COLUMN_NAME_GAME_ID + "=?", 
+	    		new String[] { String.valueOf(getGameIDFromTurn(turn_id)) } , 
+	    		null, null, null);
+	    
+	    ArrayList<Integer> cardIDs = new ArrayList<Integer>();
+	    
+	    if (cursor != null)
+	    {
+	    	cursor.moveToFirst();
+	    	for (int index = 0; index < cursor.getCount(); index++)
+	    	{
+	    		cardIDs.add(cursor.getInt(0));
+	    		cursor.moveToNext();
+	    	}
+	    	cursor.close();
+	    	
+	    }
+	    
+	    return cardIDs;
+	        
+	}	
+	
 	public int getBlackCard(long turnid) {
 	    
 	    Cursor cursor = db.getReadableDatabase().query(DBContract.Turn.TABLE_NAME, 

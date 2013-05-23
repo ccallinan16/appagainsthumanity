@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -137,7 +138,7 @@ public class MainActivity extends Activity {
 				new IDToCardTranslator(this.getApplicationContext()));
 		
 		//check connection
-		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
 		System.out.println(serverProxy.isConnected());
 		
 		//register user

@@ -9,16 +9,8 @@ class NotificationHandler
     protected $turnTable;
     protected $notificationTable;
     protected $dealtBlackCardTable;
+    protected $dealtWhiteCardTable;
     protected $sm; //serviceLocator
-    
-    const notification_new_game      = 0;  //important notification
-    const notification_new_round     = 1;  //important notification
-    const notification_choose_black  = 2;  //important notification
-    const notification_chosen_black  = 3;
-    const notification_choose_white  = 4;  //important notification
-    const notification_chosen_white  = 5;
-    const notification_choose_winner = 6;  //important notification
-    const notification_chosen_winner = 7;  //important notification
     
     public function __construct($serviceLocator) {
         $this->sm = $serviceLocator;    
@@ -76,6 +68,14 @@ class NotificationHandler
         return $this->dealtBlackCardTable;
     }
     
+    public function getDealtWhiteCardTable()
+    {
+        if (!$this->dealtWhiteCardTable) {
+            $this->dealtWhiteCardTable = $this->sm->get('Application\Model\DealtWhiteCardTable');
+        }
+        return $this->dealtWhiteCardTable;
+    }
+    
     /*
      *  private helper functions
      */
@@ -104,15 +104,36 @@ class NotificationHandler
       return $data;
     }
     
-    private function getNewRoundUpdate($user_id, $turn_id) {
-      //fetch and return data      
+    private function getNewRoundUpdate($user_id, $turn_id) {  
+      //fetch turn data
       $turn = $this->getTurnTable()->getTurn($turn_id);
-      return $turn->toArray();
+      $turnData = $turn->toArray();
+      
+      //fetch white card data
+      $cardData = $this->getDealtWhiteCardTable()->getDealtWhiteCardsOfUser($user_id, $turnData['game_id']);
+      
+      //prepare data array
+      $data = array();
+      $data['turn'] = $turnData;
+      $data['cards'] = $cardData;
+      
+      return $data;
     }
     
-    private function getChooseBlackUpdate($user_id, $game_id) {
-      //fetch and return data      
-      return $this->getDealtBlackCardTable()->getDealtBlackCards($user_id, $game_id);
+    private function getNewRoundCzarUpdate($user_id, $turn_id) {
+      //fetch turn data
+      $turn = $this->getTurnTable()->getTurn($turn_id);
+      $turnData = $turn->toArray();
+      
+      //fetch white card data
+      $cardData = $this->getDealtBlackCardTable()->getDealtBlackCards($user_id, $turnData['game_id']);
+      
+      //prepare data array
+      $data = array();
+      $data['turn'] = $turnData;
+      $data['cards'] = $cardData;
+      
+      return $data;
     }
     
     /*
@@ -149,8 +170,8 @@ class NotificationHandler
           case Notification::notification_new_round :
             $data = $this->getNewRoundUpdate($notification->user_id, $notification->content_id);
             break;    
-          case Notification::notification_choose_black :
-            $data = $this->getChooseBlackUpdate($notification->user_id, $notification->content_id);
+          case Notification::notification_new_round_czar :
+            $data = $this->getNewRoundCzarUpdate($notification->user_id, $notification->content_id);
             break;              
                 
           
@@ -159,9 +180,8 @@ class NotificationHandler
             //something went wrong here..
             break;
         }
-        
-        
-        //$this->getNotificationTable()->deleteNotification($notification_id); 
+               
+        $this->getNotificationTable()->deleteNotification($notification_id); 
         return $data;
   	}
 }

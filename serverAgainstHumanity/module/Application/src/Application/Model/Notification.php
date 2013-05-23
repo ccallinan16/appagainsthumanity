@@ -3,15 +3,12 @@ namespace Application\Model;
 
 class Notification
 {
-    const notification_new_game      = 0;  //important notification
-    const notification_new_round     = 1;  //important notification
-    const notification_choose_black  = 2;  //important notification
-    const notification_chosen_black  = 3;
-    const notification_choose_white  = 4;  //important notification
-    const notification_chosen_white  = 5;
-    const notification_choose_winner = 6;  //important notification
-    const notification_chosen_winner = 7;  //important notification
-
+    const notification_new_game       = 0;
+    const notification_new_round      = 1;
+    const notification_new_round_czar = 2;
+    const notification_chosen_black   = 3;
+    const notification_chosen_white   = 4;
+    const notification_chosen_winner  = 5;
     public $id;
     public $user_id;
     public $type;
