@@ -47,7 +47,6 @@
 
     
     <string name="title_activity_gallery">GalleryActivity</string>
-    <string name="hello_world">Hello world!</string>    
     <string name="title_activity_my_gallery">MyGallery</string>
     <string name="title_activity_card_slide">CardSlideActivity</string>
 

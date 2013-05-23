@@ -1,20 +1,31 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
 import mocks.IDToCardTranslator;
+
+import org.gcm.trials.AlertDialogManager;
+import org.gcm.trials.ConnectionDetector;
+import org.gcm.trials.ServerUtilities;
+import org.gcm.trials.WakeLocker;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
@@ -24,6 +35,10 @@ import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
+
+import static org.gcm.trials.CommonUtilities.*;
+
+import com.google.android.gcm.GCMRegistrar;
 
 public class MainActivity extends Activity {
 
@@ -39,7 +54,7 @@ public class MainActivity extends Activity {
 	private ListView gameListView;
 	private GamelistAdapter gamelistAdapter;
 	public DBProxy dbProxy;
-	private String username;
+	public static String username;
 	private ProgressBar bar;
 	
 	//database
@@ -58,26 +73,6 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		/**
-		 * 
-		 */
-		try {
-			GCMRegistrar.checkDevice(this);
-			GCMRegistrar.checkManifest(this);
-			final String regId = GCMRegistrar.getRegistrationId(this);
-			if (regId.equals("")) {
-			  GCMRegistrar.register(this, SENDER_ID);
-			} else {
-			  System.out.println("Already registered");
-			}
-		} catch (Exception e)
-		{
-			//for the testcases, this does not matter right now.
-			System.err.println(e.getMessage());
-		}
-
-		
 		
 		//retrieve username flag
 		boolean flagUsernameExists = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getBoolean(getString(R.string.sharedpreferences_key_username_defined), false);
@@ -139,16 +134,16 @@ public class MainActivity extends Activity {
 		CardCollection.instance.setTranslator(
 				new IDToCardTranslator(this.getApplicationContext()));
 		
+		//prepare xmlrpc connection
+		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
+		
 		//check connection
 		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 		System.out.println(serverProxy.isConnected());
 		
-		if (!checkConnection())
-			return;
-		handleRegistrationWithGCM();
-
-		//prepare xmlrpc connection
-		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
+		//if (!checkConnection())
+		//	return;
+		//handleRegistrationWithGCM();
 		
 		//check for updates
         bar = (ProgressBar) findViewById(R.id.progressBar);
