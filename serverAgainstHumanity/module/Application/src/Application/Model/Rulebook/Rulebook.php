@@ -31,6 +31,10 @@ abstract class Rulebook {
     return $this->rpc->getDealtWhiteCardTable();
   }
   
+  protected function getPlayedWhiteCardTable() {
+    return $this->rpc->getPlayedWhiteCardTable();
+  }
+  
   protected function getGameTable() {
     return $this->rpc->getGameTable();
   }
@@ -52,7 +56,8 @@ abstract class Rulebook {
   }
   
   public abstract function onCreateGame($gameId, $userId);
-  
+  public abstract function onBlackCardChosen($user_id, $turn_id, $card_id);
+  public abstract function onWhiteCardChosen($user_id, $turn_id, $card_id);  
   
 }
 

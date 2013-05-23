@@ -189,6 +189,7 @@ public class DBProxy {
 		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID,
 		    "COUNT(DISTINCT "+DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard._ID + ") AS numwhitechosen",
 		    DBContract.User.TABLE_NAME + "2" + "." + DBContract.User.COLUMN_NAME_USERNAME + " AS winner",
+		    DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_WON,
 		};
 
 		// How you want the results sorted in the resulting Cursor
@@ -212,7 +213,8 @@ public class DBProxy {
 		    DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID + " = ? ",
 		    new String[]{String.valueOf(game_id)},    // The values for the WHERE clause
 		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID, // don't group the rows
-		    null,//DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_WON + " = 1",                                     // don't filter by row groups
+		    DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_WON + "= max(" + 
+		    DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_WON + ")",                                     // don't filter by row groups
 		    sortOrder                                 // The sort order
 		    );
 	}

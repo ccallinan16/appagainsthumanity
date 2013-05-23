@@ -10,14 +10,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
@@ -44,6 +48,7 @@ public class MainActivity extends Activity {
 	private GamelistAdapter gamelistAdapter;
 	public DBProxy dbProxy;
 	private String username;
+	private ProgressBar bar;
 	
 	//database
 	private Cursor gamelistCursor;
@@ -137,23 +142,12 @@ public class MainActivity extends Activity {
 		CardCollection.instance.setTranslator(
 				new IDToCardTranslator(this.getApplicationContext()));
 		
-		//check connection
-		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
-		System.out.println(serverProxy.isConnected());
+		//prepare xmlrpc connection
+		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
 		
-		//register user
-		//TODO: in production, check in sharedPref-entry whether registration has already happened
-		//      in the meantime register all over in case the database was dropped 
-		ServerConnector connector = new ServerConnector(dbProxy);
-		connector.registerUser(username);
-		
-		//check and process notifications
-		NotificationHandler handler = new NotificationHandler(dbProxy);
-		handler.checkAndHandleUpdates();
-		
-		//retrieve game list
-		gamelistCursor = dbProxy.readGameList(username);
-		displayListView(gamelistCursor);
+		//check for updates
+        bar = (ProgressBar) findViewById(R.id.progressBar);
+        new ProgressTask().execute();
 	}
 	
     @Override
@@ -232,5 +226,48 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	private class ProgressTask extends AsyncTask <Void,Void,Void>{
+	    @Override
+	    protected void onPreExecute(){
+	    	gameListView.setVisibility(View.GONE);
+	        bar.setVisibility(View.VISIBLE);
+	    }
+
+	    @Override
+	    protected Void doInBackground(Void... arg0) {   
+	    	 XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+		        if (serverProxy.isConnected()) {
+					//register user
+					//TODO: in production, check in sharedPref-entry whether registration has already happened
+					//      in the meantime register all over in case the database was dropped 
+					ServerConnector connector = new ServerConnector(dbProxy);
+					connector.registerUser(username);
+					
+					//check and process notifications
+					NotificationHandler handler = new NotificationHandler(dbProxy);
+					handler.checkAndHandleUpdates();
+				} else {
+					//show toast and notify user about connection problems
+					runOnUiThread(new Runnable() {
+						public void run() {
+							Toast.makeText(MainActivity.this, getString(R.string.main_toast_connectionerror), Toast.LENGTH_SHORT).show();
+						    }
+						});
+				}
+		        return null;
+	    }
+
+	    @Override
+	    protected void onPostExecute(Void result) {
+	        //hide progress bar
+	    	bar.setVisibility(View.GONE);
+	    	gameListView.setVisibility(View.VISIBLE);
+			
+	        //retrieve and show game list
+			gamelistCursor = dbProxy.readGameList(username);
+			displayListView(gamelistCursor);
+	    }
 	}
 }

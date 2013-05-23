@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardFragmentAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
@@ -55,8 +56,8 @@ public class CardSlideActivity extends FragmentActivity {
 	  
 	  turnID = getIntent().getExtras().getLong(BundleCreator.TURN_ID);
 	  	  
-	  if (		 context == ViewContext.CONFIRM_WHITE 
-			  || context == ViewContext.CONFIRM_BLACK
+	  if (context == ViewContext.CONFIRM_PAIR 
+			  || context == ViewContext.CONFIRM_SINGLE
 			  || context == ViewContext.SHOW_RESULT)
 	  {
 			TextView lbl = (TextView) findViewById(R.id.cs_label);
@@ -96,6 +97,8 @@ public class CardSlideActivity extends FragmentActivity {
 		{
 		      LinearLayout btns = (LinearLayout) findViewById(R.id.footer);
 		      btns.setVisibility(View.GONE);
+		      
+
 		}
 		else
 		{
@@ -120,9 +123,8 @@ public class CardSlideActivity extends FragmentActivity {
 								
 			  		if (proxy == null)
 			  			proxy = new DBProxy(v.getContext());
-			  		
 					ServerConnector connector = new ServerConnector(proxy);
-										
+					
 					switch (context)
 					{
 					case CONFIRM_BLACK:
@@ -147,6 +149,7 @@ public class CardSlideActivity extends FragmentActivity {
 	}     
 
 	protected void createAndStartMainActivity(View v) {
+		System.out.println("back to main");
 		Intent intent = new Intent(v.getContext(),MainActivity.class);
 		//add flag to get back to main activity and clean intermediate activities
     	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -155,6 +158,7 @@ public class CardSlideActivity extends FragmentActivity {
 
 	private void initSlider()
 	{
+		
 		  boolean selectable = false;
 		  
 		  if (context == ViewContext.SELECT_BLACK || 
@@ -163,9 +167,7 @@ public class CardSlideActivity extends FragmentActivity {
 			  selectable = true;
 		  
 		  if (proxy == null)
-		  {
-			  proxy = new DBProxy(this);		  
-		  }
+			  proxy = new DBProxy(this);
 		  
 		  ServerConnector serverConnector = new ServerConnector(proxy);
 		  IDToCardTranslator dealer = new IDToCardTranslator(this);

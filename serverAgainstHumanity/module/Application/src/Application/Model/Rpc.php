@@ -13,6 +13,7 @@ class Rpc
     protected $notificationTable;
     protected $dealtBlackCardTable;
     protected $dealtWhiteCardTable;
+    protected $playedWhiteCardTable;
     protected $sm; //serviceLocator
     
     public function __construct($serviceLocator) {
@@ -77,6 +78,14 @@ class Rpc
             $this->dealtWhiteCardTable = $this->sm->get('Application\Model\DealtWhiteCardTable');
         }
         return $this->dealtWhiteCardTable;
+    }
+    
+    public function getPlayedWhiteCardTable()
+    {
+        if (!$this->playedWhiteCardTable) {
+            $this->playedWhiteCardTable = $this->sm->get('Application\Model\PlayedWhiteCardTable');
+        }
+        return $this->playedWhiteCardTable;
     }
     
     public function addNotification($type, $userId, $contentId) {
@@ -171,7 +180,7 @@ class Rpc
         foreach($data['invites'] as $userId)
             $this->addNotification(Notification::notification_new_game, $userId, $game_id);     
 
-        //call onCreate of gametype
+        //call onCreate of rulebook
         $rulebook = Rulebook::createRulebook($this);
         $rulebook->onCreateGame($game_id, $user_id);
         
@@ -204,15 +213,64 @@ class Rpc
         $turn->setBlackCardId($card_id);
         $this->getTurnTable()->saveTurn($turn);
         
+        //remove from dealtBlackCards
+        $this->getDealtBlackCardTable()->removeDealtBlackCard($turn->game_id, $card_id, $user_id);
+        
+        //call onBlackCardChosen of rulebook
+        $rulebook = Rulebook::createRulebook($this);
+        $rulebook->onBlackCardChosen($user_id, $turn_id, $card_id);
+         
         //add notification
         $participants = $this->getParticipationTable()->getParticipants($turn->game_id);
-        foreach ($participant as $participant_id) {
-          $this->addNotification(Notification::notification_chosen_black, $participant_id, $gameId); 
+        foreach ($participants as $participant_id) {
+          $this->addNotification(Notification::notification_chosen_black, $participant_id, $turn_id); 
         }
         
-        //call onCreate of gametype
+        //return true if no exception occured
+        return true;
+  	}
+    
+    /**
+  	 * sets the played white card id of for a specified turn for a specified user
+  	 *
+     * @param int $user_id
+     * @param int $turn_id
+     * @param int $card_id          
+  	 * @return bool success
+  	 */
+  	public function chooseWhiteCard($user_id, $turn_id, $card_id)
+  	{                   
+        //retrieve turn object
+        $turn = $this->getTurnTable()->getTurn($turn_id);
+                
+        //check validity of user id
+        $participants = $this->getParticipationTable()->getParticipants($turn->game_id);
+        if ($user_id == $turn->user_id || !in_array($user_id, $participants))
+          return false;
+          
+        //check validity of card id
+        if (!$this->getDealtWhiteCardTable()->isDealtWhiteCard($turn->game_id, $card_id, $user_id))
+          return false;
+          
+        //add entry in playedWhiteCardTable
+        $card = new PlayedWhiteCard();
+        $card->setTurnId($turn_id);
+        $card->setUserId($user_id);
+        $card->setWhiteCardId($card_id);
+        $card->setWon(false);
+        $this->getPlayedWhiteCardTable()->savePlayedWhiteCard($card);
+        
+        //remove from dealtWhiteCards
+        $this->getDealtWhiteCardTable()->removeDealtWhiteCard($turn->game_id, $card_id, $user_id);
+        
+        //call onWhiteCardChosen of rulebook
         $rulebook = Rulebook::createRulebook($this);
-        $rulebook->onBlackCardChosen($user_id, $turn_id, $card_id);        
+        $rulebook->onWhiteCardChosen($user_id, $turn_id, $card_id);
+         
+        //add notification
+        foreach ($participants as $participant_id) {
+          $this->addNotification(Notification::notification_chosen_white, $participant_id, $turn_id); 
+        }
         
         //return true if no exception occured
         return true;

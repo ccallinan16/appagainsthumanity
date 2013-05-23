@@ -63,33 +63,43 @@ public class ServerConnector {
 		}
 	}
 	
-	public void selectCardBlack(long turn_id, int id)
+	public boolean selectCardBlack(long turn_id, int id)
 	{		
 		//Czar selects a black card, CardType.BLACK
 		if (isRobolectricTestrun) {
 			CardCollection.instance.setBlackCard(id);
 			proxy.getDBSetter().setBlackCardID(turn_id, id);
+			return true;
+			
 		} else {
 			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 			
 			//check connection
 			if (!serverProxy.isConnected())
-				return;
+				return false;
 			
 			//query server
-		//	return serverProxy.createGame(proxy.getUserID(), invites, roundCap, scoreCap);
+			return serverProxy.selectBlackCard(proxy.getUserID(), (int) turn_id, id);
 		}
 		
 	}
 	
-	public void selectCardWhite(long turn_id, int id)
+	public boolean selectCardWhite(long turn_id, int id)
 	{
 		//Players select a whiteCard
-		
-		//tables affected:
-		//played_white_cards
+		if (isRobolectricTestrun) {		
 			proxy.getDBSetter().setWhiteCardID(turn_id,proxy.getUserID(),id);
-		//TODO: send info to server
+			return true;
+		} else {
+			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+			
+			//check connection
+			if (!serverProxy.isConnected())
+				return false;
+			
+			//query server
+			return serverProxy.selectWhiteCard(proxy.getUserID(), (int) turn_id, id);
+		}
 	}
 	
 	public void selectWinner(long turn_id, int id)

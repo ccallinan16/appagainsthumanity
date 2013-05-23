@@ -62,6 +62,12 @@ class DealtWhiteCardTable
                                           'user_id' => $userId));
     }
     
+    public function removeDealtWhiteCard($game_id, $white_card_id, $user_id) {
+        $this->tableGateway->delete(array('game_id'       => $game_id,
+                                          'white_card_id' => $white_card_id,
+                                          'user_id'       => $user_id));
+    }    
+    
     public function dealCards($gameId, $userId, $cards) {
         $card = new DealtWhiteCard();
         $card->setId(0);
@@ -88,5 +94,19 @@ class DealtWhiteCardTable
         foreach($result as $dealtWhiteCard)
           $data[] = $dealtWhiteCard->toArray();
         return $data;
+    }
+    
+    public function isDealtWhiteCard($game_id, $white_card_id, $user_id) {
+        $game_id  = (int) $game_id;
+        $white_card_id  = (int) $white_card_id;
+        $user_id  = (int) $user_id;
+        $rowset = $this->tableGateway->select(array('game_id' => $game_id,
+                                                    'white_card_id' => $white_card_id,
+                                                    'user_id' => $user_id ));
+        $row = $rowset->current();
+        if (!$row) {
+            return false;
+        }
+        return true;
     }
 }

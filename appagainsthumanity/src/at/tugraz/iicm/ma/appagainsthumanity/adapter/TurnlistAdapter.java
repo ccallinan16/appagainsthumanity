@@ -3,6 +3,7 @@ package at.tugraz.iicm.ma.appagainsthumanity.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,6 +39,8 @@ public class TurnlistAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, final Context context, Cursor c) {
+		DatabaseUtils.dumpCursor(c);
+		
 		//retrieve views
 		TextView round = (TextView)view.findViewById(R.id.tv_round);
 		TextView status = (TextView)view.findViewById(R.id.tv_status);
@@ -56,19 +59,19 @@ public class TurnlistAdapter extends CursorAdapter {
 			status.setText(context.getString(R.string.game_overview_turns_text_chooseblack));
 			view.setOnClickListener(
 					new ChooseViewListener(activity, ViewContext.SELECT_BLACK,c.getLong(0)));
-		} else if (!username.equals(c.getString(3)) && c.getInt(5) < (c.getInt(2) - 1)) {
+		} else if (!username.equals(c.getString(3)) && c.getInt(5) < (c.getInt(2) - 1) && c.getLong(4) != 0) {
 			//choose white card
 			thumbnail.setImageResource(R.drawable.card_white);
 			status.setText(context.getString(R.string.game_overview_turns_text_choosewhiteblack));
 			view.setOnClickListener(
 					new ChooseViewListener(activity, ViewContext.SELECT_WHITE,c.getLong(0)));
-		} else if (username.equals(c.getString(3)) && c.getInt(5) == (c.getInt(2) - 1) && c.getString(6).equals(null)) {
+		} else if (username.equals(c.getString(3)) && c.getInt(5) == (c.getInt(2) - 1) && c.getInt(7) == 0) {
 			//choose winning card
 			thumbnail.setImageResource(R.drawable.winner);
 			status.setText(context.getString(R.string.game_overview_turns_text_choosewinner));
 			view.setOnClickListener(
 					new ChooseViewListener(activity, ViewContext.SELECT_BLACK,c.getLong(0)));
-		} else if (! (c.getString(6) == null)) {
+		} else if (c.getInt(7) == 0) {
 			//show result
 			if (c.getString(6).equals(username)) {
 				thumbnail.setImageResource(R.drawable.star);
