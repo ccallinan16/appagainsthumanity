@@ -56,8 +56,8 @@ public class CardSlideActivity extends FragmentActivity {
 	  
 	  turnID = getIntent().getExtras().getLong(BundleCreator.TURN_ID);
 	  	  
-	  if (context == ViewContext.CONFIRM_PAIR 
-			  || context == ViewContext.CONFIRM_SINGLE
+	  if (context == ViewContext.CONFIRM_WHITE 
+			  || context == ViewContext.CONFIRM_BLACK
 			  || context == ViewContext.SHOW_RESULT)
 	  {
 			TextView lbl = (TextView) findViewById(R.id.cs_label);
