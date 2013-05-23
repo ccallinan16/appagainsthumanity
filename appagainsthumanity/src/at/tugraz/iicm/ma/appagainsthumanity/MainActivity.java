@@ -136,15 +136,7 @@ public class MainActivity extends Activity {
 		
 		//prepare xmlrpc connection
 		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
-		
-		//check connection
-		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
-		System.out.println(serverProxy.isConnected());
-		
-		//if (!checkConnection())
-		//	return;
-		//handleRegistrationWithGCM();
-		
+				
 		//check for updates
         bar = (ProgressBar) findViewById(R.id.progressBar);
         new ProgressTask().execute();
@@ -308,8 +300,6 @@ public class MainActivity extends Activity {
 					protected Void doInBackground(Void... params) {
 						// Register on our server
 						// On server creates a new user
-						XMLRPCServerProxy.getInstance().signupUser(username, regId);
-
 						ServerUtilities.register(context, username, null, regId);
 						return null;
 					}
@@ -369,6 +359,8 @@ public class MainActivity extends Activity {
 					//      in the meantime register all over in case the database was dropped 
 					ServerConnector connector = new ServerConnector(dbProxy);
 					connector.registerUser(username);
+					
+					//handleRegistrationWithGCM();
 					
 					//check and process notifications
 					NotificationHandler handler = new NotificationHandler(dbProxy);

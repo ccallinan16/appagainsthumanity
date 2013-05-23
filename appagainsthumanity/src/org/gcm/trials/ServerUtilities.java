@@ -14,6 +14,7 @@ import java.util.Random;
 import android.content.Context;
 import android.util.Log;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 
 import com.google.android.gcm.GCMRegistrar;
 import static org.gcm.trials.CommonUtilities.SENDER_ID;
@@ -49,7 +50,11 @@ public final class ServerUtilities {
             try {
                 displayMessage(context, context.getString(
                         R.string.server_registering, i, MAX_ATTEMPTS));
-                post(serverUrl, params);
+                
+				int id = XMLRPCServerProxy.getInstance().signupUser(name, regId);
+
+				if (id == 0) throw new IOException();
+                //post(serverUrl, params);
                 GCMRegistrar.setRegisteredOnServer(context, true);
                 String message = context.getString(R.string.server_registered);
                 CommonUtilities.displayMessage(context, message);
