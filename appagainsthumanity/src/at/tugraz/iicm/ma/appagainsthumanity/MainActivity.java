@@ -111,6 +111,7 @@ public class MainActivity extends Activity {
 		
 		//bind gameListView
 		gameListView = (ListView) findViewById(R.id.game_list_view);
+//        bar = (ProgressBar) findViewById(R.id.progressBar);
 	}
 	
 	public void setUsername(String name)
@@ -300,6 +301,8 @@ public class MainActivity extends Activity {
 					protected Void doInBackground(Void... params) {
 						// Register on our server
 						// On server creates a new user
+				//		XMLRPCServerProxy.getInstance().signupUser(username, regId);
+
 						ServerUtilities.register(context, username, null, regId);
 						return null;
 					}
