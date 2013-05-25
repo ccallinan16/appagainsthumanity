@@ -13,7 +13,7 @@
 		    style="@style/button"
 		    android:layout_width="fill_parent"
 		    android:text="@string/main_text_create_game"
-		    android:onClick="registerGCM"
+		    android:onClick="createGame"
 		    android:drawableLeft="@drawable/plus"
 	    />
     </LinearLayout>

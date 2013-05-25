@@ -53,6 +53,7 @@ public class XMLRPCServerProxy extends ServerProxy{
 	
 	@Override
 	public int signupUser(String username, String gcmid) {
+		System.out.println("XMLRPCServerProxy::signupUser called " + username);
 		try{
 			Object o = client.call(NAMESPACE_RPC + FUNCTIONNAME_REGISTERUSER, username,gcmid);
 			int id = Integer.parseInt(o.toString());

@@ -55,8 +55,10 @@
     <string name="gamelist_numplayers">NumPlayers</string>
     <string name="sharedpreferences_filename">sharedpref</string>
     <string name="sharedpreferences_key_username">username</string>
-    <string name="sharedpreferences_key_username_defined">username_defined</string>
+    <string name="sharedpreferences_key_username_defined">username_defined</string>    
     <string name="sharedpreferences_key_xmlrpc_hostname">pref_xml_host</string>
+    <string name="sharedpref_key_registered">registered_flag</string>
+   
     <string name="title_activity_game_options">GameOptions</string>
     <string name="title_activity_game_overview">GameOverviewActivity</string>
     <string name="listitem_turnlist_text_turn">Round</string>
@@ -71,6 +73,10 @@
     <string name="gcm_unregistered">From GCM: device successfully unregistered!</string>
     <string name="gcm_message">From GCM: you got message!</string>
     <string name="gcm_error">From GCM: error (%1$s).</string>
+    
+    <string name="gcm_no_account_title">Google Account Missing</string>
+    <string name="gcm_no_account_body">Please link a valid google account in your settings.</string>
+    
     <string name="gcm_recoverable_error">From GCM: recoverable error (%1$s).</string>
     <string name="gcm_deleted">From GCM: server deleted %1$d pending messages!</string>
     <string name="server_registering">Trying (attempt %1$d/%2$d) to register device on Demo Server.</string>

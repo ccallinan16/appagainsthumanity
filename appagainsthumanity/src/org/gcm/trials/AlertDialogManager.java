@@ -2,6 +2,7 @@ package org.gcm.trials;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import at.tugraz.iicm.ma.appagainsthumanity.R;
  
 public class AlertDialogManager {
     /**
@@ -12,7 +13,7 @@ public class AlertDialogManager {
      * @param status - success/failure (used to set icon)
      *               - pass null if you don't want icon
      * */
-    public void showAlertDialog(Context context, String title, String message,
+    public static void showAlertDialog(Context context, String title, String message,
             Boolean status) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
  
@@ -35,4 +36,19 @@ public class AlertDialogManager {
         // Showing Alert Message
         alertDialog.show();
     }
+
+	public static void showErrorAlertDialog(Context context, String errorId, boolean status) {
+		
+		String title = "An Error occured";
+		String message = "";
+		
+		if (errorId.equals("ACCOUNT_MISSING"))
+		{			
+			title = context.getString(R.string.gcm_no_account_title);
+			message = context.getString(R.string.gcm_no_account_body);	
+		}
+		
+		showAlertDialog(context, title, message, status);
+		
+	}
 }
