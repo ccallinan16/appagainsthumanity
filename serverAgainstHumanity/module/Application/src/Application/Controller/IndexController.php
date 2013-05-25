@@ -10,6 +10,7 @@
 namespace Application\Controller;
 
 use Application\Model\Rpc;
+use Application\Model\Gcm;
 use Application\Model\NotificationHandler;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -23,6 +24,7 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
     	$server = new Server();
+    	$gcm = new GCM();
     	$rpc = new Rpc($this->getServiceLocator());
     	$server->setClass($rpc, IndexController::NAMESPACE_RPC);
 	$notificationHandler = new NotificationHandler($this->getServiceLocator());
@@ -49,8 +51,9 @@ class IndexController extends AbstractActionController
     	//echo $rpc->createGame(14, $data);
     	//print_r( $notificationHandler->getNotifications(14));
       //print_r( $notificationHandler->getUpdate(155));
-      echo $server->handle();
+      //echo $server->handle();
       
+		echo $gcm->send_notification("hello","blub");
 		return $this->getResponse();
     }
     

@@ -6,7 +6,7 @@ use Application\Model\Rulebook\Rulebook;
 class Rpc
 {
 
-	  protected $userTable;
+	protected $userTable;
     protected $gameTable;
     protected $participationTable;
     protected $turnTable;
@@ -143,33 +143,31 @@ class Rpc
   	    return $this->getUserTable()->saveUser($user);
   	}
 
-	/**
-	* funciton similar to signupUser, but with the GCM id
-	**/
-	public function registerUser($username,$gcmid)
-	{
-		echo "##registerUser called: ".$username.", ".$gcmid." ##" ;
-		
-		//file_put_contents ( "elislog.txt" , "##registerUser called: ".$username.", ".$gcmid." ##");
-		
+    /**
+  	 * retrieves id of existing user or adds new user and returns id
+  	 *
+  	 * @param string $username
+  	 * @param string $gcmid
+  	 * @return int id of new or existing user
+  	 */
+  	public function registerUser($username,$gcmid)
+	{	
 		$id = $this->getUserTable()->getUserId($username);
 		
 		//entry already exists, but we should probably add the gcmid.
 		if ($id > 0)
 		{
 			$user = $this->getUserTable()->getUser($id);
-			$user->setGCMID($gcmid);
-			return $this->getUserTable()->saveUser($user);
+		}
+		else
+		{			
+			$user = new User();
+			$user->setId(0);
+			$user->setUsername($username);
 		}
 		
-		//otherwise add new user
-		$user = new User();
-		$user->setId(0);
 		$user->setGCMID($gcmid);
-		$user->setUsername($username);
-		
-		return $this->getUserTable()->saveUser($user);
-				
+		return $this->getUserTable()->saveUser($user);				
 	}
     
     /**

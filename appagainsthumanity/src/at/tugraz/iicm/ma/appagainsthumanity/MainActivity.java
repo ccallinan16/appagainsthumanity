@@ -55,7 +55,14 @@ public class MainActivity extends Activity {
 	private GamelistAdapter gamelistAdapter;
 	public DBProxy dbProxy;
 	public static String username;
+	private String regId;
 	private ProgressBar bar;
+	
+	/**
+	 * member because it needs to be cancelled on destroy
+	 */
+	private ProgressTask asyncTask;
+	private Context context = this;
 	
 	//database
 	private Cursor gamelistCursor;
@@ -74,6 +81,22 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		getUsernameFromShared();
+		
+		//populate database presets
+		Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, DBProxy.PRESETS);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+		
+		//bind gameListView
+		gameListView = (ListView) findViewById(R.id.game_list_view);
+//        bar = (ProgressBar) findViewById(R.id.progressBar);
+	}
+		
+	public void getUsernameFromShared()
+	{
 		//retrieve username flag
 		boolean flagUsernameExists = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getBoolean(getString(R.string.sharedpreferences_key_username_defined), false);
 		
@@ -91,27 +114,11 @@ public class MainActivity extends Activity {
 				} else
 					username = list[0].name;
 			}
-			
-			//supply username to shared preferences for other activities
-			SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).edit();
-			editor.putString(getString(R.string.sharedpreferences_key_username), username);
-			//set flag
-			editor.putBoolean(getString(R.string.sharedpreferences_key_username_defined), true);
-			editor.commit();
+			setUsername(username);
 		} else {
 			username = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getString(getString(R.string.sharedpreferences_key_username), "");
 		}
-		
-		//populate database presets
-		Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
-		// Create an ArrayAdapter using the string array and a default spinner layout
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, DBProxy.PRESETS);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
-		
-		//bind gameListView
-		gameListView = (ListView) findViewById(R.id.game_list_view);
-//        bar = (ProgressBar) findViewById(R.id.progressBar);
+
 	}
 	
 	public void setUsername(String name)
@@ -122,6 +129,8 @@ public class MainActivity extends Activity {
 						getString(R.string.sharedpreferences_filename), 
 						Context.MODE_PRIVATE).edit();
 		editor.putString(getString(R.string.sharedpreferences_key_username), name);
+		//set flag
+		editor.putBoolean(getString(R.string.sharedpreferences_key_username_defined), true);
 		editor.commit();
 	}
 	
@@ -135,12 +144,23 @@ public class MainActivity extends Activity {
 		CardCollection.instance.setTranslator(
 				new IDToCardTranslator(this.getApplicationContext()));
 		
+
+		//check if device is capable of gcm
+		checkGCMRequirements();
+		
+		//register the receiver for GCM events
+		registerReceiver(mHandleMessageReceiver, new IntentFilter(
+				DISPLAY_MESSAGE_ACTION));
+
+		
+		
 		//prepare xmlrpc connection
 		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
 				
 		//check for updates
         bar = (ProgressBar) findViewById(R.id.progressBar);
-        new ProgressTask().execute();
+        asyncTask = new ProgressTask();
+        asyncTask.execute();
 	}
 	
     @Override
@@ -164,8 +184,8 @@ public class MainActivity extends Activity {
    @Override
 	protected void onDestroy() {
 		
-		if (mRegisterTask != null) {
-			mRegisterTask.cancel(true);
+		if (asyncTask != null) {
+			asyncTask.cancel(true);
 		}
 		try {
 			unregisterReceiver(mHandleMessageReceiver);
@@ -237,25 +257,6 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	/**
-	 * checks if mobile device has internet switched on.
-	 */
-	private boolean checkConnection()
-	{
-		ConnectionDetector cd = new ConnectionDetector(getApplicationContext());
-
-		// Check if Internet present
-		if (!cd.isConnectingToInternet()) {
-			AlertDialogManager alert = new AlertDialogManager();
-			// Internet Connection is not present
-			alert.showAlertDialog(MainActivity.this,
-					"Internet Connection Error",
-					"Please connect to working Internet connection", false);
-			// stop executing code by return
-			return false;
-		}
-		return true;
-	}
 	
 	/**
 	 * GCM Handling 
@@ -264,8 +265,9 @@ public class MainActivity extends Activity {
 	 * 3. check if already registered
 	 * 4. if not -> register.
 	 */
-	private void handleRegistrationWithGCM()
-	{	
+	private boolean checkGCMRequirements()
+	{
+		
 		// Make sure the device has the proper dependencies.
 		GCMRegistrar.checkDevice(this);
 
@@ -273,53 +275,10 @@ public class MainActivity extends Activity {
 		// while developing the app, then uncomment it when it's ready.
 		GCMRegistrar.checkManifest(this);
 
-		registerReceiver(mHandleMessageReceiver, new IntentFilter(
-				DISPLAY_MESSAGE_ACTION));
-		
-		// Get GCM registration id
-		final String regId = GCMRegistrar.getRegistrationId(this);
-
-		// Check if regid already presents
-		if (regId.equals("")) {
-			// Registration is not present, register now with GCM			
-			GCMRegistrar.register(this, SENDER_ID);
-		} else {
-			// Device is already registered on GCM
-			if (GCMRegistrar.isRegisteredOnServer(this)) {
-				// Skips registration.				
-				Toast.makeText(getApplicationContext(), "Already registered with GCM", Toast.LENGTH_LONG).show();
-				ServerUtilities.unregister(this,regId);
-			} else {
-				// Try to register again, but not in the UI thread.
-				// It's also necessary to cancel the thread onDestroy(),
-				// hence the use of AsyncTask instead of a raw thread.
-				final Context context = this;
-				// Asyntask
-				mRegisterTask = new AsyncTask<Void, Void, Void>() {
-
-					@Override
-					protected Void doInBackground(Void... params) {
-						// Register on our server
-						// On server creates a new user
-				//		XMLRPCServerProxy.getInstance().signupUser(username, regId);
-
-						ServerUtilities.register(context, username, null, regId);
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(Void result) {
-						mRegisterTask = null;
-					}
-
-				};
-				mRegisterTask.execute(null, null, null);
-			}
-		}
-
-
+		return true;
 	}
-	
+
+		
 	/**
 	 * Receiving push messages
 	 * */
@@ -345,7 +304,84 @@ public class MainActivity extends Activity {
 		}
 	};
 	
+	public void gcmRegistrationProcess()
+	{
+		boolean flagRegistered = getApplicationContext()
+									.getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE)
+									.getBoolean(getString(R.string.sharedpref_key_registered), false);
 
+		if(false)//if (flagRegistered)
+		{
+			runOnUiThread(new Runnable() {
+				public void run() {
+					Toast.makeText(getApplicationContext(), "Already registered in Shared Pref", Toast.LENGTH_LONG).show();
+			    }
+			});
+			return; //no registration necessary anymore
+		}
+				
+		// Get GCM registration id
+		final String regId = GCMRegistrar.getRegistrationId(context);
+
+		// Check if regid already presents
+		if (regId.equals("")) {
+			// Registration is not present, register now with GCM //TODO: need to do the registration in else branch.
+			GCMRegistrar.register(context, SENDER_ID);
+
+		} else {
+			// Device is already registered on GCM
+
+			//TODO: check for this, but while we're still resetting our db, this will return true even if
+			//regid is not in our database... 
+			/*if (GCMRegistrar.isRegisteredOnServer(context)) {
+				// Skips registration.
+
+				runOnUiThread(new Runnable() {
+					public void run() {
+						Toast.makeText(getApplicationContext(), "Already registered with GCM", Toast.LENGTH_LONG).show();
+				    }
+				});
+
+				
+			} else */ {
+				
+				//registers the id with our server
+				//ServerUtilities.register(context, username, null, regId);
+				
+				ServerConnector connector = new ServerConnector(dbProxy);
+				boolean success = connector.registerUser(username,regId);
+				
+				//TODO: retry!
+				if (!success)
+					runOnUiThread(new Runnable() {
+						public void run() {
+							Toast.makeText(MainActivity.this, getString(R.string.main_toast_connectionerror), Toast.LENGTH_SHORT).show();
+						    }
+						});
+				else
+	                GCMRegistrar.setRegisteredOnServer(context, true);
+			}
+    	
+		}
+		
+		
+		SharedPreferences.Editor editor = getApplicationContext()
+				.getSharedPreferences(
+						getString(R.string.sharedpreferences_filename), 
+						Context.MODE_PRIVATE).edit();
+		
+		editor.putBoolean(getString(R.string.sharedpref_key_registered), true);
+		editor.commit();
+		
+	}
+
+	
+
+	/**
+	 * handles the registration process: username, gcmid
+	 * 
+	 *
+	 */
 	private class ProgressTask extends AsyncTask <Void,Void,Void>{
 	    @Override
 	    protected void onPreExecute(){
@@ -355,28 +391,40 @@ public class MainActivity extends Activity {
 
 	    @Override
 	    protected Void doInBackground(Void... arg0) {   
+	    	
+	    	/**
+	    	 * check if device is connected to the internet
+	    	 */
+	    	System.out.println("1");
+	    	if (!checkConnection())
+	    		return null;
+	    	System.out.println("2");
+
+	    	if (!checkGCMRequirements())
+	    		return null;
+	    	
+	    	System.out.println("3");
+
 	    	 XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
-		        if (serverProxy.isConnected()) {
-					//register user
-					//TODO: in production, check in sharedPref-entry whether registration has already happened
-					//      in the meantime register all over in case the database was dropped 
-					ServerConnector connector = new ServerConnector(dbProxy);
-					connector.registerUser(username);
-					
-					//handleRegistrationWithGCM();
-					
-					//check and process notifications
-					NotificationHandler handler = new NotificationHandler(dbProxy);
-					handler.checkAndHandleUpdates();
-				} else {
-					//show toast and notify user about connection problems
-					runOnUiThread(new Runnable() {
-						public void run() {
-							Toast.makeText(MainActivity.this, getString(R.string.main_toast_connectionerror), Toast.LENGTH_SHORT).show();
-						    }
-						});
-				}
-		        return null;
+		    	System.out.println("4");
+
+		     if (!serverProxy.isConnected())
+		     {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						Toast.makeText(MainActivity.this, getString(R.string.main_toast_connectionerror), Toast.LENGTH_SHORT).show();
+					    }
+					});
+		     }
+		    	System.out.println("6");
+
+		     gcmRegistrationProcess();
+		     
+			//check and process notifications
+			NotificationHandler handler = new NotificationHandler(dbProxy);
+			handler.checkAndHandleUpdates();
+
+	    	return null;
 	    }
 
 	    @Override
@@ -389,6 +437,27 @@ public class MainActivity extends Activity {
 			gamelistCursor = dbProxy.readGameList(username);
 			displayListView(gamelistCursor);
 	    }
+	    
+		/**
+		 * checks if mobile device has internet switched on.
+		 */
+		private boolean checkConnection()
+		{
+			ConnectionDetector cd = new ConnectionDetector(getApplicationContext());
+
+			// Check if Internet present
+			if (!cd.isConnectingToInternet()) {
+				// Internet Connection is not present
+				AlertDialogManager.showAlertDialog(MainActivity.this,
+						"Internet Connection Error",
+						"Please connect to working Internet connection", false);
+				// stop executing code by return
+				return false;
+			}
+			return true;
+		}
+		
+
 	}
 
 }
