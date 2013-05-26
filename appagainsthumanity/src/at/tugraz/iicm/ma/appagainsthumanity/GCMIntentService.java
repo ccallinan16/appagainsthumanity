@@ -1,7 +1,8 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 import static org.gcm.trials.CommonUtilities.SENDER_ID;
+import static org.gcm.trials.CommonUtilities.displayMessageByBroadcast;
 
-import org.gcm.trials.AlertDialogManager;
+import org.gcm.trials.ServerUtilities;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -9,13 +10,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
-import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 
-import static org.gcm.trials.CommonUtilities.displayMessageByBroadcast;
-
 import com.google.android.gcm.GCMBaseIntentService;
+import com.google.android.gcm.GCMRegistrar;
  
 public class GCMIntentService extends GCMBaseIntentService {
  
@@ -36,7 +34,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         
         //this is happening twice now. 
         XMLRPCServerProxy.getInstance().signupUser(MainActivity.username, registrationId);
-        //ServerUtilities.register(context, MainActivity.name, MainActivity.email, registrationId);
+        GCMRegistrar.setRegisteredOnServer(context, true);
+
     }
  
     /**
@@ -48,7 +47,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         displayMessageByBroadcast(context, getString(R.string.gcm_unregistered));
         
 		XMLRPCServerProxy.getInstance().signupUser(MainActivity.username, "");
-       // ServerUtilities.unregister(context, registrationId);
+        GCMRegistrar.setRegisteredOnServer(context, false);
     }
  
     /**

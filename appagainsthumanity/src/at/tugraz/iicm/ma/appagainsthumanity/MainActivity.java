@@ -320,8 +320,9 @@ public class MainActivity extends Activity {
 		boolean flagRegistered = getApplicationContext()
 									.getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE)
 									.getBoolean(getString(R.string.sharedpref_key_registered), false);
-
-		if (flagRegistered)
+		
+		XMLRPCServerProxy server = XMLRPCServerProxy.getInstance();
+		if (flagRegistered && server.isRegIDSet(username))
 		{
 			runOnUiThread(new Runnable() {
 				public void run() {
@@ -341,27 +342,33 @@ public class MainActivity extends Activity {
 			editor.commit();
 
 			*/
+			
+			setRegistered(false);
 			return; //no registration necessary anymore
 		}
-				
 
 		// Get GCM registration id
 		final String regId = GCMRegistrar.getRegistrationId(context);
 
 		System.err.println("reg id: " + regId);
-		
+		ServerConnector connector = new ServerConnector(dbProxy);
+
 		// Check if regid already presents
 		if (regId.equals("")) {
 			
 			// Registration is not present, register now with GCM, this will call the XMLRPCServer register function, but not the local one.
 			GCMRegistrar.register(context, SENDER_ID);
 			
+			int id = XMLRPCServerProxy.getInstance().getUserId(username);
+			connector.registerUser(username, id);
+			
+			
 		} else {
 			// Device is already registered on GCM
 
 			//TODO: check for this, but while we're still resetting our db, this will return true even if
 			//regid is not in our database... 
-			/*if (GCMRegistrar.isRegisteredOnServer(context)) {
+			if (GCMRegistrar.isRegisteredOnServer(context) && server.isRegIDSet(username)) {
 				// Skips registration.
 
 				runOnUiThread(new Runnable() {
@@ -370,34 +377,46 @@ public class MainActivity extends Activity {
 				    }
 				});
 
+				//make sure user is registered in local database as well
+				int id = XMLRPCServerProxy.getInstance().getUserId(username);
+				connector.registerUser(username, id);
+
+			} else  {
 				
-			} else */ {
+				int id = server.signupUser(username, regId);
 				
-				ServerConnector connector = new ServerConnector(dbProxy);
-				boolean success = connector.registerUser(username,regId);
-				
-				//TODO: retry!
-				if (!success)
+				if (id > 0)
+					connector.registerUser(username, id);
+				else
+				{
 					runOnUiThread(new Runnable() {
 						public void run() {
 							Toast.makeText(MainActivity.this, getString(R.string.main_toast_connectionerror), Toast.LENGTH_SHORT).show();
 						    }
 						});
-				else
-	                GCMRegistrar.setRegisteredOnServer(context, true);
+					//TODO: retry!
+					return;
+				}
+
+				GCMRegistrar.setRegisteredOnServer(context, true);
 			}
     	
 		}
 		
+		setRegistered(true);
 		
+	}
+	
+	private void setRegistered(boolean bool)
+	{
 		SharedPreferences.Editor editor = getApplicationContext()
 				.getSharedPreferences(
 						getString(R.string.sharedpreferences_filename), 
 						Context.MODE_PRIVATE).edit();
 		
-		editor.putBoolean(getString(R.string.sharedpref_key_registered), true);
+		editor.putBoolean(getString(R.string.sharedpref_key_registered), bool);
 		editor.commit();
-		
+
 	}
 
 	
@@ -434,7 +453,12 @@ public class MainActivity extends Activity {
 				return null;
 		     }
 		     
+			dbProxy.dumpTables();
+
 		     gcmRegistrationProcess();	
+		    
+		     dbProxy.dumpTables();
+
 		     
 			//check and process notifications
 			NotificationHandler handler = new NotificationHandler(dbProxy);

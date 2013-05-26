@@ -191,17 +191,19 @@ public class CreateGameActivity extends Activity {
 		//		if not query server and retrieve id
 		//		if not on server, return false
 		
-
+		System.out.println("valide called on : " + input);
 		//check if entry = username
 		if (input.equals(username))
 			return false;
 		
+		System.out.println("valide called on : " + input);
 
 		//check if entry exists in array
 		for (int i = 0; i < inviteArrayAdapter.getCount(); i++)
 			if (inviteArrayAdapter.getItem(i).equals(input))
 				return false;
 		
+		System.out.println("valide called on : " + input);
 
 		//check if entry exists in userlist
 		boolean found = false;
@@ -216,11 +218,13 @@ public class CreateGameActivity extends Activity {
 			} while (userCursor.moveToNext());
 
 		}
-		
+		System.out.println("valide called on : " + input);
+
 		//if user was found in local list, return true
 		if (found)
 			return found;
-		
+		System.out.println("valide called on : " + input);
+
 		//else: check server information
 		ServerConnector connector = new ServerConnector(dbProxy);
 		if (connector.retrieveUserId(input) >= 1) {

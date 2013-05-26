@@ -52,10 +52,14 @@ public class ServerConnector {
 		} else {
 			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 			
+			System.out.println("is connected at this point: " + serverProxy.isConnected());
+			
 			//check connection
 			if (!serverProxy.isConnected())
 				return false;
-			
+						
+			System.out.println("is connected at this point: " + proxy.getUserID() + " " + invites + " " + roundCap + " " + scoreCap);
+
 			//query server
 			return serverProxy.createGame(proxy.getUserID(), invites, roundCap, scoreCap);
 		}
@@ -238,6 +242,8 @@ public class ServerConnector {
 			//retrieve id of user from server
 			int id = serverProxy.getUserId(username);
 			
+			System.out.println("retrieveUserID: " + id);
+			
 			//check connection
 			if (!serverProxy.isConnected())
 				return 0;
@@ -251,11 +257,11 @@ public class ServerConnector {
 		}
 	}
 
-	public boolean registerUser(String username,String regid) {
+	public boolean registerUser(String username,int id) {
 		if (isRobolectricTestrun) {
 			return (proxy.getDBSetter().addUser(username) > 0);
 		} else {
-			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+			/*XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 			
 			//check connection
 			if (!serverProxy.isConnected())
@@ -263,13 +269,14 @@ public class ServerConnector {
 			
 			//retrieve user id from server
 			int id = serverProxy.signupUser(username,regid);
-			
+			*/
+			long retid = 0;
 			//if id is valid, insert entry in local database
 			if (id > 0)
-				proxy.getDBSetter().addUser(id, username);
+				retid = proxy.getDBSetter().addUser(id, username);
 			
 			//return success
-			return (id > 0);
+			return (retid > 0);
 		}
 	}
 

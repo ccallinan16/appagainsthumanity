@@ -50,13 +50,15 @@ public class GameOptionsActivity extends Activity {
 		boolean valid = true;
 		
 		if (textViewScorecap.getText().length() == 0)
-			valid = false;
+			scorecap = 0;
 		else 
 			scorecap = Integer.parseInt(String.valueOf(textViewScorecap.getText()));
+		
 		if (textViewRoundcap.getText().length() == 0)
-			valid = false;
+			roundcap = 0;
 		else
 			roundcap = Integer.parseInt(String.valueOf(textViewRoundcap.getText()));
+		
 		if (scorecap < 0)
 			valid = false;
 		if (roundcap < 0)
