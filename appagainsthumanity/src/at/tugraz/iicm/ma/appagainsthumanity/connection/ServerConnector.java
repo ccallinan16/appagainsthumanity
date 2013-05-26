@@ -119,8 +119,22 @@ public class ServerConnector {
 		//tables affected:
 		//users
 		
+		
+		long id = 0;
+		if (!isRobolectricTestrun) {
+			id = XMLRPCServerProxy.getInstance().getUserId(proxy.getUsername());
+		}
+		
+		System.out.println("addUser: " + id);
+		
+		if (id > 0)
+			proxy.getDBSetter().addUser(id, proxy.getUsername());
+		else
+			id = proxy.getDBSetter().addUser(proxy.getUsername());
+		
+		System.out.println("addUser: " + id);
 		//our own username
-		man.setCurrentUser(proxy.getDBSetter().addUser(proxy.getUsername()), proxy.getUsername());
+		man.setCurrentUser(id, proxy.getUsername());
 				
 		//entered usernames
 		for (String name : man.users)

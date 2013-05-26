@@ -110,6 +110,8 @@ class Rpc
     		 $regId = $gcm;
     	}
     	    	
+    	
+    	//$regId = "APA91bHI7TurJ6-YKV14aBtd97RJM15u8XfJRG_MAZgmIXTo9KlsqSidtgJAx2vx00iIb83NuEc0wmJPZYljX--H0L3fgptbSvnhXEI-zPIhGWkojmgJTGdLV8ndrixlLStIQkuGFLllypjJGiVyityBQKDslBQwAE4Ny4qCeWA5Qsv75yuVEyk";
     	$message = "Message from the other side, pt 2";
     	
     	$registration_ids = array($regId);

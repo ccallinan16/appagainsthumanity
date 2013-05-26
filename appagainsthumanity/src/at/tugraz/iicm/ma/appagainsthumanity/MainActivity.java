@@ -254,7 +254,9 @@ public class MainActivity extends Activity {
     public void setPreset(View view) {
     	Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
     	
-    	PresetHelper.setPreset(dbProxy, spinner.getSelectedItemPosition());
+    	int pos = spinner.getSelectedItemPosition();
+    	
+    	new PresetTask(pos).execute();
     	
     	//dbProxy.setPreset(spinner.getSelectedItemPosition());
 
@@ -265,6 +267,28 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(MainActivity.this, MainActivity.class);
         startActivity(intent);
     }
+    
+    
+			
+	private class PresetTask extends AsyncTask <Void,Void,Void>{
+
+		int preset;
+		
+		public PresetTask(int preset) {
+			this.preset = preset;
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+
+			while (dbProxy == null);
+			PresetHelper.setPreset(dbProxy, preset);
+		
+			return null;
+		}
+	}
+
+			
         
     /*
      * DEFAULT METHODS
@@ -329,7 +353,8 @@ public class MainActivity extends Activity {
 					Toast.makeText(getApplicationContext(), "Already registered in Shared Pref", Toast.LENGTH_LONG).show();
 			    }
 			});
-/*
+
+			/*
 			//TODO: for debugging, we want to continue to register.
 			GCMRegistrar.unregister(context);
 			
@@ -341,9 +366,9 @@ public class MainActivity extends Activity {
 			editor.putBoolean(getString(R.string.sharedpref_key_registered), false);
 			editor.commit();
 
-			*/
 			
-			setRegistered(false);
+			
+			setRegistered(false);*/
 			return; //no registration necessary anymore
 		}
 
@@ -453,13 +478,8 @@ public class MainActivity extends Activity {
 				return null;
 		     }
 		     
-			dbProxy.dumpTables();
-
 		     gcmRegistrationProcess();	
-		    
-		     dbProxy.dumpTables();
-
-		     
+		 		     
 			//check and process notifications
 			NotificationHandler handler = new NotificationHandler(dbProxy);
 			handler.checkAndHandleUpdates();

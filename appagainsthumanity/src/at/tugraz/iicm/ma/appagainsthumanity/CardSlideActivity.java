@@ -158,7 +158,7 @@ public class CardSlideActivity extends FragmentActivity {
 
 	private void initSlider()
 	{
-		
+		System.out.println("initSlider");
 		  boolean selectable = false;
 		  
 		  if (context == ViewContext.SELECT_BLACK || 
@@ -173,6 +173,8 @@ public class CardSlideActivity extends FragmentActivity {
 		  IDToCardTranslator dealer = new IDToCardTranslator(this);
 		  
 		  List<Integer> cardIDs = new ArrayList<Integer>();
+
+			System.out.println("list: " + cardIDs);
 
 		  //what if server connector returns an empty list?
 		  
@@ -201,6 +203,9 @@ public class CardSlideActivity extends FragmentActivity {
 			  break;
 			  default:
 		  }
+		  
+			System.out.println("list: " + cardIDs);
+
 		  		  
 		  //TODO: do something else for confirm views
 		  CardFragmentAdapter pageAdapter = new CardFragmentAdapter(
