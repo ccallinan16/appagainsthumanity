@@ -16,11 +16,10 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 	
 	protected static final String KEY_NOTIFICATION_TYPE = "notification_type";
 	protected static final String KEY_NOTIFICATION_ID = "notification_id";
-	UpdateTask	updateTask;
-
+	DBProxy proxy;
+	
 	public MyGCMBroadcastReceiver(DBProxy proxy) {
-		updateTask = new UpdateTask(proxy);
-
+		this.proxy = proxy;
 	}
 	
 	@Override
@@ -31,7 +30,8 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 		// Waking up mobile if it is sleeping
 		WakeLocker.acquire(context.getApplicationContext());
 		
-		updateTask.execute();
+		//TODO: possibly just do a background thread!
+		new UpdateTask(proxy).execute();
 		
 		// Showing received message
 //		lblMessage.append(newMessage + "\n");			
