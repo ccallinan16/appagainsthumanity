@@ -29,42 +29,49 @@ public class DebugPrinter {
 			projection,null,new String[]{},null,null,null);
 		System.out.println(DatabaseUtils.dumpCursorToString(c));
 		
+		c.close();
 		//table participation
 		System.out.println("table " + DBContract.Participation.TABLE_NAME);
 		c = db.query(DBContract.Participation.TABLE_NAME,
 			projection,null,new String[]{},null,null,null);
 		DatabaseUtils.dumpCursor(c);
-		
+		c.close();
+
 		//table user
 		System.out.println("table " + DBContract.User.TABLE_NAME);
 		c = db.query(DBContract.User.TABLE_NAME,
 			projection,null,new String[]{},null,null,null);
 		DatabaseUtils.dumpCursor(c);
-		
+		c.close();
+
 		//table turn
 		System.out.println("table " + DBContract.Turn.TABLE_NAME);
 		c = db.query(DBContract.Turn.TABLE_NAME,
 			projection,null,new String[]{},null,null,null);
 		DatabaseUtils.dumpCursor(c);
-		
+		c.close();
+
 		//table played_white_card
 		System.out.println("table " + DBContract.PlayedWhiteCard.TABLE_NAME);
 		c = db.query(DBContract.PlayedWhiteCard.TABLE_NAME,
 			projection,null,new String[]{},null,null,null);
 		DatabaseUtils.dumpCursor(c);
-		
+		c.close();
+
 		//table dealt_white_card
 		System.out.println("table " + DBContract.DealtWhiteCard.TABLE_NAME);
 		c = db.query(DBContract.DealtWhiteCard.TABLE_NAME,
 			projection,null,new String[]{},null,null,null);
 		DatabaseUtils.dumpCursor(c);
-		
+		c.close();
+
 		//table dealt_black_card
 		System.out.println("table " + DBContract.DealtBlackCard.TABLE_NAME);
 		c = db.query(DBContract.DealtBlackCard.TABLE_NAME,
 			projection,null,new String[]{},null,null,null);
 		DatabaseUtils.dumpCursor(c);
-		
+		c.close();
+
 		System.out.println("END DATABASE DUMP");
 	}
 	
