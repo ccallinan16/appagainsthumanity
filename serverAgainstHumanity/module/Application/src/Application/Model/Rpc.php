@@ -154,12 +154,10 @@ class Rpc
 	{	
 		$id = $this->getUserTable()->getUserId($username);
 		
+		$user = $this->getUserTable()->getUser($id);
+		
 		//entry already exists, but we should probably add the gcmid.
-		if ($id > 0)
-		{
-			$user = $this->getUserTable()->getUser($id);
-		}
-		else
+		if ($id == 0)
 		{			
 			$user = new User();
 			$user->setId(0);

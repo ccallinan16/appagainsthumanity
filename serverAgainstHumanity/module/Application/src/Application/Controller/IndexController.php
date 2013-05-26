@@ -53,7 +53,7 @@ class IndexController extends AbstractActionController
       //print_r( $notificationHandler->getUpdate(155));
       //echo $server->handle();
       
-		echo $gcm->send_notification("hello","blub");
+		//echo $gcm->send_notification("hello","blub");
 		return $this->getResponse();
     }
     

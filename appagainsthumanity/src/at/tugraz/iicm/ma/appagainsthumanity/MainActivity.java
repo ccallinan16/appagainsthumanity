@@ -118,17 +118,7 @@ public class MainActivity extends Activity {
 		} else {
 			username = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getString(getString(R.string.sharedpreferences_key_username), "");
 		}
-		
-		//populate database presets
-		Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
-		// Create an ArrayAdapter using the string array and a default spinner layout
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, DBProxy.PRESETS);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
-		
-		//bind gameListView
-		gameListView = (ListView) findViewById(R.id.game_list_view);
-//        bar = (ProgressBar) findViewById(R.id.progressBar);
+
 	}
 	
 	public void setUsername(String name)
@@ -154,7 +144,6 @@ public class MainActivity extends Activity {
 		CardCollection.instance.setTranslator(
 				new IDToCardTranslator(this.getApplicationContext()));
 		
-
 		//check if device is capable of gcm
 		checkGCMRequirements();
 		
@@ -294,8 +283,9 @@ public class MainActivity extends Activity {
 	 * 3. check if already registered
 	 * 4. if not -> register.
 	 */
-	private void handleRegistrationWithGCM()
-	{	
+	private boolean checkGCMRequirements()
+	{
+		
 		// Make sure the device has the proper dependencies.
 		GCMRegistrar.checkDevice(this);
 
@@ -303,53 +293,10 @@ public class MainActivity extends Activity {
 		// while developing the app, then uncomment it when it's ready.
 		GCMRegistrar.checkManifest(this);
 
-		registerReceiver(mHandleMessageReceiver, new IntentFilter(
-				DISPLAY_MESSAGE_ACTION));
-		
-		// Get GCM registration id
-		final String regId = GCMRegistrar.getRegistrationId(this);
-
-		// Check if regid already presents
-		if (regId.equals("")) {
-			// Registration is not present, register now with GCM			
-			GCMRegistrar.register(this, SENDER_ID);
-		} else {
-			// Device is already registered on GCM
-			if (GCMRegistrar.isRegisteredOnServer(this)) {
-				// Skips registration.				
-				Toast.makeText(getApplicationContext(), "Already registered with GCM", Toast.LENGTH_LONG).show();
-				ServerUtilities.unregister(this,regId);
-			} else {
-				// Try to register again, but not in the UI thread.
-				// It's also necessary to cancel the thread onDestroy(),
-				// hence the use of AsyncTask instead of a raw thread.
-				final Context context = this;
-				// Asyntask
-				mRegisterTask = new AsyncTask<Void, Void, Void>() {
-
-					@Override
-					protected Void doInBackground(Void... params) {
-						// Register on our server
-						// On server creates a new user
-				//		XMLRPCServerProxy.getInstance().signupUser(username, regId);
-
-						ServerUtilities.register(context, username, null, regId);
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(Void result) {
-						mRegisterTask = null;
-					}
-
-				};
-				mRegisterTask.execute(null, null, null);
-			}
-		}
-
-
+		return true;
 	}
-	
+
+		
 	/**
 	 * Receiving push messages
 	 * */
@@ -477,7 +424,7 @@ public class MainActivity extends Activity {
 	    	System.out.println("3");
 
 	    	 XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
-		    	System.out.println("4");
+		    System.out.println("4 " + serverProxy.isConnected());
 
 		     if (!serverProxy.isConnected())
 		     {
@@ -486,8 +433,8 @@ public class MainActivity extends Activity {
 						Toast.makeText(MainActivity.this, getString(R.string.main_toast_connectionerror), Toast.LENGTH_SHORT).show();
 					    }
 					});
+				return null;
 		     }
-		    	System.out.println("6");
 
 		     gcmRegistrationProcess();
 		     
