@@ -222,11 +222,13 @@ public class SetterProxy {
 		long game_id = -1;
 		long user_id = -1;
 	    	    
-	    if (cursor != null && cursor.getCount() > 0 && cursor.getColumnCount() > 1)
+	    if (cursor != null)
 	    {
-		    cursor.moveToFirst();
-		    game_id = cursor.getLong(0);
-		    user_id = cursor.getLong(1);
+		    if(cursor.moveToFirst() && cursor.getColumnCount() > 1)
+		    {
+			    game_id = cursor.getLong(0);
+			    user_id = cursor.getLong(1);
+		    }
 		    cursor.close();    
 	    }
 		
@@ -295,10 +297,11 @@ public class SetterProxy {
 			Cursor c = db.getWritableDatabase().query(tblName, new String[] { idCol }, 
 					query, args, null,null,null);
 			
-		    if (c != null && c.getCount() > 0)
+		    if (c != null)
 		    {
-			    c.moveToFirst();
-			    id = c.getInt(0);
+		    	if (c.moveToFirst())
+				    id = c.getInt(0);
+		    	
 			    c.close();    
 		    }
 		}

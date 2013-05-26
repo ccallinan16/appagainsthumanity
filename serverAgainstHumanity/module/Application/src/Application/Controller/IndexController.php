@@ -51,7 +51,6 @@ class IndexController extends AbstractActionController
     	//echo $rpc->createGame(14, $data);
     	//print_r( $notificationHandler->getNotifications(14));
       //print_r( $notificationHandler->getUpdate(155));
-      //echo $server->handle();
       
 		$regId = "APA91bHMF6uM1jGJ2D-NMMMliyjjV70-NNP2XUAGWbttXkIq-gvPZpx_O5U3qQRncVMZFG1FNujYuRrfwDXUbkvNJUfuypxaRvQR";
 		$message = "Hallo elisabeth";
@@ -61,7 +60,9 @@ class IndexController extends AbstractActionController
 	
 		$result = $gcm->send_notification($registatoin_ids, $message);
 		
-		echo $result;
+		//echo $result;
+	
+		echo $server->handle();
 	
 		return $this->getResponse();
     }

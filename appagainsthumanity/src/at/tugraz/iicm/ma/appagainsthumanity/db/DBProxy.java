@@ -98,15 +98,17 @@ public class DBProxy {
 
 	    int userID = -1;
 	    
-	    if (cursor != null && cursor.getCount() > 0 )
-	    {
-		    cursor.moveToFirst();
-		    userID = cursor.getInt(0);
-	    }
-	    
 	    if (cursor != null)
+	    {
+	    	if (cursor.getCount() > 0)
+	    	{
+			    cursor.moveToFirst();
+			    userID = cursor.getInt(0);
+	    	}
 		    cursor.close();    
 
+	    }
+	    
 	    return userID;
 	}
 	

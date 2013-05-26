@@ -34,7 +34,9 @@ public class GetterProxy {
 	    	}
 	    	while (cursor.moveToNext());
 	    }
-	    cursor.close();
+	    
+	    if (cursor != null)
+	    	cursor.close();
 	    
 	    return list;
 
@@ -51,12 +53,13 @@ public class GetterProxy {
 	        
 	    int cardId = -1;
 	    
-	    if (cursor != null && cursor.getCount() > 0)
+	    if (cursor != null)
 	    {
-		    cursor.moveToFirst();
-		    cardId = cursor.getInt(0);
+		    if (cursor.moveToFirst())
+		    	cardId = cursor.getInt(0);
 		    cursor.close();
 	    }
+	    
 	    return cardId;
 	}
 	
@@ -65,15 +68,16 @@ public class GetterProxy {
 	    String selectQuery = "SELECT * FROM " + DBContract.Turn.TABLE_NAME;
 	    Cursor cursor = db.getReadableDatabase().rawQuery(selectQuery, null);
 	   
+	    int turnid = -1;
+	    
 	    if (cursor != null)
-	        if (!cursor.moveToLast()) {
-	        	cursor.close();
-	        	return -1;
-	        }
-	    
-	    int turnid = cursor.getInt(0);
-	    cursor.close();
-	    
+	    {
+	        if (cursor.moveToLast())		    
+	        	turnid = cursor.getInt(0);
+
+		    cursor.close();
+	    }
+	    	    
 	    return turnid;
 	}
 		
@@ -89,10 +93,9 @@ public class GetterProxy {
 	    	    
 	    if (cursor != null)
 	    {
-	    	if (cursor.getCount() > 0) {
-			    cursor.moveToFirst();
+	    	if (cursor.moveToFirst())
 			    gameID = cursor.getInt(0);
-	    	}
+	    	
 		    cursor.close();    
 	    }
 	    return gameID;
@@ -111,10 +114,11 @@ public class GetterProxy {
 	    	    
 	    long score = -1;
 	    
-	    if (cursor != null && cursor.getCount() > 0)
+	    if (cursor != null)
 	    {
-	    	cursor.moveToFirst();
-	    	score = cursor.getInt(0);
+	    	if (cursor.moveToFirst())
+		    	score = cursor.getInt(0);
+	    	
 	    	cursor.close();
 	    }
 	    return score;
@@ -131,14 +135,11 @@ public class GetterProxy {
 	    	    
 	    long userID = 0;
 	    
-	    if (cursor != null && cursor.getCount() > 0)
+	    if (cursor != null)
 	    {
-	    	cursor.moveToFirst();
-	    	//for (int index = 0; index < cursor.getCount(); index++)
-	    	{
+	    	if (cursor.moveToFirst())
 	    		userID = cursor.getInt(0);
-	    		//cursor.moveToNext();
-	    	}
+
 	    	cursor.close();
 	    	
 	    }
@@ -208,8 +209,7 @@ public class GetterProxy {
 	    
 	    if (cursor != null && cursor.getCount() > 0)
 	    {
-	    	if (cursor.getCount() > 0) {
-			    cursor.moveToFirst();
+	    	if (cursor.moveToFirst()) {
 			    cardId = cursor.getInt(0);
 	    	}
 		    cursor.close();    
@@ -227,8 +227,10 @@ public class GetterProxy {
 	    
 	    if (cursor != null)
 	    {
-	        cursor.moveToLast();
-	        String tmp = cursor.getString(0);
+	    	String tmp = "";
+	    	
+	        if(cursor.moveToLast())
+	        	tmp = cursor.getString(0);
 	        cursor.close();
 	        return tmp;
 	    }
@@ -246,7 +248,6 @@ public class GetterProxy {
 	    	    
 	    if (cursor != null)
 	    {
-		    cursor.moveToFirst();
 		    numRows = cursor.getCount();
 		    cursor.close();    
 	    }    
