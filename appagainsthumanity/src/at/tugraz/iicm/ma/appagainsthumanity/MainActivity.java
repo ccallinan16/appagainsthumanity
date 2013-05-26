@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -185,30 +186,28 @@ public class MainActivity extends Activity {
 	
     @Override
     protected void onStop() {
+		if (asyncTask != null) {
+			asyncTask.cancel(true);
+		}
     	try {
-    		super.onStop();
     		if (this.gamelistCursor != null){
     			this.gamelistCursor.close();
     			this.gamelistCursor = null;
     		}
-
     		if (this.dbProxy != null) {
     			this.dbProxy.onStop();
     			this.dbProxy = null;
     		}
+			unregisterReceiver(mHandleMessageReceiver);
     	} catch (Exception error) {
         /** Error Handler Code **/
     	}// end try/catch (Exception error)
+		super.onStop();
     }
 
    @Override
 	protected void onDestroy() {
-		
-		if (asyncTask != null) {
-			asyncTask.cancel(true);
-		}
 		try {
-			unregisterReceiver(mHandleMessageReceiver);
 			GCMRegistrar.onDestroy(this);
 		} catch (Exception e) {
 			//bug in gcm, not our fault.
@@ -465,9 +464,13 @@ public class MainActivity extends Activity {
 			// Check if Internet present
 			if (!cd.isConnectingToInternet()) {
 				// Internet Connection is not present
-				AlertDialogManager.showAlertDialog(MainActivity.this,
-						"Internet Connection Error",
-						"Please connect to working Internet connection", false);
+				runOnUiThread(new Runnable() {
+					public void run() {
+						AlertDialogManager.showAlertDialog(MainActivity.this,
+								"Internet Connection Error",
+								"Please connect to working Internet connection", false);
+					    }
+				});
 				// stop executing code by return
 				return false;
 			}
