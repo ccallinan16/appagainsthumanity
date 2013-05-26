@@ -1,9 +1,12 @@
 package org.xmlrpc.android;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
@@ -166,6 +169,11 @@ AuthScope.ANY_REALM),
 	@SuppressWarnings("unchecked")
 	public Object callEx(String method, Object[] params) throws XMLRPCException {
 		try {
+			//get and consume previous entity.
+			/*HttpEntity oldent = postMethod.getEntity();
+			if (oldent != null)
+				oldent.consumeContent();*/
+			
 			// prepare POST body
 			String body = methodCall(method, params);
 
@@ -190,11 +198,13 @@ AuthScope.ANY_REALM),
 			// setup pull parser
 			XmlPullParser pullParser = XmlPullParserFactory.newInstance().newPullParser();
 			entity = response.getEntity();
-			Reader reader = new InputStreamReader(new BufferedInputStream(entity.getContent()));
+						
 // for testing purposes only
-// reader = new StringReader("<?xml version='1.0'?><methodResponse><params><param><value>\n\n\n</value></param></params></methodResponse>");
+			//Reader reader = new StringReader("<?xml version='1.0'?><methodResponse><params><param><value>\n\n\n</value></param></params></methodResponse>");	
+						
+			Reader reader = new InputStreamReader(new BufferedInputStream(entity.getContent()));		
 			pullParser.setInput(reader);
-			
+						
 			// lets start pulling...
 			pullParser.nextTag();
 			pullParser.require(XmlPullParser.START_TAG, null, Tag.METHOD_RESPONSE);

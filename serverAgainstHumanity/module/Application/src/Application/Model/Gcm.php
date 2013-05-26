@@ -14,13 +14,13 @@ class Gcm {
     /**
      * Sending Push Notification
      */
-    public function send_notification($registatoin_ids, $message) {
+    public function send_notification($registration_ids, $message) {
  
         // Set POST variables
         $url = 'https://android.googleapis.com/gcm/send';
  
         $fields = array(
-            'registration_ids' => $registatoin_ids,
+            'registration_ids' => $registration_ids,
             'data' => $message,
         );
  
@@ -51,7 +51,6 @@ class Gcm {
  
         // Close connection
         curl_close($ch);
-        echo $result;
     }
  
 }

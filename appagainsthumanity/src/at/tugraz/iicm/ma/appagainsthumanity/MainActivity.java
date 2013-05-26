@@ -161,8 +161,6 @@ public class MainActivity extends Activity {
 		//register the receiver for GCM events
 		registerReceiver(mHandleMessageReceiver, new IntentFilter(
 				DISPLAY_MESSAGE_ACTION));
-
-		
 		
 		//prepare xmlrpc connection
 		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));

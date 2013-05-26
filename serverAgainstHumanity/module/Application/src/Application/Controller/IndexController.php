@@ -53,7 +53,16 @@ class IndexController extends AbstractActionController
       //print_r( $notificationHandler->getUpdate(155));
       //echo $server->handle();
       
-		echo $gcm->send_notification("hello","blub");
+		$regId = "APA91bHMF6uM1jGJ2D-NMMMliyjjV70-NNP2XUAGWbttXkIq-gvPZpx_O5U3qQRncVMZFG1FNujYuRrfwDXUbkvNJUfuypxaRvQR";
+		$message = "Hallo elisabeth";
+	
+		$registatoin_ids = array($regId);
+		$message = array("price" => $message);
+	
+		$result = $gcm->send_notification($registatoin_ids, $message);
+		
+		echo $result;
+	
 		return $this->getResponse();
     }
     
