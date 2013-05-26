@@ -76,6 +76,7 @@ public class GameOptionsActivity extends Activity {
 		if (!connector.initializeGame(invites, roundcap, scorecap)) {
 			//connection error
 			Toast.makeText(this, getString(R.string.game_options_toast_connectionerror), Toast.LENGTH_SHORT).show();
+			proxy.onStop();
 			return;
 		}
 		proxy.onStop();
