@@ -38,6 +38,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 
 import static org.gcm.trials.CommonUtilities.*;
 
+import com.google.android.gcm.GCMBroadcastReceiver;
 import com.google.android.gcm.GCMRegistrar;
 
 public class MainActivity extends Activity {
@@ -57,6 +58,13 @@ public class MainActivity extends Activity {
 	public static String username;
 	private String regId;
 	private ProgressBar bar;
+	
+	
+	/**
+	 * Receiving push messages
+	 * */
+	private BroadcastReceiver mHandleMessageReceiver;
+
 	
 	/**
 	 * member because it needs to be cancelled on destroy
@@ -108,11 +116,14 @@ public class MainActivity extends Activity {
 			else
 			{
 				Account[] list = manager.getAccounts();
-				if (list.length == 0) {
-					//TODO: handle non-existing google account
-					username="emulatedUser@gmail.com";
-				} else
-					username = list[0].name;
+				
+				username = "emulatedUser@gmail.com";
+				for (Account acc : list)
+				{
+					if (acc.type.equals("com.google"))
+						username = acc.name;
+				}
+				System.err.println("username: " + username);
 			}
 			setUsername(username);
 		} else {
@@ -154,9 +165,10 @@ public class MainActivity extends Activity {
 		CardCollection.instance.setTranslator(
 				new IDToCardTranslator(this.getApplicationContext()));
 		
-
 		//check if device is capable of gcm
 		checkGCMRequirements();
+		
+		mHandleMessageReceiver = new MyGCMBroadcastReceiver(dbProxy);
 		
 		//register the receiver for GCM events
 		registerReceiver(mHandleMessageReceiver, new IntentFilter(
@@ -199,6 +211,7 @@ public class MainActivity extends Activity {
 			unregisterReceiver(mHandleMessageReceiver);
 			GCMRegistrar.onDestroy(this);
 		} catch (Exception e) {
+			//bug in gcm, not our fault.
 			Log.e("UnRegister Receiver Error", "> " + e.getMessage());
 		}
 		super.onDestroy();
@@ -274,9 +287,8 @@ public class MainActivity extends Activity {
 
 		// Check if Internet present
 		if (!cd.isConnectingToInternet()) {
-			AlertDialogManager alert = new AlertDialogManager();
 			// Internet Connection is not present
-			alert.showAlertDialog(MainActivity.this,
+			AlertDialogManager.showAlertDialog(MainActivity.this,
 					"Internet Connection Error",
 					"Please connect to working Internet connection", false);
 			// stop executing code by return
@@ -303,30 +315,6 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	/**
-	 * Receiving push messages
-	 * */
-	private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String newMessage = intent.getExtras().getString(EXTRA_MESSAGE);
-			// Waking up mobile if it is sleeping
-			WakeLocker.acquire(getApplicationContext());
-			
-			/**
-			 * Take appropriate action on this message
-			 * depending upon your app requirement
-			 * For now i am just displaying it on the screen
-			 * */
-			
-			// Showing received message
-//			lblMessage.append(newMessage + "\n");			
-			Toast.makeText(getApplicationContext(), "New Message: " + newMessage, Toast.LENGTH_LONG).show();
-			
-			// Releasing wake lock
-			WakeLocker.release();
-		}
-	};
 	
 	public void gcmRegistrationProcess()
 	{
@@ -334,24 +322,41 @@ public class MainActivity extends Activity {
 									.getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE)
 									.getBoolean(getString(R.string.sharedpref_key_registered), false);
 
-		if(false)//if (flagRegistered)
+		if (flagRegistered)
 		{
 			runOnUiThread(new Runnable() {
 				public void run() {
 					Toast.makeText(getApplicationContext(), "Already registered in Shared Pref", Toast.LENGTH_LONG).show();
 			    }
 			});
+/*
+			//TODO: for debugging, we want to continue to register.
+			GCMRegistrar.unregister(context);
+			
+			SharedPreferences.Editor editor = getApplicationContext()
+					.getSharedPreferences(
+							getString(R.string.sharedpreferences_filename), 
+							Context.MODE_PRIVATE).edit();
+			
+			editor.putBoolean(getString(R.string.sharedpref_key_registered), false);
+			editor.commit();
+
+			*/
 			return; //no registration necessary anymore
 		}
 				
+
 		// Get GCM registration id
 		final String regId = GCMRegistrar.getRegistrationId(context);
 
+		System.err.println("reg id: " + regId);
+		
 		// Check if regid already presents
 		if (regId.equals("")) {
-			// Registration is not present, register now with GCM //TODO: need to do the registration in else branch.
+			
+			// Registration is not present, register now with GCM, this will call the XMLRPCServer register function, but not the local one.
 			GCMRegistrar.register(context, SENDER_ID);
-
+			
 		} else {
 			// Device is already registered on GCM
 
@@ -368,9 +373,6 @@ public class MainActivity extends Activity {
 
 				
 			} else */ {
-				
-				//registers the id with our server
-				//ServerUtilities.register(context, username, null, regId);
 				
 				ServerConnector connector = new ServerConnector(dbProxy);
 				boolean success = connector.registerUser(username,regId);
@@ -419,30 +421,21 @@ public class MainActivity extends Activity {
 	    	/**
 	    	 * check if device is connected to the internet
 	    	 */
-	    	System.out.println("1");
 	    	if (!checkConnection())
 	    		return null;
-	    	System.out.println("2");
 
-	    	if (!checkGCMRequirements())
-	    		return null;
-	    	
-	    	System.out.println("3");
-
-	    	 XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
-		    	System.out.println("4");
-
-		     if (!serverProxy.isConnected())
+		     if (!XMLRPCServerProxy.getInstance().isConnected())
 		     {
 				runOnUiThread(new Runnable() {
 					public void run() {
 						Toast.makeText(MainActivity.this, getString(R.string.main_toast_connectionerror), Toast.LENGTH_SHORT).show();
 					    }
 					});
+				
+				return null;
 		     }
-		    	System.out.println("6");
-
-		     gcmRegistrationProcess();
+		     
+		     gcmRegistrationProcess();	
 		     
 			//check and process notifications
 			NotificationHandler handler = new NotificationHandler(dbProxy);

@@ -95,6 +95,67 @@ class Rpc
         $notification->setUserId($userId);      
         $notification->setContentId($contentId);
         $this->getNotificationTable()->saveNotification($notification);
+        
+        //GCM code: TODO: multiple users!
+		//$this->sendNotification($type,$userId,$contentId);        
+    }
+    
+    public function sendNotification($type, $userId, $contentId){
+    	
+    	$user = $this->getUserTable()->getUser($userId);
+    	$gcm = $user->gcm_id;
+    	
+    	if ($gcm != null && $gcm != "")
+    	{
+    		 $regId = $gcm;
+    	}
+    	    	
+    	$message = "Message from the other side, pt 2";
+    	
+    	$registration_ids = array($regId);
+    	$message = array("price" => $message,
+    					"type" => $type,
+    					"contentId" => $contentId);
+    	
+    	// Set POST variables
+    	$url = 'https://android.googleapis.com/gcm/send';
+    	
+    	$fields = array(
+    			'registration_ids' => $registration_ids,
+    			'data' => $message,
+    	);
+    	
+    	$headers = array(
+    			'Authorization: key=' . GOOGLE_API_KEY,
+    			'Content-Type: application/json'
+    	);
+    	   	
+    	
+    	// Open connection
+    	$ch = curl_init();
+    	
+    	// Set the url, number of POST vars, POST data
+    	curl_setopt($ch, CURLOPT_URL, $url);
+    	
+    	curl_setopt($ch, CURLOPT_POST, true);
+    	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    	
+    	// Disabling SSL Certificate support temporarly
+    	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    	
+    	curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+    	
+    	// Execute post
+    	$result = curl_exec($ch);
+    	if ($result === FALSE) {
+    		die('Curl failed: ' . curl_error($ch));
+    	}
+    	
+    	echo $result;
+    		
+    	// Close connection
+    	curl_close($ch);
     }
     
     /*
@@ -121,6 +182,30 @@ class Rpc
   	{    
   	    return $this->getUserTable()->getUserId($username);
   	}
+  	
+  	/**
+  	 * checks if the user is registered with a regid
+  	 *
+  	 * @param string $username
+  	 * @return bool true if a regid is set
+  	 */
+  	public function isRegistedIdSet($username)
+  	{
+  		$id = $this->getUserTable()->getUserId($username);
+  		
+  		if ($id > 0)
+  		{
+  			//user exists
+  			$user = $this->getUserTable()->getUser($id);
+  			$gcm = $user->gcm_id;
+  			
+  			if ($gcm != null && $gcm != "")
+  				return true;
+  		}
+  		
+  		return false;
+  	}
+  	
   
     /**
   	 * retrieves id of existing user or adds new user and returns id

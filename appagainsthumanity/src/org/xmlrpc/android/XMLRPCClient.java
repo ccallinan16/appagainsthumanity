@@ -1,12 +1,9 @@
 package org.xmlrpc.android;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
@@ -19,8 +16,14 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.xmlpull.v1.XmlPullParser;
@@ -91,7 +94,18 @@ public class XMLRPCClient extends XMLRPCCommon {
 		// two second delay between sending http POST request and POST body 
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);
-		client = new DefaultHttpClient();
+		
+		/**
+		 * make threadsafe for asynctask
+		 */
+		SchemeRegistry schemeRegistry = new SchemeRegistry();
+		schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+		final SSLSocketFactory sslSocketFactory = SSLSocketFactory.getSocketFactory();
+		schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
+		ClientConnectionManager cm = new ThreadSafeClientConnManager(httpParams, schemeRegistry);
+		DefaultHttpClient httpclient = new DefaultHttpClient(cm, httpParams);
+		client = new DefaultHttpClient(cm, httpParams);
+
 	}
 	
 	/**
@@ -168,19 +182,14 @@ AuthScope.ANY_REALM),
 	 */
 	@SuppressWarnings("unchecked")
 	public Object callEx(String method, Object[] params) throws XMLRPCException {
-		try {
-			//get and consume previous entity.
-			/*HttpEntity oldent = postMethod.getEntity();
-			if (oldent != null)
-				oldent.consumeContent();*/
-			
+		try {	
 			// prepare POST body
 			String body = methodCall(method, params);
 
 			// set POST body
 			HttpEntity entity = new StringEntity(body);
 			postMethod.setEntity(entity);
-
+			
 			//Log.d(Tag.LOG, "ros HTTP POST");
 			// execute HTTP POST request
 			HttpResponse response = client.execute(postMethod);
@@ -202,7 +211,7 @@ AuthScope.ANY_REALM),
 // for testing purposes only
 			//Reader reader = new StringReader("<?xml version='1.0'?><methodResponse><params><param><value>\n\n\n</value></param></params></methodResponse>");	
 						
-			Reader reader = new InputStreamReader(new BufferedInputStream(entity.getContent()));		
+			Reader reader = new InputStreamReader(new BufferedInputStream(entity.getContent(), 8192));		
 			pullParser.setInput(reader);
 						
 			// lets start pulling...
@@ -240,6 +249,7 @@ AuthScope.ANY_REALM),
 			}
 		} catch (XMLRPCException e) {
 			// catch & propagate XMLRPCException/XMLRPCFault
+			
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();

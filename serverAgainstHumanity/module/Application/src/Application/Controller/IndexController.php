@@ -24,7 +24,7 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
     	$server = new Server();
-    	$gcm = new GCM();
+    	//$gcm = new GCM();
     	$rpc = new Rpc($this->getServiceLocator());
     	$server->setClass($rpc, IndexController::NAMESPACE_RPC);
 	$notificationHandler = new NotificationHandler($this->getServiceLocator());
@@ -51,17 +51,7 @@ class IndexController extends AbstractActionController
     	//echo $rpc->createGame(14, $data);
     	//print_r( $notificationHandler->getNotifications(14));
       //print_r( $notificationHandler->getUpdate(155));
-      
-		$regId = "APA91bHMF6uM1jGJ2D-NMMMliyjjV70-NNP2XUAGWbttXkIq-gvPZpx_O5U3qQRncVMZFG1FNujYuRrfwDXUbkvNJUfuypxaRvQR";
-		$message = "Hallo elisabeth";
-	
-		$registatoin_ids = array($regId);
-		$message = array("price" => $message);
-	
-		$result = $gcm->send_notification($registatoin_ids, $message);
-		
-		//echo $result;
-	
+      	
 		echo $server->handle();
 	
 		return $this->getResponse();

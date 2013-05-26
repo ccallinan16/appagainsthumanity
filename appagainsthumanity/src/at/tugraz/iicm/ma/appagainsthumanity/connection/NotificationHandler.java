@@ -56,29 +56,36 @@ public class NotificationHandler {
 			
 			System.out.println("got notification of type: " + type + " with id: " + notificationId);
 			
-			switch (type) {
-			case NOTIFICATION_NEW_GAME:
-				callbackNewGame(notificationId);
-				break;
-			case NOTIFICATION_NEW_ROUND:
-				callbackNewRound(notificationId);
-				break;
-			case NOTIFICATION_NEW_ROUND_CZAR:
-				callbackNewRoundCzar(notificationId);
-				break;	
-			case NOTIFICATION_CHOSEN_BLACK:
-				callbackChosenBlack(notificationId);
-				break;
-			case NOTIFICATION_CHOSEN_WHITE:
-				callbackChosenWhite(notificationId);
-				break;
-			case NOTIFICATION_CHOSEN_WINNER:
-				callbackChosenWinner(notificationId);
-				break;
-			}
+			handleUpdate(type,notificationId);
 		}
 	}
 
+	public void handleUpdate(int type, int notificationId) {
+		switch (type) {
+		case NOTIFICATION_NEW_GAME:
+			callbackNewGame(notificationId);
+			break;
+		case NOTIFICATION_NEW_ROUND:
+			callbackNewRound(notificationId);
+			break;
+		case NOTIFICATION_NEW_ROUND_CZAR:
+			callbackNewRoundCzar(notificationId);
+			break;	
+		case NOTIFICATION_CHOSEN_BLACK:
+			callbackChosenBlack(notificationId);
+			break;
+		case NOTIFICATION_CHOSEN_WHITE:
+			callbackChosenWhite(notificationId);
+			break;
+		case NOTIFICATION_CHOSEN_WINNER:
+			callbackChosenWinner(notificationId);
+			break;
+		}
+		
+	}
+
+	
+	
 	private void callbackChosenWinner(int notificationId) {
 
 		
@@ -202,4 +209,5 @@ public class NotificationHandler {
 												   Integer.parseInt(participation.get("user_id")), Integer.parseInt(participation.get("score")));
 		}
 	}
+
 }

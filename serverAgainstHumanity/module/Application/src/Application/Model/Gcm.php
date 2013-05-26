@@ -28,9 +28,11 @@ class Gcm {
             'Authorization: key=' . GOOGLE_API_KEY,
             'Content-Type: application/json'
         );
+        
+        
         // Open connection
         $ch = curl_init();
- 
+         
         // Set the url, number of POST vars, POST data
         curl_setopt($ch, CURLOPT_URL, $url);
  
@@ -48,7 +50,7 @@ class Gcm {
         if ($result === FALSE) {
             die('Curl failed: ' . curl_error($ch));
         }
- 
+         
         // Close connection
         curl_close($ch);
     }

@@ -13,7 +13,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 
-import static org.gcm.trials.CommonUtilities.displayMessage;
+import static org.gcm.trials.CommonUtilities.displayMessageByBroadcast;
 
 import com.google.android.gcm.GCMBaseIntentService;
  
@@ -31,7 +31,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onRegistered(Context context, String registrationId) {
         Log.i(TAG, "Device registered: regId = " + registrationId);
-        displayMessage(context, "Your device registred with GCM");
+        displayMessageByBroadcast(context, "Your device registred with GCM");
         Log.d("NAME", MainActivity.username);
         
         //this is happening twice now. 
@@ -44,8 +44,10 @@ public class GCMIntentService extends GCMBaseIntentService {
      * */
     @Override
     protected void onUnregistered(Context context, String registrationId) {
-        Log.i(TAG, "Device unregistered");
-        displayMessage(context, getString(R.string.gcm_unregistered));
+        Log.i(TAG, "Device unregistered, " + registrationId);
+        displayMessageByBroadcast(context, getString(R.string.gcm_unregistered));
+        
+		XMLRPCServerProxy.getInstance().signupUser(MainActivity.username, "");
        // ServerUtilities.unregister(context, registrationId);
     }
  
@@ -57,7 +59,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         Log.i(TAG, "Received message");
         String message = intent.getExtras().getString("price");
          
-        displayMessage(context, message);
+        displayMessageByBroadcast(context, message);
         // notifies user
         generateNotification(context, message);
     }
@@ -69,7 +71,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onDeletedMessages(Context context, int total) {
         Log.i(TAG, "Received deleted messages notification");
         String message = getString(R.string.gcm_deleted, total);
-        displayMessage(context, message);
+        displayMessageByBroadcast(context, message);
         // notifies user
         generateNotification(context, message);
     }
@@ -83,14 +85,14 @@ public class GCMIntentService extends GCMBaseIntentService {
         
         //AlertDialogManager.showErrorAlertDialog(context,errorId, false);
         
-        displayMessage(context, getString(R.string.gcm_error, errorId));
+        displayMessageByBroadcast(context, getString(R.string.gcm_error, errorId));
     }
  
     @Override
     protected boolean onRecoverableError(Context context, String errorId) {
         // log message
         Log.i(TAG, "Received recoverable error: " + errorId);
-        displayMessage(context, getString(R.string.gcm_recoverable_error,
+        displayMessageByBroadcast(context, getString(R.string.gcm_recoverable_error,
                 errorId));
         return super.onRecoverableError(context, errorId);
     }

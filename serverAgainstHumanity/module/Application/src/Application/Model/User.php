@@ -41,6 +41,10 @@ class User
     	$this->gcm_id = $gcm_id;
     }
     
+    public function getGCMID() {
+    	return $this->gcm_id;
+    }
+    
     public function __toString()
     {
     	$string = "[User: ";

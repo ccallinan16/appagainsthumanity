@@ -21,6 +21,7 @@ public class XMLRPCServerProxy extends ServerProxy{
 	private static final String FUNCTIONNAME_GETUPDATE 			= "getUpdate";
 	private static final String FUNCTIONNAME_CHOOSEBLACKCARD	= "chooseBlackCard";
 	private static final String FUNCTIONNAME_CHOOSEWHITECARD	= "chooseWhiteCard";
+	private static final String FUNCTIONNAME_ISREGISTERED 		= "isRegistedIdSet";
 	
 	private XMLRPCClient client;
     private URI uri;
@@ -53,8 +54,8 @@ public class XMLRPCServerProxy extends ServerProxy{
 	
 	@Override
 	public int signupUser(String username, String gcmid) {
-		System.out.println("XMLRPCServerProxy::signupUser called " + username);
-		try{
+		System.out.println("XMLRPCServerProxy::signupUser called " + username + " size: " + gcmid.length() + "\n" + gcmid);
+		try{ 
 			Object o = client.call(NAMESPACE_RPC + FUNCTIONNAME_REGISTERUSER, username,gcmid);
 			int id = Integer.parseInt(o.toString());
 			return id;
@@ -64,6 +65,17 @@ public class XMLRPCServerProxy extends ServerProxy{
 		}
 	}
 
+	public boolean isRegIDSet(String username) {
+		try{
+			Object o = client.call(NAMESPACE_RPC + FUNCTIONNAME_ISREGISTERED, username);
+			return Boolean.parseBoolean(o.toString());
+		} catch (XMLRPCException e) {
+			setDisconnected();
+			return false;
+		}
+	}
+
+	
 	@Override
 	public int getUserId(String username) {
 		try{
@@ -140,4 +152,5 @@ public class XMLRPCServerProxy extends ServerProxy{
 			return false;
 		}
 	}
+
 }
