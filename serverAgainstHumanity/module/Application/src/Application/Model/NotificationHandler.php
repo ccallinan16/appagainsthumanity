@@ -160,6 +160,22 @@ class NotificationHandler
       return $data;
     }
     
+    private function getChosenWinnerUpdate($user_id, $turn_id) {      
+      //fetch played white cards for turn
+      $cardData = $this->getPlayedWhiteCardTable()->getCardsOfTurn($turn_id);
+      
+      //fetch participation data
+      $turn = $this->getTurnTable()->getTurn($turn_id);
+      $participationData = $this->getParticipationTable()->getParticipationOfGame($turn->game_id);
+      
+      //prepare data array
+      $data = array();
+      $data['cards'] = $cardData;
+      $data['participation'] =  $participationData;
+      
+      return $data;
+    }
+    
     /*
      *  public rpc functions
      */
@@ -202,10 +218,11 @@ class NotificationHandler
             break;    
           case Notification::notification_chosen_white :
             $data = $this->getChosenWhiteUpdate($notification->user_id, $notification->content_id);
-            break;          
-                
-          
-          
+            break;       
+          case Notification::notification_chosen_winner :
+            $data = $this->getChosenWinnerUpdate($notification->user_id, $notification->content_id);
+            break;        
+            
           default:
             //something went wrong here..
             break;

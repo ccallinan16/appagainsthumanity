@@ -57,7 +57,7 @@ public class GamelistAdapter extends CursorAdapter {
 			thumbnail.setImageResource(R.drawable.card_black);
 			thumbnail.setOnClickListener(
 					new ChooseViewListener(activity, ViewContext.SELECT_BLACK,turn));
-		} else if (c.getLong(6) != c.getLong(7) && c.getInt(9) < (c.getInt(5) - 1) && c.getLong(8) != 0) {
+		} else if (c.getLong(6) != c.getLong(7) && c.getInt(9) < (c.getInt(5) - 1) && c.getLong(8) != 0 && c.getLong(11) == 0) {
 			//choose white card
 			thumbnail.setImageResource(R.drawable.card_white);
 			thumbnail.setOnClickListener(
@@ -66,7 +66,7 @@ public class GamelistAdapter extends CursorAdapter {
 			//choose winning card
 			thumbnail.setImageResource(R.drawable.winner);
 			thumbnail.setOnClickListener(
-					new ChooseViewListener(activity, ViewContext.SELECT_WHITE,turn));
+					new ChooseViewListener(activity, ViewContext.SELECT_WINNER,turn));
 		} else {
 			thumbnail.setImageResource(R.drawable.time);
 			thumbnail.setEnabled(false);

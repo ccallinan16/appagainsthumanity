@@ -65,13 +65,13 @@ public class TurnlistAdapter extends CursorAdapter {
 			status.setText(context.getString(R.string.game_overview_turns_text_choosewhiteblack));
 			view.setOnClickListener(
 					new ChooseViewListener(activity, ViewContext.SELECT_WHITE,c.getLong(0)));
-		} else if (username.equals(c.getString(3)) && c.getInt(5) == (c.getInt(2) - 1) && c.getInt(7) == 0) {
+		} else if (username.equals(c.getString(3)) && c.getInt(5) == (c.getInt(2) - 1) && c.getString(6) == null) {
 			//choose winning card
 			thumbnail.setImageResource(R.drawable.winner);
 			status.setText(context.getString(R.string.game_overview_turns_text_choosewinner));
 			view.setOnClickListener(
-					new ChooseViewListener(activity, ViewContext.SELECT_BLACK,c.getLong(0)));
-		} else if (c.getInt(7) == 0) {
+					new ChooseViewListener(activity, ViewContext.SELECT_WINNER,c.getLong(0)));
+		} else if (c.getString(6) != null) {
 			//show result
 			if (c.getString(6).equals(username)) {
 				thumbnail.setImageResource(R.drawable.star);

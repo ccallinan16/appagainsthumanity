@@ -27,10 +27,11 @@ public class XMLRPCServerProxy extends ServerProxy{
 	private static final String FUNCTIONNAME_GETUPDATE 			= "getUpdate";
 	private static final String FUNCTIONNAME_CHOOSEBLACKCARD	= "chooseBlackCard";
 	private static final String FUNCTIONNAME_CHOOSEWHITECARD	= "chooseWhiteCard";
+	private static final String FUNCTIONNAME_CHOOSEWINNERCARD	= "chooseWinnerCard";
 	private static final String FUNCTIONNAME_ISREGISTERED 		= "isRegistedIdSet";
 	
 	private static final String KEY_ACTION = "action";
-	private static final String KEY_UID = "userid";
+	private static final String KEY_UID    = "userid";
 	private static final String KEY_TURNID = "turnid";
 	private static final String KEY_CARDID = "cardid";
 
@@ -170,7 +171,8 @@ public class XMLRPCServerProxy extends ServerProxy{
             			b = (Boolean) client.call(NAMESPACE_RPC + function, uid, payload);
                 	}
                 	else if (  function.equals(FUNCTIONNAME_CHOOSEBLACKCARD) 
-                			|| function.equals(FUNCTIONNAME_CHOOSEWHITECARD))
+                			|| function.equals(FUNCTIONNAME_CHOOSEWHITECARD)
+                			|| function.equals(FUNCTIONNAME_CHOOSEWINNERCARD))
                 	{
                 		int cardID = (Integer) payload.get(KEY_CARDID);
                 		int turnID = (Integer) payload.get(KEY_TURNID);
@@ -234,38 +236,49 @@ public class XMLRPCServerProxy extends ServerProxy{
 	/**
 	 * this function is called directly in the ui thread, so we need to start an async task
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean selectBlackCard(int userId, int turnId, int cardId) {
-		
 		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put(KEY_UID, userId);
 		data.put(KEY_TURNID, turnId);
 		data.put(KEY_CARDID, cardId);
-		
-		data.put(KEY_UID, userId);
 		data.put(KEY_ACTION, FUNCTIONNAME_CHOOSEBLACKCARD);
-		
 		ServerActionTask task = new ServerActionTask();		
 		task.execute(data);
-				
 		return true;
 	}
 	
 	/**
 	 * this function is called directly in the ui thread, so we need to start an async task
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean selectWhiteCard(int userId, int turnId, int cardId) {
-		
 		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put(KEY_UID, userId);
 		data.put(KEY_TURNID, turnId);
 		data.put(KEY_CARDID, cardId);
-		
-		data.put(KEY_UID, userId);
 		data.put(KEY_ACTION, FUNCTIONNAME_CHOOSEWHITECARD);
-		
 		ServerActionTask task = new ServerActionTask();		
 		task.execute(data);
-
+		return true;
+	}
+	
+	/**
+	 * this function is called directly in the ui thread, so we need to start an async task
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean selectWinnerCard(int userId, int turnId, int cardId) {
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put(KEY_UID, userId);
+		data.put(KEY_TURNID, turnId);
+		data.put(KEY_CARDID, cardId);
+		data.put(KEY_ACTION, FUNCTIONNAME_CHOOSEWINNERCARD);
+		ServerActionTask task = new ServerActionTask();		
+		task.execute(data);
+		System.out.println("task executing");
 		return true;
 	}
 

@@ -469,7 +469,7 @@ class Rpc
      * @param int $card_id          
   	 * @return bool success
   	 */
-  	public function chooseWinningCard($user_id, $turn_id, $card_id)
+  	public function chooseWinnerCard($user_id, $turn_id, $card_id)
   	{                   
         //retrieve turn object
         try {

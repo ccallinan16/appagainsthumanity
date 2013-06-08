@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 10;
     public static final String DATABASE_NAME = "AppAgainstHumanity.db";
     public static final String TEST_DB_NAME = 
     		"/home/egetzner/appagainsthumanity/HumanityTest/testdata/test.db";

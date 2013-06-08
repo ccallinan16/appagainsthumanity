@@ -34,6 +34,7 @@ return array(
                         'action'        => 'index',
                     ),
                 ),
+
                 'may_terminate' => true,
                 'child_routes' => array(
                     'default' => array(
@@ -90,6 +91,7 @@ return array(
             'application/server/index' => __DIR__ . '/../view/application/server/index.phtml',
             'application/client/index' => __DIR__ . '/../view/application/client/index.phtml',
             'application/client/creategame' => __DIR__ . '/../view/application/client/index.phtml',
+            'application/client/choosecard' => __DIR__ . '/../view/application/client/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ),

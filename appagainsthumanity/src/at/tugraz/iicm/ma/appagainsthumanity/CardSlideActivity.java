@@ -73,15 +73,11 @@ public class CardSlideActivity extends FragmentActivity {
     
     @Override
     protected void onStop() {
-    	
-    	
     	try {
     		super.onStop();
-
     		if (this.proxy != null) {
     			this.proxy.onStop();
     			this.proxy = null;
-
     		}
     	} catch (Exception error) {
         /** Error Handler Code **/
@@ -89,62 +85,54 @@ public class CardSlideActivity extends FragmentActivity {
     }
     	
 	private void initButtons() {
-
-		
 		if (	context == ViewContext.SELECT_BLACK ||
 				context == ViewContext.SELECT_WHITE ||
-				context == ViewContext.SELECT_WINNER)
-		{
-		      LinearLayout btns = (LinearLayout) findViewById(R.id.footer);
-		      btns.setVisibility(View.GONE);
-		      
-
-		}
-		else
-		{
-		      Button okButton = (Button) findViewById(R.id.okButton);
-		      
-		      switch (context)
-		      {
-		      case CONFIRM_WHITE:
-		      case CONFIRM_BLACK:
-		    	  okButton.setText(R.string.menu_send);
-		    	  default:
-		      }
-		      		      	      
-		      okButton.setOnClickListener(new View.OnClickListener() {
+				context == ViewContext.SELECT_WINNER) {
+			LinearLayout btns = (LinearLayout) findViewById(R.id.footer);
+			btns.setVisibility(View.GONE);
+		} else {
+			Button okButton = (Button) findViewById(R.id.okButton);
+			  
+			switch (context) {
+				case CONFIRM_WHITE:
+				case CONFIRM_BLACK:
+				case CONFIRM_WINNER:
+					okButton.setText(R.string.menu_send);
+				default:
+			}
+			  		      	      
+			okButton.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 					
 					int id = CardCollection.instance.getSelectedID();
-					
-			  		Intent intent = new Intent(v.getContext(),MainActivity.class);
-								
-			  		if (proxy == null)
-			  			proxy = new DBProxy(v.getContext());
+							
+					Intent intent = new Intent(v.getContext(),MainActivity.class);
+										
+					if (proxy == null)
+						proxy = new DBProxy(v.getContext());
 					ServerConnector connector = new ServerConnector(proxy);
-					
-					switch (context)
-					{
-					case CONFIRM_BLACK:
-						connector.selectCardBlack(turnID, id);
-						break;
-					case CONFIRM_WHITE:
-						connector.selectCardWhite(turnID, id); 
-						break;
-					case CONFIRM_WINNER:
-						connector.selectWinner(turnID, id);
-						break;
-					default:
-						break;
+						
+					switch (context) {
+						case CONFIRM_BLACK:
+							connector.selectCardBlack(turnID, id);
+							break;
+						case CONFIRM_WHITE:
+							connector.selectCardWhite(turnID, id); 
+							break;
+						case CONFIRM_WINNER:
+							connector.selectWinner(turnID, id);
+							break;
+						default:
+							break;
 					}
-				
+					
 			    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				  	v.getContext().startActivity(intent);									
 				}
-			});
-
+			}
+			);
 		}  
 	}     
 

@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
@@ -56,9 +57,11 @@ public class MainActivity extends Activity {
 	private ListView gameListView;
 	private GamelistAdapter gamelistAdapter;
 	public DBProxy dbProxy;
+	public NotificationHandler notificationHandler;
 	public static String username;
 	private String regId;
 	private ProgressBar bar;
+	private static boolean isFirstStart = true; //indicates first start
 	
 	
 	/**
@@ -89,19 +92,30 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		//bind views
+		Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
+		gameListView = (ListView) findViewById(R.id.game_list_view);
+		bar = (ProgressBar) findViewById(R.id.progressBar);
 		
+		//get username
 		getUsernameFromShared();
 		
 		//populate database presets
-		Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
-		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, DBProxy.PRESETS);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 		
-		//bind gameListView
-		gameListView = (ListView) findViewById(R.id.game_list_view);
-//        bar = (ProgressBar) findViewById(R.id.progressBar);
+		//set the translator in the Singleton
+		CardCollection.instance.setTranslator(
+				new IDToCardTranslator(this.getApplicationContext()));
+		
+		//prepare xmlrpc connection
+		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
+		
+		//indicate first start for notification polling
+		if (savedInstanceState == null)
+			isFirstStart = true;
 	}
 		
 	public void getUsernameFromShared()
@@ -130,17 +144,6 @@ public class MainActivity extends Activity {
 		} else {
 			username = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreferences_filename), Context.MODE_PRIVATE).getString(getString(R.string.sharedpreferences_key_username), "");
 		}
-		
-		//populate database presets
-		Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
-		// Create an ArrayAdapter using the string array and a default spinner layout
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, DBProxy.PRESETS);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
-		
-		//bind gameListView
-		gameListView = (ListView) findViewById(R.id.game_list_view);
-//        bar = (ProgressBar) findViewById(R.id.progressBar);
 	}
 	
 	public void setUsername(String name)
@@ -161,37 +164,24 @@ public class MainActivity extends Activity {
 		super.onStart();
 		// Instanciate database proxy
 		dbProxy = new DBProxy(this.getApplicationContext());
-		
-		//set the translator in the Singleton
-		CardCollection.instance.setTranslator(
-				new IDToCardTranslator(this.getApplicationContext()));
+		notificationHandler = new NotificationHandler(dbProxy);
 		
 		//check if device is capable of gcm
 		checkGCMRequirements();
 		
+		//register the receiver for GCM events
 		OnNotificationListener list = new OnNotificationListener() {
-			
 			@Override
 			public void onResponse(int type, int game, String msg) {
-				
 				System.out.println("onResponse called, msg: " + msg);
 				// TODO Auto-generated method stub
-		        new ProgressTask().execute();
-
+		        new NotificationUpdateTask().execute();
 			}
 		};
-		
 		mHandleMessageReceiver = new MyGCMBroadcastReceiver(dbProxy, list);
-		
-		//register the receiver for GCM events
-		registerReceiver(mHandleMessageReceiver, new IntentFilter(
-				DISPLAY_MESSAGE_ACTION));
-		
-		//prepare xmlrpc connection
-		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
+		registerReceiver(mHandleMessageReceiver, new IntentFilter(DISPLAY_MESSAGE_ACTION));
 				
 		//check for updates
-        bar = (ProgressBar) findViewById(R.id.progressBar);
         asyncTask = new ProgressTask();
         asyncTask.execute();
 	}
@@ -211,6 +201,8 @@ public class MainActivity extends Activity {
     			this.dbProxy = null;
     		}
 			unregisterReceiver(mHandleMessageReceiver);
+			this.mHandleMessageReceiver = null;
+			notificationHandler = null;
     	} catch (Exception error) {
         /** Error Handler Code **/
     	}// end try/catch (Exception error)
@@ -257,33 +249,18 @@ public class MainActivity extends Activity {
 	
     public void createGame(View view) {
     	Intent intent = new Intent(this, CreateGameActivity.class);
-//    	EditText editText = (EditText) findViewById(R.id.edit_message);
-//    	String message = editText.getText().toString();
-//    	intent.putExtra(EXTRA_MESSAGE, message);
     	startActivity(intent);
     }
     
     public void setPreset(View view) {
     	Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
-    	
     	int pos = spinner.getSelectedItemPosition();
-    	
     	new PresetTask(pos).execute();
-    	
     	//dbProxy.setPreset(spinner.getSelectedItemPosition());
 
-    	Toast toast = Toast.makeText(getApplicationContext(), spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT);
-    	toast.show();
-    	
-    	finish();
-        Intent intent = new Intent(MainActivity.this, MainActivity.class);
-        startActivity(intent);
     }
-    
-    
 			
 	private class PresetTask extends AsyncTask <Void,Void,Void>{
-
 		int preset;
 		
 		public PresetTask(int preset) {
@@ -297,6 +274,17 @@ public class MainActivity extends Activity {
 			PresetHelper.setPreset(dbProxy, preset);
 		
 			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			Spinner spinner = (Spinner) findViewById(R.id.presets_spinner);
+			Toast toast = Toast.makeText(getApplicationContext(), spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT);
+	    	toast.show();
+	    	
+	    	finish();
+	        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+	        startActivity(intent);
 		}
 	}
 
@@ -481,24 +469,25 @@ public class MainActivity extends Activity {
 	    	if (!checkConnection())
 	    		return null;
 
-		     if (!XMLRPCServerProxy.getInstance().isConnected())
-		     {
+	    	if (!XMLRPCServerProxy.getInstance().isConnected()) {
 				runOnUiThread(new Runnable() {
 					public void run() {
 						Toast.makeText(MainActivity.this, getString(R.string.main_toast_connectionerror), Toast.LENGTH_SHORT).show();
 					    }
 					});
-				
 				return null;
-		     }
-		     
-		     gcmRegistrationProcess();	
-		 		     
-			//check and process notifications
-			NotificationHandler handler = new NotificationHandler(dbProxy);
-			handler.checkAndHandleUpdates();
+			}
+	    	
+	    	//register gcm
+	    	gcmRegistrationProcess();	
 
-	    	return null;
+	    	//check and process notifications only on first start
+		    if (isFirstStart) {
+		    	isFirstStart = false;
+		    	notificationHandler.checkAndHandleUpdates();
+		    }
+		     
+		    return null;
 	    }
 
 	    @Override
@@ -509,6 +498,7 @@ public class MainActivity extends Activity {
 			
 	        //retrieve and show game list
 			gamelistCursor = dbProxy.readGameList(username);
+			DatabaseUtils.dumpCursor(gamelistCursor);
 			displayListView(gamelistCursor);
 	    }
 	    
@@ -534,8 +524,35 @@ public class MainActivity extends Activity {
 			}
 			return true;
 		}
-		
+	}
+	
+	/**
+	 * handles GCM update notifications
+	 */
+	private class NotificationUpdateTask extends AsyncTask <Void,Void,Void>{
+	    @Override
+	    protected void onPreExecute(){
+	    	gameListView.setVisibility(View.GONE);
+	        bar.setVisibility(View.VISIBLE);
+	    }
 
+	    @Override
+	    protected Void doInBackground(Void... arg0) {   
+			//check and process notifications only on first start
+	    	notificationHandler.checkAndHandleUpdates();
+		    return null;
+	    }
+
+	    @Override
+	    protected void onPostExecute(Void result) {
+	        //hide progress bar
+	    	bar.setVisibility(View.GONE);
+	    	gameListView.setVisibility(View.VISIBLE);
+			
+	        //retrieve and show game list
+			gamelistCursor = dbProxy.readGameList(username);
+			displayListView(gamelistCursor);
+	    }
 	}
 
 }

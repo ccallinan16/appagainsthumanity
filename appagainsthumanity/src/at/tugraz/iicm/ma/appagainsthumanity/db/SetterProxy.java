@@ -108,6 +108,16 @@ public class SetterProxy {
 		return insertIgnoreOverwrite(DBContract.Participation.TABLE_NAME, DBContract.Participation._ID, values);
 	}
 	
+	public void updateParticipation(long id, long game_id, long user_id, int score) {
+		ContentValues values = new ContentValues();
+		values.put(DBContract.Participation.COLUMN_NAME_GAME_ID, game_id);
+		values.put(DBContract.Participation.COLUMN_NAME_USER_ID, user_id);
+		values.put(DBContract.Participation.COLUMN_NAME_SCORE, score);
+		db.getWritableDatabase().update(DBContract.Participation.TABLE_NAME, values, 
+			  	DBContract.Participation._ID + " = ?", 
+			  	new String[]{String.valueOf(id)});
+	}
+	
 	public long addTurn(long game_id, int roundnumber, long user_id, Integer black_id) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.Turn.COLUMN_NAME_GAME_ID, game_id);
@@ -145,15 +155,27 @@ public class SetterProxy {
 	}
 	
 	
-	public long addPlayedWhiteCard(long turn_id, long user_id, long white_card_id, Boolean won) {
+	public long addPlayedWhiteCard(long id, long turn_id, long user_id, long white_card_id, Boolean won) {
 		ContentValues values = new ContentValues();
+		if(id > 0)
+			values.put(DBContract.PlayedWhiteCard._ID, id);
 		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID, turn_id);
 		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID, user_id);
 		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID, white_card_id);
 		if (won != null)
 			values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_WON, won);
-		
 		return insertIgnoreOverwrite(DBContract.PlayedWhiteCard.TABLE_NAME, DBContract.PlayedWhiteCard._ID, values);
+	}
+	
+	public void updatePlayedWhiteCard(long id, long turn_id, long user_id, long white_card_id, Boolean won) {
+		ContentValues values = new ContentValues();
+		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID, turn_id);
+		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID, user_id);
+		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID, white_card_id);
+		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_WON, won);
+		db.getWritableDatabase().update(DBContract.PlayedWhiteCard.TABLE_NAME, values, 
+									  	DBContract.PlayedWhiteCard._ID + " = ?", 
+									  	new String[]{String.valueOf(id)});
 	}
 	
 	public boolean setBlackCardID(long turn_id, int cardIndex) {
@@ -308,77 +330,4 @@ public class SetterProxy {
 		
 		return id;
 	}	
-
-	
-	
-	/**
-	 * old preset setting method
-	 */
-	/*
-	 * DEBUG QUERIES
-	 */
-	public void setPreset(int preset) {
-		long user_1, user_2, user_3, user_4;
-		long game_1, game_2, game_3, game_4;
-		long turn_1, turn_2, turn_3, turn_4;		
-		
-		//retrieve username
-		String username = db.getUsername();
-		
-		switch(preset) {
-		case PresetHelper.NO_GAMES:
-			//1 user, no games
-			addUser(username);
-			break;
-			
-		case PresetHelper.SELECT_BLACK:
-						
-			//3 users, 1 game, 2 rounds, user has to choose black card
-			//table user: add local user
-				user_1 = addUser(username);
-				user_2 = addUser("user2@dummy.com");
-				user_3 = addUser("user3@dummy.com");
-			//table game: add game
-				game_1 = addGame(5, 0);
-			//table participation
-				addParticipation(game_1, user_1, 0);
-				addParticipation(game_1, user_2, 0);
-				addParticipation(game_1, user_3, 1);
-			//table turn
-				turn_1 = addTurn(game_1, 1, user_1, 1);
-				turn_2 = addTurn(game_1, 2, user_1, null);
-			//table playedWhiteCards
-				//turn1, player2
-				addPlayedWhiteCard(turn_1, user_2, 11, null);
-				//turn1, player3
-				addPlayedWhiteCard(turn_1, user_3, 12, null);
-			break;
-		case PresetHelper.SELECT_WHITE:
-			//3 users, 1 game, 2 rounds, user has to choose black card
-			//table user: add local user
-				user_1 = addUser(username);
-				user_2 = addUser("user2@dummy.com");
-				user_3 = addUser("user3@dummy.com");
-			//table game: add game
-				game_1 = addGame(5, 0);
-			//table participation
-				addParticipation(game_1, user_1, 0);
-				addParticipation(game_1, user_2, 1);
-				addParticipation(game_1, user_3, 0);
-			//table turn
-				turn_1 = addTurn(game_1, 1, user_1, 1);
-				turn_2 = addTurn(game_1, 2, user_2, 2);
-			//table playedWhiteCards
-				//turn1, player2
-				addPlayedWhiteCard(turn_1, user_2, 11, null);
-				//turn1, player3
-				addPlayedWhiteCard(turn_1, user_3, 12, null);
-				//turn2, player 3
-				addPlayedWhiteCard(turn_2, user_3, 13, null);
-			break;
-		}
-	}
-	
-
-	
 }
