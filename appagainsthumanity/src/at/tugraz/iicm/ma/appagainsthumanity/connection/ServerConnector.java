@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import mocks.IDToCardTranslator;
 import android.os.AsyncTask;
 import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
+import at.tugraz.iicm.ma.appagainsthumanity.GameOptionsActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
@@ -31,8 +32,9 @@ public class ServerConnector {
 	
 	/**
 	 * user initiated
+	 * @param responseListener 
 	 */
-	public boolean initializeGame(long[] invites, int roundCap, int scoreCap) {
+	public boolean initializeGame(long[] invites, int roundCap, int scoreCap, OnResponseListener responseListener) {
 		if (isRobolectricTestrun) {
 			//insert new game
 			long gameId = proxy.getDBSetter().addGame(roundCap, scoreCap);
@@ -66,7 +68,7 @@ public class ServerConnector {
 			
 			
 			//query server
-			return serverProxy.createGame(proxy.getUserID(), invites, roundCap, scoreCap);
+			return serverProxy.createGame(proxy.getUserID(), invites, roundCap, scoreCap, responseListener);
 		}
 	}
 	

@@ -39,14 +39,13 @@ class ClientController extends AbstractActionController
     {
     	$client = new Client('http://10.0.0.3/');
         try {
-            $user_id = "14";
+            $user_id = 14;
             $data = array(
               "roundcap" => 5,
               "scorecap" => 5,
               "invites" => array(
                 "1" => 1,
                 "5" => 5,
-                "7" => 7  
               )
             );
               

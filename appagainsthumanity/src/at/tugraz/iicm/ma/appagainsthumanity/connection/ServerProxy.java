@@ -44,10 +44,10 @@ public abstract class ServerProxy {
 	public abstract boolean checkConnection();
 	public abstract int signupUser(String username, String gcmid);
 	public abstract int getUserId(String username);
-	public abstract boolean createGame(int userId, long[] invites, int roundcap, int scorecap);
+	public abstract boolean createGame(int userId, long[] invites, int roundcap, int scorecap, OnResponseListener responseListener);
 	public abstract HashMap<String, String> getNotifications(int userId);
 	public abstract Object getUpdate(int notificationId);
 	public abstract boolean selectBlackCard(int userId, int turnId, int cardId);
 	public abstract boolean selectWhiteCard(int userId, int turnId, int cardId);
-	
+
 }

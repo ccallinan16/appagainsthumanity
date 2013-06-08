@@ -11,6 +11,7 @@ import android.widget.Toast;
 import at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.OnResponseListener;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerProxy;
 
 public class XMLRPCServerProxy extends ServerProxy{
@@ -94,7 +95,7 @@ public class XMLRPCServerProxy extends ServerProxy{
 	}
 
 	@Override
-	public boolean createGame(int userId, long[] invites, int roundcap, int scorecap) {
+	public boolean createGame(int userId, long[] invites, int roundcap, int scorecap, OnResponseListener responseListener) {
 		//prepare data
 		HashMap<String, Object> data = new HashMap<String, Object>();
 		data.put("roundcap", roundcap);
@@ -107,8 +108,9 @@ public class XMLRPCServerProxy extends ServerProxy{
 		data.put("userid", userId);
 		data.put("action", 1);
 		
-		AsyncTask<HashMap<String, Object>, Void, Boolean> task = new ServerActionTask();
+		ServerActionTask task = new ServerActionTask();
 		
+		task.setOnResponseListener(responseListener);
 		task.execute(data);
 		
 		//TODO: always returns true, as its an async task, we don't wait for it.. 
@@ -129,6 +131,12 @@ public class XMLRPCServerProxy extends ServerProxy{
 	class ServerActionTask extends AsyncTask<HashMap<String,Object>, Void, Boolean> {
 
         private Exception exception;
+        private OnResponseListener listener = null;
+        private Object response = null;
+        
+        public void setOnResponseListener(OnResponseListener onResponseListener) {
+        	this.listener = onResponseListener;
+        }
 
         protected Boolean doInBackground(HashMap<String,Object>... data) {
             try {
@@ -147,9 +155,12 @@ public class XMLRPCServerProxy extends ServerProxy{
             			payload.remove("userid");
             			
             			Boolean b = (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CREATEGAME, uid, payload);
+            			response = b;
             			return b;
             		} catch (XMLRPCException e) {
             			setDisconnected();
+            			e.printStackTrace();
+            			response = false;
             			return false;
             		}
             	}
@@ -166,6 +177,9 @@ public class XMLRPCServerProxy extends ServerProxy{
         	if (exception != null)
         	{
         		exception.printStackTrace();
+        	}
+        	if (listener != null) {
+        		listener.onResponse(response);
         	}
         }
      }

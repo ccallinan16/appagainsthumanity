@@ -11,14 +11,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.OnResponseListener;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 
-public class GameOptionsActivity extends Activity {
+public class GameOptionsActivity extends Activity implements OnResponseListener {
 
 	private long[] invites;
 	private TextView textViewRoundcap;
 	private TextView textViewScorecap;
+	private DBProxy proxy;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,25 +75,40 @@ public class GameOptionsActivity extends Activity {
 		}
 		
 		//update server information
-		DBProxy proxy = new DBProxy(this);
+		proxy = new DBProxy(this);
 		ServerConnector connector = new ServerConnector(proxy);
-		if (!connector.initializeGame(invites, roundcap, scorecap)) {
+		connector.initializeGame(invites, roundcap, scorecap, this);
+	}
+	
+	public void onResponse(Object response) {
+		Boolean success = false;
+		if (response != null)
+			success = (Boolean) response;
+		if (!success) {
 			//connection error
 			Toast.makeText(this, getString(R.string.game_options_toast_connectionerror), Toast.LENGTH_SHORT).show();
-			proxy.onStop();
-			return;
+		} else {
+			//create intent
+			Intent intent = new Intent(this, MainActivity.class);
+			//add flag to get back to main activity and clean intermediate activities
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			//launch intent
+			startActivity(intent);
 		}
-		proxy.onStop();
-		
-
-		//create intent
-    	Intent intent = new Intent(this, MainActivity.class);
-    	//add flag to get back to main activity and clean intermediate activities
-    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    	//launch intent
-    	startActivity(intent);
-    	
 	}
+	
+	 @Override
+    protected void onStop() {
+    	try {
+    		if (this.proxy != null) {
+    			this.proxy.onStop();
+    			this.proxy = null;
+    		}
+    	} catch (Exception error) {
+        /** Error Handler Code **/
+    	}// end try/catch (Exception error)
+		super.onStop();
+    }
 	
 	/*
 	 * DEFAULT METHODS
