@@ -142,17 +142,13 @@ public class XMLRPCServerProxy extends ServerProxy{
             	case 1:
             		try{
             			int uid = (Integer) payload.get("userid");
-            			System.err.println("uid : " + uid);
             			
             			payload.remove("action");
             			payload.remove("userid");
             			
-            			System.out.println(payload);
-            			Boolean b = (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CREATEGAME, uid, data);
+            			Boolean b = (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CREATEGAME, uid, payload);
             			return b;
             		} catch (XMLRPCException e) {
-            			System.err.println("--------------");
-            			e.printStackTrace();
             			setDisconnected();
             			return false;
             		}

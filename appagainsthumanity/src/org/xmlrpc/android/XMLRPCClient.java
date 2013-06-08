@@ -217,7 +217,7 @@ AuthScope.ANY_REALM),
 			// lets start pulling...
 			pullParser.nextTag();
 			pullParser.require(XmlPullParser.START_TAG, null, Tag.METHOD_RESPONSE);
-			
+					
 			pullParser.nextTag(); // either Tag.PARAMS (<params>) or Tag.FAULT (<fault>)  
 			String tag = pullParser.getName();
 			if (tag.equals(Tag.PARAMS)) {

@@ -265,7 +265,8 @@ class Rpc
   	 * @return bool success
   	 */
   	public function createGame($user_id, $data)
-  	{           
+  	{     
+  		
         //validate users
         try {
           $user = $this->getUserTable()->getUser($user_id);
