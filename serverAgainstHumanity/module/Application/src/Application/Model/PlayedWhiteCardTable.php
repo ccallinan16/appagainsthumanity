@@ -27,6 +27,19 @@ class PlayedWhiteCardTable
             throw new \Exception("Could not find row $id");
         }
         return $row;
+    } 
+    
+    public function getPlayedWhiteCardByTurnAndCard($turn_id, $white_card_id)
+    {
+        $turn_id  = (int) $turn_id;
+        $white_card_id = (int) $white_card_id;
+        $rowset = $this->tableGateway->select(array('turn_id'       => $turn_id,
+                                                    'white_card_id' => $white_card_id));
+        $row = $rowset->current();
+        if (!$row) {
+            throw new \Exception('Could not find dealt white card with turn_id ' . $turn_id . ' and white_card_id ' . $white_card_id);
+        }
+        return $row;
     }
     
     public function savePlayedWhiteCard(PlayedWhiteCard $playedWhiteCard)
@@ -63,5 +76,17 @@ class PlayedWhiteCardTable
         foreach($result as $playedWhiteCard)
           $data[] = $playedWhiteCard->toArray();
         return $data;
+    }
+    
+    public function isPlayedWhiteCard($turn_id, $white_card_id) {
+        $turn_id  = (int) $turn_id;
+        $white_card_id  = (int) $white_card_id;
+        $rowset = $this->tableGateway->select(array('turn_id' => $turn_id,
+                                                    'white_card_id' => $white_card_id));
+        $row = $rowset->current();
+        if (!$row) {
+            return false;
+        }
+        return true;
     }
 }

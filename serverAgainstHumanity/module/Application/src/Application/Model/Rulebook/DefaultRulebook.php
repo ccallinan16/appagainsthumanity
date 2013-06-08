@@ -152,6 +152,32 @@ class DefaultRulebook extends Rulebook {
     //do nothing for now
   }
   
+  /**
+   * called after white card was inserted into playedWhiteCard table
+   *  
+   * @param int $user_id      
+   * @param int $turn_id
+   * @param int $card_id
+   * @return void      
+   */   
+  public function onWinnerCardChosen($user_id, $turn_id, $card_id) {
+    //increment score of user who played the winning card
+    $card = $this->getPlayedWhiteCardTable()->getPlayedWhiteCardByTurnAndCard($turn_id, $card_id);
+    $turn = $this->getTurnTable()->getTurn($turn_id);
+    $participation = $this->getParticipationTable()->getParticipationByGameAndUser($turn->game_id, $card->user_id);
+    $participation->score = $participation->score + 1;
+    $this->getParticipationTable()->saveParticipation($participation);
+    
+    //check if score cap or turn cap was reached
+    $game = $this->getGameTable()->getGame($turn->game_id);
+    if ($participation->score >= $game->scorecap || $turn->roundnumber >= $game->roundcap) {
+      ;//nothing to do here
+    } else {
+      //add new turn
+      $this->addTurn($game->id);
+    }
+  }
+  
   
 
   

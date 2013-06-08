@@ -29,6 +29,19 @@ class ParticipationTable
         return $row;
     }
     
+    public function getParticipationByGameAndUser($game_id, $user_id)
+    {
+        $game_id  = (int) $game_id;
+        $user_id = (int) $user_id;
+        $rowset = $this->tableGateway->select(array('game_id' => $game_id,
+                                                    'user_id' => $user_id));
+        $row = $rowset->current();
+        if (!$row) {
+            throw new \Exception('Could not find participation with game_id ' . $game_id . ' and user_id ' . $user_id);
+        }
+        return $row;
+    }
+    
     public function saveParticipation(Participation $participation)
     {
         $data = array(

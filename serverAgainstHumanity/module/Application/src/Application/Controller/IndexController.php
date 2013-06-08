@@ -50,12 +50,19 @@ class IndexController extends AbstractActionController
 	    
       //echo $rpc->checkConnection();
     	//echo $rpc->createGame(14, $data);
-    	//echo $rpc->chooseWhiteCard(14, 12, 1);
+      //echo $rpc->chooseBlackCard(7, 9, 59);
+    	//echo $rpc->chooseWhiteCard(5, 9, 247);
+      echo $rpc->chooseWinningCard(7, 9, 247);
       //print_r( $notificationHandler->getNotifications(14));
       //print_r( $notificationHandler->getUpdate(155));
+    
+    //enables detailed exception information 
     Fault::attachFaultException('Exception'); 	
-		echo $server->handle();
+		
+    //dispatch rpc server and return response
+    //echo $server->handle();
 	
+    //return our own (probably empty) response
 		return $this->getResponse();
     }
     

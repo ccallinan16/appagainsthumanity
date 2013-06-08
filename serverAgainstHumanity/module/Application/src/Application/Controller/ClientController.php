@@ -46,7 +46,7 @@ class ClientController extends AbstractActionController
               "invites" => array(
                 "1" => 1,
                 "5" => 5,
-                "7" => 21  
+                "7" => 7  
               )
             );
               

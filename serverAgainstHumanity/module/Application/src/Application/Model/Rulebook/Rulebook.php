@@ -58,7 +58,8 @@ abstract class Rulebook {
   public abstract function validateGameData($data);
   public abstract function onCreateGame($gameId, $userId);
   public abstract function onBlackCardChosen($user_id, $turn_id, $card_id);
-  public abstract function onWhiteCardChosen($user_id, $turn_id, $card_id);  
+  public abstract function onWhiteCardChosen($user_id, $turn_id, $card_id);
+  public abstract function onWinnerCardChosen($user_id, $turn_id, $card_id);  
   
 }
 

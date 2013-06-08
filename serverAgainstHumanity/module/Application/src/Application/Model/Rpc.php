@@ -331,15 +331,20 @@ class Rpc
   	public function chooseBlackCard($user_id, $turn_id, $card_id)
   	{                   
         //retrieve turn object
-        $turn = $this->getTurnTable()->getTurn($turn_id);
+        try {
+          $turn = $this->getTurnTable()->getTurn($turn_id);
+        } catch (\Exception $e) {
+          //invalid turn id
+          throw new \Exception('Invalid turn id supplied: ' . $turn_id);
+        }
         
         //check validity of user id
         if ($turn->user_id != $user_id)
-          throw new \Exception('Invalid user for this operation');
+          throw new \Exception('Invalid user for this operation: ' . $user_id);
           
         //check validity of card id
         if (!$this->getDealtBlackCardTable()->isDealtBlackCard($turn->game_id, $card_id, $user_id))
-          throw new \Exception('Invalid card id for this operation');
+          throw new \Exception('Invalid card id for this operation: ' . $card_id);
           
         //update 
         $turn->setBlackCardId($card_id);
@@ -372,17 +377,22 @@ class Rpc
   	 */
   	public function chooseWhiteCard($user_id, $turn_id, $card_id)
   	{                   
-        //retrieve turn object
-        $turn = $this->getTurnTable()->getTurn($turn_id);
+        //retrieve turn object     
+        try {
+          $turn = $this->getTurnTable()->getTurn($turn_id);
+        } catch (\Exception $e) {
+          //invalid turn id
+          throw new \Exception('Invalid turn id supplied: ' . $turn_id);
+        }
                 
         //check validity of user id
         $participants = $this->getParticipationTable()->getParticipants($turn->game_id);
         if ($user_id == $turn->user_id || !in_array($user_id, $participants))
-          throw new \Exception('Invalid user for this operation');
+          throw new \Exception('Invalid user for this operation: ' . $user_id);
           
         //check validity of card id
         if (!$this->getDealtWhiteCardTable()->isDealtWhiteCard($turn->game_id, $card_id, $user_id))
-          throw new \Exception('Invalid card id for this operation');
+          throw new \Exception('Invalid card id for this operation: ' . $card_id);
           
         //add entry in playedWhiteCardTable
         $card = new PlayedWhiteCard();
@@ -419,34 +429,34 @@ class Rpc
   	public function chooseWinningCard($user_id, $turn_id, $card_id)
   	{                   
         //retrieve turn object
-        $turn = $this->getTurnTable()->getTurn($turn_id); 
+        try {
+          $turn = $this->getTurnTable()->getTurn($turn_id);
+        } catch (\Exception $e) {
+          //invalid turn id
+          throw new \Exception('Invalid turn id supplied: ' . $turn_id);
+        }
                 
         //check validity of user id
         if ($turn->user_id != $user_id)
-          throw new \Exception('Invalid user for this operation');
+          throw new \Exception('Invalid user for this operation: ' . $user_id);
           
         //check validity of card id
-        if (!$this->getDealtWhiteCardTable()->isDealtWhiteCard($turn->game_id, $card_id, $user_id))
-          return false;
+        if (!$this->getPlayedWhiteCardTable()->isPlayedWhiteCard($turn_id, $card_id))
+          throw new \Exception('Invalid card id for this operation: ' . $card_id);
           
         //add entry in playedWhiteCardTable
-        $card = new PlayedWhiteCard();
-        $card->setTurnId($turn_id);
-        $card->setUserId($user_id);
-        $card->setWhiteCardId($card_id);
-        $card->setWon(false);
+        $card = $this->getPlayedWhiteCardTable()->getPlayedWhiteCardByTurnAndCard($turn_id, $card_id);
+        $card->setWon(true);
         $this->getPlayedWhiteCardTable()->savePlayedWhiteCard($card);
-        
-        //remove from dealtWhiteCards
-        $this->getDealtWhiteCardTable()->removeDealtWhiteCard($turn->game_id, $card_id, $user_id);
         
         //call onWhiteCardChosen of rulebook
         $rulebook = Rulebook::createRulebook($this);
-        $rulebook->onWhiteCardChosen($user_id, $turn_id, $card_id);
+        $rulebook->onWinnerCardChosen($user_id, $turn_id, $card_id);
          
         //add notification
+        $participants = $this->getParticipationTable()->getParticipants($turn->game_id);
         foreach ($participants as $participant_id) {
-          $this->addNotification(Notification::notification_chosen_white, $participant_id, $turn_id); 
+          $this->addNotification(Notification::notification_chosen_winner, $participant_id, $turn_id); 
         }
         
         //return true if no exception occured
