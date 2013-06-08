@@ -154,7 +154,7 @@ class Rpc
     		die('Curl failed: ' . curl_error($ch));
     	}
     	
-    	echo $result;
+//    	echo $result;
     		
     	// Close connection
     	curl_close($ch);

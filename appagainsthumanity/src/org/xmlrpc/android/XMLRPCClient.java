@@ -208,7 +208,7 @@ AuthScope.ANY_REALM),
 			XmlPullParser pullParser = XmlPullParserFactory.newInstance().newPullParser();
 			entity = response.getEntity();
 						
-// for testing purposes only
+			// for testing purposes only
 			//Reader reader = new StringReader("<?xml version='1.0'?><methodResponse><params><param><value>\n\n\n</value></param></params></methodResponse>");	
 						
 			Reader reader = new InputStreamReader(new BufferedInputStream(entity.getContent(), 8192));		

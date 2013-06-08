@@ -38,7 +38,7 @@
 	        style="@style/button"
 	        android:layout_width="fill_parent"
 	        android:text="@string/create_game_button_confirm"
-	         android:onClick="confirmEntries"
+	        android:onClick="confirmEntries"
         />
 	</LinearLayout>
 </LinearLayout>
