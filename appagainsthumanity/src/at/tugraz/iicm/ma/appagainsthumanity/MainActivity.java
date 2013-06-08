@@ -346,7 +346,9 @@ public class MainActivity extends Activity {
 									.getBoolean(getString(R.string.sharedpref_key_registered), false);
 		
 		XMLRPCServerProxy server = XMLRPCServerProxy.getInstance();
-		if (flagRegistered && server.isRegIDSet(username))
+		ServerConnector connector = new ServerConnector(dbProxy);
+
+		if (flagRegistered && server.isRegIDSet(username) && connector.retrieveUserId(username) >= 0)
 		{
 			runOnUiThread(new Runnable() {
 				public void run() {
@@ -376,12 +378,12 @@ public class MainActivity extends Activity {
 		final String regId = GCMRegistrar.getRegistrationId(context);
 
 		System.err.println("reg id: " + regId);
-		ServerConnector connector = new ServerConnector(dbProxy);
 
 		// Check if regid already presents
 		if (regId.equals("")) {
 			
-			// Registration is not present, register now with GCM, this will call the XMLRPCServer register function, but not the local one.
+			// Registration is not present, register now with GCM, 
+			//this will call the XMLRPCServer register function, but not the local one.
 			GCMRegistrar.register(context, SENDER_ID);
 			
 			int id = XMLRPCServerProxy.getInstance().getUserId(username);

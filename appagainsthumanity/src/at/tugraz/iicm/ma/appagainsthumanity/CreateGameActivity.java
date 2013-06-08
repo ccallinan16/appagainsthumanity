@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
@@ -191,19 +193,16 @@ public class CreateGameActivity extends Activity {
 		//		if not query server and retrieve id
 		//		if not on server, return false
 		
-		System.out.println("valide called on : " + input);
 		//check if entry = username
 		if (input.equals(username))
 			return false;
 		
-		System.out.println("valide called on : " + input);
 
 		//check if entry exists in array
 		for (int i = 0; i < inviteArrayAdapter.getCount(); i++)
 			if (inviteArrayAdapter.getItem(i).equals(input))
 				return false;
 		
-		System.out.println("valide called on : " + input);
 
 		//check if entry exists in userlist
 		boolean found = false;
@@ -218,27 +217,35 @@ public class CreateGameActivity extends Activity {
 			} while (userCursor.moveToNext());
 
 		}
-		System.out.println("valide called on : " + input);
 
 		//if user was found in local list, return true
 		if (found)
 			return found;
-		System.out.println("valide called on : " + input);
 
+		//TODO: put this in an async thread
+		
+		/*
+		
 		//else: check server information
 		ServerConnector connector = new ServerConnector(dbProxy);
 		if (connector.retrieveUserId(input) >= 1) {
 			
 			//update local cursor information
-			
 			userCursor = dbProxy.readKnownOtherUsers(username);
 		
 			//userAdapter.changeCursor(userCursor);
 
 			return true;
 		}
+		
+		
 		//otherwise, user was not found
 		return false;
+		*/
+		
+		//for now
+		return true;
+		
 	}
 	
 	private long retrieveUserId(String input) {
@@ -247,12 +254,14 @@ public class CreateGameActivity extends Activity {
 		
 		//check if entry exists in userlist
 		long found = -1;
-		userCursor.moveToFirst();
-		do { 
-			if(input.equals(userCursor.getString(1)))
-				found = userCursor.getLong(0);
-		} while (userCursor.moveToNext());
-		
+		if (userCursor.moveToFirst())
+		{
+			do { 
+				if(input.equals(userCursor.getString(1)))
+					found = userCursor.getLong(0);
+			} while (userCursor.moveToNext());
+		}
+				
 		return found;
 	}
 	
@@ -261,30 +270,90 @@ public class CreateGameActivity extends Activity {
 	 */
 	
 	public void confirmEntries(View view) {
+				
 		//abort if num invites < 2
-		if (inviteArrayAdapter.getCount() < 2) {
+		//TODO: tmp set down to 1
+		if (inviteArrayAdapter.getCount() < 1) {
 			Toast.makeText(this, getString(R.string.create_game_toast_notenoughplayers), Toast.LENGTH_SHORT).show();
 			return;
 		}
 		
-		//create intent
-    	Intent intent = new Intent(this, GameOptionsActivity.class);
-    	
-    	//compile list of invites
-	    long[] items = new long[inviteArrayAdapter.getCount()];
-	    for (int position = 0; position < inviteArrayAdapter.getCount(); position++) {
-	    	items[position] = retrieveUserId(inviteArrayAdapter.getItem(position));
-	    	if (! (items[position] >= 1)) {
-	    		//something went wrong here
-	    		Toast.makeText(CreateGameActivity.this, getString(R.string.create_game_toast_invalidentry), Toast.LENGTH_SHORT).show();
-	    		return;
-	    	}
-	    }
-	    
-	    //put extra and start activity
-    	intent.putExtra(EXTRA_INVITES, items);
-    	startActivity(intent);
+    	new ValidateInvitesTask().execute("");	    
 	}
+	
+	
+	
+	class ValidateInvitesTask extends AsyncTask<String, Void, Boolean> {
+
+        private Exception exception;
+        long[] items;
+        
+        protected Boolean doInBackground(String... data) {
+            try {
+            	
+            	System.out.println("invitearray: " + inviteArrayAdapter.getCount());
+            	
+        	    items = new long[inviteArrayAdapter.getCount()];
+        	    for (int position = 0; position < inviteArrayAdapter.getCount(); position++) {
+        	    	
+        	    	String name = inviteArrayAdapter.getItem(position);
+        	    	System.out.println("name: " + name);
+        	    	
+        	    	items[position] = retrieveUserId(name);
+        	    	if (! (items[position] >= 1)) {
+        	    		
+            			ServerConnector connector = new ServerConnector(dbProxy);
+            			items[position] = connector.retrieveUserId(name);
+            			if (items[position] >= 1) {
+            				
+            				//update local cursor information
+            				userCursor = dbProxy.readKnownOtherUsers(username);
+            			
+            				//userAdapter.changeCursor(userCursor);
+            			}
+            			else
+            			{
+            				//user is not in the database
+            				throw new Exception(name);
+            			}
+        	    	}
+        	    }
+        	    
+        	    for (long num : items)
+        	    	System.out.println("items: " + num);
+        	               	            	
+                return null;
+            } catch (Exception e) {
+                this.exception = e;
+                return null;
+            }
+        }
+
+        protected void onPostExecute(Boolean b) {
+            // TODO: check this.exception 
+        	
+        	if (this.exception == null)
+        	{
+        		//no exception occured, move on to next activity
+        		
+        		//create intent
+            	Intent intent = new Intent(CreateGameActivity.this, GameOptionsActivity.class);
+
+        	    //put extra and start activity
+            	intent.putExtra(EXTRA_INVITES, items);
+            	startActivity(intent);
+
+        	}
+        	else
+        	{
+	    		Toast.makeText(CreateGameActivity.this, getString(R.string.create_game_toast_invalidentry)+": " + exception.getMessage(), Toast.LENGTH_SHORT).show();
+	    		exception.printStackTrace();
+        	}
+
+        }
+     }
+	
+
 	
 	/*
 	 * DEFAULT METHODS

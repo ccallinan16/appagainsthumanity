@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import mocks.IDToCardTranslator;
+import android.os.AsyncTask;
 import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
@@ -60,6 +61,10 @@ public class ServerConnector {
 						
 			System.out.println("is connected at this point: " + proxy.getUserID() + " " + invites + " " + roundCap + " " + scoreCap);
 
+			//we want to query the server, but in an async task. lets see if we can do this.
+			
+			
+			
 			//query server
 			return serverProxy.createGame(proxy.getUserID(), invites, roundCap, scoreCap);
 		}
@@ -293,5 +298,5 @@ public class ServerConnector {
 			return (retid > 0);
 		}
 	}
-
+	
 }

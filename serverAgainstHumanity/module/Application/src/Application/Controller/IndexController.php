@@ -49,10 +49,10 @@ class IndexController extends AbstractActionController
 	    //print "\n User: ".$rpc->getUserTable()->fetchAll()->current();
 	    
       //echo $rpc->checkConnection();
-    	//echo $rpc->createGame(14, $data);
+      //echo $rpc->createGame(14, $data);
       //echo $rpc->chooseBlackCard(7, 9, 59);
     	//echo $rpc->chooseWhiteCard(5, 9, 247);
-      echo $rpc->chooseWinningCard(7, 9, 247);
+      //echo $rpc->chooseWinningCard(7, 9, 247);
       //print_r( $notificationHandler->getNotifications(14));
       //print_r( $notificationHandler->getUpdate(155));
     
@@ -60,7 +60,7 @@ class IndexController extends AbstractActionController
     Fault::attachFaultException('Exception'); 	
 		
     //dispatch rpc server and return response
-    //echo $server->handle();
+    echo $server->handle();
 	
     //return our own (probably empty) response
 		return $this->getResponse();

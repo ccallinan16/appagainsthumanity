@@ -6,6 +6,11 @@ import java.util.HashMap;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
+import android.os.AsyncTask;
+import android.widget.Toast;
+import at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity;
+import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
+import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerProxy;
 
 public class XMLRPCServerProxy extends ServerProxy{
@@ -99,6 +104,17 @@ public class XMLRPCServerProxy extends ServerProxy{
 			inviteData.put(String.valueOf(id), id);
 		data.put("invites", inviteData);
 		
+		data.put("userid", userId);
+		data.put("action", 1);
+		
+		AsyncTask<HashMap<String, Object>, Void, Boolean> task = new ServerActionTask();
+		
+		task.execute(data);
+		
+		//TODO: always returns true, as its an async task, we don't wait for it.. 
+		return true;
+		
+		/*
 		//query
 		try{
 			Boolean b = (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CREATEGAME, userId, data);
@@ -106,8 +122,58 @@ public class XMLRPCServerProxy extends ServerProxy{
 		} catch (XMLRPCException e) {
 			setDisconnected();
 			return false;
-		}
+		}*/
 	}
+	
+	
+	class ServerActionTask extends AsyncTask<HashMap<String,Object>, Void, Boolean> {
+
+        private Exception exception;
+
+        protected Boolean doInBackground(HashMap<String,Object>... data) {
+            try {
+            	
+            	//what to do
+            	HashMap<String,Object> payload = data[0];
+            	int i = (Integer) payload.get("action");
+            	
+            	switch(i)
+            	{
+            	case 1:
+            		try{
+            			int uid = (Integer) payload.get("userid");
+            			System.err.println("uid : " + uid);
+            			
+            			payload.remove("action");
+            			payload.remove("userid");
+            			
+            			System.out.println(payload);
+            			Boolean b = (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CREATEGAME, uid, data);
+            			return b;
+            		} catch (XMLRPCException e) {
+            			System.err.println("--------------");
+            			e.printStackTrace();
+            			setDisconnected();
+            			return false;
+            		}
+            	}
+            	     	           	
+                return null;
+            } catch (Exception e) {
+                this.exception = e;
+                return null;
+            }
+        }
+
+        protected void onPostExecute(Boolean b) {
+
+        	if (exception != null)
+        	{
+        		exception.printStackTrace();
+        	}
+        }
+     }
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
