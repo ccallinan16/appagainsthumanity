@@ -254,12 +254,14 @@ public class CreateGameActivity extends Activity {
 		
 		//check if entry exists in userlist
 		long found = -1;
-		userCursor.moveToFirst();
-		do { 
-			if(input.equals(userCursor.getString(1)))
-				found = userCursor.getLong(0);
-		} while (userCursor.moveToNext());
-		
+		if (userCursor.moveToFirst())
+		{
+			do { 
+				if(input.equals(userCursor.getString(1)))
+					found = userCursor.getLong(0);
+			} while (userCursor.moveToNext());
+		}
+				
 		return found;
 	}
 	
@@ -288,6 +290,8 @@ public class CreateGameActivity extends Activity {
         
         protected Boolean doInBackground(String... data) {
             try {
+            	
+            	System.out.println("invitearray: " + inviteArrayAdapter.getCount());
             	
         	    items = new long[inviteArrayAdapter.getCount()];
         	    for (int position = 0; position < inviteArrayAdapter.getCount(); position++) {
@@ -341,7 +345,10 @@ public class CreateGameActivity extends Activity {
 
         	}
         	else
+        	{
 	    		Toast.makeText(CreateGameActivity.this, getString(R.string.create_game_toast_invalidentry)+": " + exception.getMessage(), Toast.LENGTH_SHORT).show();
+	    		exception.printStackTrace();
+        	}
 
         }
      }
