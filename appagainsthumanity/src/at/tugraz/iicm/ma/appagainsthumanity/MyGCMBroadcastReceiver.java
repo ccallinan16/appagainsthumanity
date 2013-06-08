@@ -17,9 +17,11 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 	protected static final String KEY_NOTIFICATION_TYPE = "notification_type";
 	protected static final String KEY_NOTIFICATION_ID = "notification_id";
 	DBProxy proxy;
+	OnNotificationListener listener;
 	
-	public MyGCMBroadcastReceiver(DBProxy proxy) {
+	public MyGCMBroadcastReceiver(DBProxy proxy, OnNotificationListener listener) {
 		this.proxy = proxy;
+		this.listener = listener;
 	}
 	
 	@Override
@@ -27,11 +29,17 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 		
 		System.err.println("BroadcastReceiver CALLED!!");
 		String newMessage = intent.getExtras().getString(CommonUtilities.KEY_MESSAGE);
+		//String notificationid = intent.getExtras().getString(KEY_NOTIFICATION_ID);
+		//String type = intent.getExtras().getString(KEY_NOTIFICATION_TYPE);
+
+		if (listener != null)
+			listener.onResponse(1, 1, "hello!");
+		
 		// Waking up mobile if it is sleeping
 		WakeLocker.acquire(context.getApplicationContext());
 		
 		//TODO: possibly just do a background thread!
-		new UpdateTask(proxy).execute();
+		//new UpdateTask(proxy).execute();
 		
 		// Showing received message
 //		lblMessage.append(newMessage + "\n");			
@@ -41,6 +49,7 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 		WakeLocker.release();
 	}
 	
+	/*//better to do in main thread!
 	private class UpdateTask extends AsyncTask <Void,Void,Void>{
 
 		private NotificationHandler handler;
@@ -61,6 +70,6 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 			
 			return null;
 		}
-	}
+	}*/
 
 }

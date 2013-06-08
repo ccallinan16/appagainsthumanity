@@ -97,8 +97,9 @@ class DefaultRulebook extends Rulebook {
    */   
     public function validateGameData($data) {
       
+    	//TODO: temporarily set to 1
       //check that at least 2 players were invited
-      if (!array_key_exists('invites', $data) || count($data['invites']) < 2)
+      if (!array_key_exists('invites', $data) || count($data['invites']) < 1)
         throw new \Exception('Insuficcient number of players invited');
       
       //either roundcap or scorecap need to be > 0 

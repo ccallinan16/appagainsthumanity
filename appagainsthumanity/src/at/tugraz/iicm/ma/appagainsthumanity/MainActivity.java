@@ -169,7 +169,19 @@ public class MainActivity extends Activity {
 		//check if device is capable of gcm
 		checkGCMRequirements();
 		
-		mHandleMessageReceiver = new MyGCMBroadcastReceiver(dbProxy);
+		OnNotificationListener list = new OnNotificationListener() {
+			
+			@Override
+			public void onResponse(int type, int game, String msg) {
+				
+				System.out.println("onResponse called, msg: " + msg);
+				// TODO Auto-generated method stub
+		        new ProgressTask().execute();
+
+			}
+		};
+		
+		mHandleMessageReceiver = new MyGCMBroadcastReceiver(dbProxy, list);
 		
 		//register the receiver for GCM events
 		registerReceiver(mHandleMessageReceiver, new IntentFilter(

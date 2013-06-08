@@ -29,6 +29,12 @@ public class XMLRPCServerProxy extends ServerProxy{
 	private static final String FUNCTIONNAME_CHOOSEWHITECARD	= "chooseWhiteCard";
 	private static final String FUNCTIONNAME_ISREGISTERED 		= "isRegistedIdSet";
 	
+	private static final String KEY_ACTION = "action";
+	private static final String KEY_UID = "userid";
+	private static final String KEY_TURNID = "turnid";
+	private static final String KEY_CARDID = "cardid";
+
+	
 	private XMLRPCClient client;
     private URI uri;
 	
@@ -94,6 +100,9 @@ public class XMLRPCServerProxy extends ServerProxy{
 		}
 	}
 
+	/**
+	 * as this function is called directly in an ui-thread, we need to start an async task to connect to the server
+	 */
 	@Override
 	public boolean createGame(int userId, long[] invites, int roundcap, int scorecap, OnResponseListener responseListener) {
 		//prepare data
@@ -105,8 +114,10 @@ public class XMLRPCServerProxy extends ServerProxy{
 			inviteData.put(String.valueOf(id), id);
 		data.put("invites", inviteData);
 		
-		data.put("userid", userId);
-		data.put("action", 1);
+		data.put(KEY_UID, userId);
+		data.put(KEY_ACTION, FUNCTIONNAME_CREATEGAME);
+		
+		System.out.println(data);
 		
 		ServerActionTask task = new ServerActionTask();
 		
@@ -116,15 +127,6 @@ public class XMLRPCServerProxy extends ServerProxy{
 		//TODO: always returns true, as its an async task, we don't wait for it.. 
 		return true;
 		
-		/*
-		//query
-		try{
-			Boolean b = (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CREATEGAME, userId, data);
-			return b;
-		} catch (XMLRPCException e) {
-			setDisconnected();
-			return false;
-		}*/
 	}
 	
 	
@@ -141,31 +143,51 @@ public class XMLRPCServerProxy extends ServerProxy{
         protected Boolean doInBackground(HashMap<String,Object>... data) {
             try {
             	
-            	//what to do
             	HashMap<String,Object> payload = data[0];
-            	int i = (Integer) payload.get("action");
-            	
-            	switch(i)
-            	{
-            	case 1:
-            		try{
-            			int uid = (Integer) payload.get("userid");
-            			
-            			payload.remove("action");
-            			payload.remove("userid");
-            			
-            			Boolean b = (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CREATEGAME, uid, payload);
-            			response = b;
-            			return b;
-            		} catch (XMLRPCException e) {
-            			setDisconnected();
-            			e.printStackTrace();
-            			response = false;
-            			return false;
-            		}
-            	}
-            	     	           	
-                return null;
+        		System.out.println(data);
+        		System.out.println(payload);
+
+
+            	//what to do
+            	String function = (String) payload.get(KEY_ACTION);
+    			Integer uid = (Integer) payload.get(KEY_UID);
+    			
+        		System.out.println(payload);
+
+    			
+    			payload.remove(KEY_ACTION);
+    			payload.remove(KEY_UID);
+    			
+        		System.out.println(payload);
+
+          		try{
+            		System.out.println("in try " + payload);
+
+        			Boolean b = null;
+        			
+                	if (function.equals(FUNCTIONNAME_CREATEGAME))
+                	{
+            			b = (Boolean) client.call(NAMESPACE_RPC + function, uid, payload);
+                	}
+                	else if (  function.equals(FUNCTIONNAME_CHOOSEBLACKCARD) 
+                			|| function.equals(FUNCTIONNAME_CHOOSEWHITECARD))
+                	{
+                		int cardID = (Integer) payload.get(KEY_CARDID);
+                		int turnID = (Integer) payload.get(KEY_TURNID);
+                		
+                		b = (Boolean) client.call(NAMESPACE_RPC + function, uid, turnID, cardID); 
+                	}
+        			
+        			response = b;
+        			return b;
+
+                	
+        		} catch (XMLRPCException e) {
+        			setDisconnected();
+        			e.printStackTrace();
+        			response = false;
+        			return false;
+        		}
             } catch (Exception e) {
                 this.exception = e;
                 return null;
@@ -209,24 +231,42 @@ public class XMLRPCServerProxy extends ServerProxy{
 		}
 	}
 	
+	/**
+	 * this function is called directly in the ui thread, so we need to start an async task
+	 */
 	@Override
 	public boolean selectBlackCard(int userId, int turnId, int cardId) {
-		try{
-			return (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CHOOSEBLACKCARD, userId, turnId, cardId);
-		} catch (XMLRPCException e) {
-			setDisconnected();
-			return false;
-		}
+		
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put(KEY_TURNID, turnId);
+		data.put(KEY_CARDID, cardId);
+		
+		data.put(KEY_UID, userId);
+		data.put(KEY_ACTION, FUNCTIONNAME_CHOOSEBLACKCARD);
+		
+		ServerActionTask task = new ServerActionTask();		
+		task.execute(data);
+				
+		return true;
 	}
 	
+	/**
+	 * this function is called directly in the ui thread, so we need to start an async task
+	 */
 	@Override
 	public boolean selectWhiteCard(int userId, int turnId, int cardId) {
-		try{
-			return (Boolean) client.call(NAMESPACE_RPC + FUNCTIONNAME_CHOOSEWHITECARD, userId, turnId, cardId);
-		} catch (XMLRPCException e) {
-			setDisconnected();
-			return false;
-		}
+		
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put(KEY_TURNID, turnId);
+		data.put(KEY_CARDID, cardId);
+		
+		data.put(KEY_UID, userId);
+		data.put(KEY_ACTION, FUNCTIONNAME_CHOOSEWHITECARD);
+		
+		ServerActionTask task = new ServerActionTask();		
+		task.execute(data);
+
+		return true;
 	}
 
 }

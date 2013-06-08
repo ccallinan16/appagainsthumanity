@@ -16,7 +16,6 @@ use Application\Model\NotificationHandler;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\XmlRpc\Server;
-define("GOOGLE_API_KEY", "AIzaSyClphHWMig6AY_bSun4RuWgVO3tAK5SYTg");
 
 class ServerController extends AbstractActionController
 {
@@ -34,9 +33,11 @@ class ServerController extends AbstractActionController
 			
 		$uid = $rpc->getUserId("getzner.e@googlemail.com");
 
+		echo $uid;
+		
 		$rpc->sendNotification(Notification::notification_new_game,$uid,1);
 		
-		echo $server->handle();
+		//echo $server->handle();
 
 		return $this->getResponse();
 	}

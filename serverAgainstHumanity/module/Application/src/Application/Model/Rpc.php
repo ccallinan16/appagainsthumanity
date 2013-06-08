@@ -3,6 +3,8 @@ namespace Application\Model;
 
 use Application\Model\Rulebook\Rulebook;
 
+define("GOOGLE_API_KEY", "AIzaSyClphHWMig6AY_bSun4RuWgVO3tAK5SYTg");
+
 class Rpc
 {
 
@@ -97,10 +99,21 @@ class Rpc
         $this->getNotificationTable()->saveNotification($notification);
         
         //GCM code: TODO: multiple users!
-		//$this->sendNotification($type,$userId,$contentId);        
+		$this->sendNotification($type,$userId,$contentId);        
     }
     
+  	/**
+	 * sends a gcm notification
+	 *  
+  	 * @param int $userId
+  	 * @param int $type
+  	 * @param int $contentId
+  	 * @return bool true if a regid is set
+  	 */
     public function sendNotification($type, $userId, $contentId){
+    	
+    	//if ($userId == null || $contentId == null)
+    	//	return; 
     	
     	$user = $this->getUserTable()->getUser($userId);
     	$gcm = $user->gcm_id;
@@ -109,13 +122,39 @@ class Rpc
     	{
     		 $regId = $gcm;
     	}
+    	else
+    		return false; //if we don't have a valid id, there is no point in sending it.
     	    	
+    	$submessage = "sendNotification is a success.";
+    	 
     	
-    	//$regId = "APA91bHI7TurJ6-YKV14aBtd97RJM15u8XfJRG_MAZgmIXTo9KlsqSidtgJAx2vx00iIb83NuEc0wmJPZYljX--H0L3fgptbSvnhXEI-zPIhGWkojmgJTGdLV8ndrixlLStIQkuGFLllypjJGiVyityBQKDslBQwAE4Ny4qCeWA5Qsv75yuVEyk";
-    	$message = "Message from the other side, pt 2";
+    	switch($type) {
+    	
+    		case Notification::notification_new_game :
+    			$submessage = "a new game has been started.";
+    			break;
+    		case Notification::notification_new_round :
+    			$submessage = "a new round has been started.";
+    			break;
+    		case Notification::notification_new_round_czar :
+    			$submessage = "You get to choose a black card!";
+    			break;
+    		case Notification::notification_chosen_black :
+    			$submessage = "Choose a white card.";
+    			break;
+    		case Notification::notification_chosen_white :
+    			$submessage = "white cards have been chosen?.";
+    			break;
+    	
+    		default:
+    			//something went wrong here..
+    			break;
+    	}
+    	 
+    	
     	
     	$registration_ids = array($regId);
-    	$message = array("price" => $message,
+    	$message = array("price" => $submessage,
     					"type" => $type,
     					"contentId" => $contentId);
     	
@@ -123,6 +162,9 @@ class Rpc
     	$url = 'https://android.googleapis.com/gcm/send';
     	
     	$fields = array(
+    			//'collapse_key' => "my_key",
+    			'time_to_live' => 108,
+    			'delay_while_idle' => false,
     			'registration_ids' => $registration_ids,
     			'data' => $message,
     	);
@@ -152,12 +194,12 @@ class Rpc
     	$result = curl_exec($ch);
     	if ($result === FALSE) {
     		die('Curl failed: ' . curl_error($ch));
+    		return false;
     	}
-    	
-    	echo $result;
-    		
+    	   		
     	// Close connection
     	curl_close($ch);
+    	return true;
     }
     
     /*
