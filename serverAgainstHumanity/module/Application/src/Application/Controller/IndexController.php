@@ -15,6 +15,7 @@ use Application\Model\NotificationHandler;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\XmlRpc\Server;
+use Zend\XmlRpc\Server\Fault;
 
 class IndexController extends AbstractActionController
 {
@@ -49,9 +50,10 @@ class IndexController extends AbstractActionController
 	    
       //echo $rpc->checkConnection();
     	//echo $rpc->createGame(14, $data);
-    	//print_r( $notificationHandler->getNotifications(14));
+    	//echo $rpc->chooseWhiteCard(14, 12, 1);
+      //print_r( $notificationHandler->getNotifications(14));
       //print_r( $notificationHandler->getUpdate(155));
-      	
+    Fault::attachFaultException('Exception'); 	
 		echo $server->handle();
 	
 		return $this->getResponse();

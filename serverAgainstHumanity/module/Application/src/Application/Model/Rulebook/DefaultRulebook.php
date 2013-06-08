@@ -88,6 +88,26 @@ class DefaultRulebook extends Rulebook {
     //update dealt cards
     $this->getDealtBlackCardTable()->dealCards($game_id, $user_id, $cards);
   }
+
+  /**
+   * called before game creation to validate provided game data
+   *     
+   * @param array $data contains game data
+   * @return void      
+   */   
+    public function validateGameData($data) {
+      
+      //check that at least 2 players were invited
+      if (!array_key_exists('invites', $data) || count($data['invites']) < 2)
+        throw new \Exception('Insuficcient number of players invited');
+      
+      //either roundcap or scorecap need to be > 0 
+      //both need to be >= 0
+      if (!array_key_exists('roundcap', $data) || !array_key_exists('scorecap', $data) ||
+          $data['roundcap'] < 0 || $data['scorecap'] < 0 ||
+          $data['roundcap'] == 0 && $data['scorecap'] == 0)
+        throw new \Exception('Invalid game parameters supplied');
+    }
   
   /**
    * OnEvent-Functions

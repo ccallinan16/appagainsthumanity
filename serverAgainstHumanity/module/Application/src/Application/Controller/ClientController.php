@@ -37,22 +37,22 @@ class ClientController extends AbstractActionController
     
     public function creategameAction()
     {
-    	$client = new Client('http://localhost/');
+    	$client = new Client('http://10.0.0.3/');
         try {
-            $username = "testuser1";
+            $user_id = "14";
             $data = array(
               "roundcap" => 5,
               "scorecap" => 5,
               "invites" => array(
                 "1" => 1,
                 "5" => 5,
-                "7" => 7  
+                "7" => 21  
               )
             );
               
             
         
-            $data = $client->call('aah.createGame', array($username, $data));
+            $data = $client->call('aah.createGame', array((int) $user_id, (array) $data));
             $this->layout( 'layout/xml-layout' );
             
 			return new ViewModel(array(
