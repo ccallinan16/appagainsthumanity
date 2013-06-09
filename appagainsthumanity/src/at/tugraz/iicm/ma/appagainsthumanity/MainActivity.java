@@ -181,7 +181,7 @@ public class MainActivity extends Activity {
 			}
 		};
 		
-		mHandleMessageReceiver = new MyGCMBroadcastReceiver(dbProxy, list);
+		mHandleMessageReceiver = new MyGCMBroadcastReceiver(dbProxy, null);
 		
 		//register the receiver for GCM events
 		registerReceiver(mHandleMessageReceiver, new IntentFilter(
@@ -293,7 +293,7 @@ public class MainActivity extends Activity {
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			while (dbProxy == null);
+			//while (dbProxy == null);
 			PresetHelper.setPreset(dbProxy, preset);
 		
 			return null;

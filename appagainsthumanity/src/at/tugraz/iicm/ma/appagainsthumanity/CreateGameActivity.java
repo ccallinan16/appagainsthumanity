@@ -105,7 +105,7 @@ public class CreateGameActivity extends Activity {
 				dlg.show();
 		}
 		});
-		dbProxy.dumpTables();
+		//dbProxy.dumpTables();
 	}
 	
 	@Override

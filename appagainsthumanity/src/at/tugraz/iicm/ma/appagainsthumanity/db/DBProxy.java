@@ -270,8 +270,8 @@ public class DBProxy {
 		printer.printTableWithOnlyInts(DBContract.Turn.TABLE_NAME);
 		System.out.println("\n----------------");
 
-		printer.printTableWithOnlyInts(DBContract.DealtWhiteCard.TABLE_NAME);
-		System.out.println("\n----------------");
+		//printer.printTableWithOnlyInts(DBContract.DealtWhiteCard.TABLE_NAME);
+		//System.out.println("\n----------------");
 
 		printer.printPlayedWhiteCards();
 		printer.printUsers();

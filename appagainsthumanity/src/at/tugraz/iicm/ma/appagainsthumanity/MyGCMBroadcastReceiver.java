@@ -34,12 +34,14 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 
 		if (listener != null)
 			listener.onResponse(1, 1, "hello!");
+		else
+			new UpdateTask(proxy).execute();
+
 		
 		// Waking up mobile if it is sleeping
 		WakeLocker.acquire(context.getApplicationContext());
 		
 		//TODO: possibly just do a background thread!
-		//new UpdateTask(proxy).execute();
 		
 		// Showing received message
 //		lblMessage.append(newMessage + "\n");			
@@ -49,7 +51,7 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 		WakeLocker.release();
 	}
 	
-	/*//better to do in main thread!
+	//better to do in main thread!
 	private class UpdateTask extends AsyncTask <Void,Void,Void>{
 
 		private NotificationHandler handler;
@@ -70,6 +72,6 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 			
 			return null;
 		}
-	}*/
+	}
 
 }
