@@ -34,7 +34,7 @@ public class ServerConnector {
 	 * user initiated
 	 * @param responseListener 
 	 */
-	public boolean initializeGame(long[] invites, int roundCap, int scoreCap, OnResponseListener responseListener) {
+	public void initializeGame(long[] invites, int roundCap, int scoreCap, OnResponseListener responseListener) {
 		if (isRobolectricTestrun) {
 			//insert new game
 			long gameId = proxy.getDBSetter().addGame(roundCap, scoreCap);
@@ -51,7 +51,6 @@ public class ServerConnector {
 			//add turn
 			proxy.getDBSetter().addTurn(gameId, 1, userId, null);
 			
-			return true;
 		} else {
 			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 			
@@ -64,63 +63,48 @@ public class ServerConnector {
 				*/
 			
 			//query server
-			return serverProxy.createGame(proxy.getUserID(), invites, roundCap, scoreCap, responseListener);
+			serverProxy.createGame(proxy.getUserID(), invites, roundCap, scoreCap, responseListener);
 		}
 	}
 	
-	public boolean selectCardBlack(long turn_id, int id)
+	public void selectCardBlack(long turn_id, int id)
 	{		
 		//Czar selects a black card, CardType.BLACK
 		if (isRobolectricTestrun) {
 			CardCollection.instance.setBlackCard(id);
 			proxy.getDBSetter().setBlackCardID(turn_id, id);
-			return true;
 			
 		} else {
 			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
-			
-			//check connection
-			if (!serverProxy.isConnected())
-				return false;
-			
+						
 			//query server
-			return serverProxy.selectBlackCard(proxy.getUserID(), (int) turn_id, id);
+			serverProxy.selectBlackCard(proxy.getUserID(), (int) turn_id, id);
 		}
 		
 	}
 	
-	public boolean selectCardWhite(long turn_id, int id)
+	public void selectCardWhite(long turn_id, int id)
 	{
 		//Players select a whiteCard
 		if (isRobolectricTestrun) {		
 			proxy.getDBSetter().setWhiteCardID(turn_id,proxy.getUserID(),id);
-			return true;
 		} else {
 			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
-			
-			//check connection
-			if (!serverProxy.isConnected())
-				return false;
-			
+						
 			//query server
-			return serverProxy.selectWhiteCard(proxy.getUserID(), (int) turn_id, id);
+			serverProxy.selectWhiteCard(proxy.getUserID(), (int) turn_id, id);
 		}
 	}
 	
-	public boolean selectWinner(long turn_id, int id)
+	public void selectWinner(long turn_id, int id)
 	{
 		if (isRobolectricTestrun) {		
 			proxy.getDBSetter().updatePlayedWhiteCard(turn_id, id);
-			return true;
 		} else {
 			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
-			
-			//check connection
-			if (!serverProxy.isConnected())
-				return false;
-			
+						
 			//query server
-			return serverProxy.selectWinnerCard(proxy.getUserID(), (int) turn_id, id);
+			serverProxy.selectWinnerCard(proxy.getUserID(), (int) turn_id, id);
 		}
 	}
 	
