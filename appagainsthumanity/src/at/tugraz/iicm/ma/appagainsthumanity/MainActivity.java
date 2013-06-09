@@ -352,12 +352,7 @@ public class MainActivity extends VisibilityAwareActivity {
 
 		if (flagRegistered && server.isRegIDSet(username) && connector.retrieveUserId(username) >= 0)
 		{
-			runOnUiThread(new Runnable() {
-				public void run() {
-					Toast.makeText(getApplicationContext(), "Already registered in Shared Pref", Toast.LENGTH_LONG).show();
-			    }
-			});
-
+			
 			/*
 			//TODO: for debugging, we want to continue to register.
 			GCMRegistrar.unregister(context);
@@ -479,13 +474,13 @@ public class MainActivity extends VisibilityAwareActivity {
 					});
 				return null;
 		     }
-		     
-	    	//register gcm
-		     gcmRegistrationProcess();	
-		 		     
+		     		 		     
 	    	//check and process notifications only on first start
 		    if (isFirstStart) {
 		    	isFirstStart = false;
+
+		    	//register gcm
+			    gcmRegistrationProcess();
 		    	notificationHandler.checkAndHandleUpdates();
 		    }
 

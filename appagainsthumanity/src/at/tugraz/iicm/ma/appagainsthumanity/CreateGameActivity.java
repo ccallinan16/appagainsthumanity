@@ -131,8 +131,10 @@ public class CreateGameActivity extends VisibilityAwareActivity {
 	
     @Override
     protected void onStop() {
+    	System.err.println("onStop in CreateGameActivity called.");
     	try {
     		super.onStop();
+
     		if (this.userCursor != null){
     			this.userCursor.close();
     			this.userCursor = null;
@@ -304,6 +306,9 @@ public class CreateGameActivity extends VisibilityAwareActivity {
             			items[position] = connector.retrieveUserId(name);
             			if (items[position] >= 1) {
             				
+            				if (userCursor != null)
+            					userCursor.close();
+            				
             				//update local cursor information
             				userCursor = dbProxy.readKnownOtherUsers(username);
             			
@@ -329,10 +334,15 @@ public class CreateGameActivity extends VisibilityAwareActivity {
 
         protected void onPostExecute(Boolean b) {
             // TODO: check this.exception 
-        	
+			
+
         	if (this.exception == null)
         	{
         		//no exception occured, move on to next activity
+        		        		
+        		if (userCursor != null)
+        			userCursor.close();
+        		userCursor = null;
         		
         		//create intent
             	Intent intent = new Intent(CreateGameActivity.this, GameOptionsActivity.class);
