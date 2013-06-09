@@ -30,7 +30,7 @@ class ServerController extends AbstractActionController
 		$server->setClass($rpc, IndexController::NAMESPACE_RPC);
 		$notificationHandler = new NotificationHandler($this->getServiceLocator());
 		$server->setClass($notificationHandler, IndexController::NAMESPACE_NOTIFICATION);
-		/*
+		
 		$uid1 = $rpc->getUserId("getzner.e@googlemail.com");
 		$uid2 = $rpc->getUserId("egetzner22@gmail.com");
 		
@@ -39,15 +39,15 @@ class ServerController extends AbstractActionController
 		echo $uid1;
 		echo $uid2;
 		
-		$rpc->sendNotification(Notification::notification_new_round_czar,$uid1,1);
-		*/
-
+		$rpc->addAndSendNotificationToAll(Notification::notification_new_round_czar,$uids,1);
+		
+/*
 		$uid = $rpc->getUserId("getzner.e@googlemail.com");
 
 		echo $uid;
 		
 		$rpc->sendNotification(Notification::notification_new_game,$uid,1);
-
+*/
 		//echo $server->handle();
 
 		return $this->getResponse();

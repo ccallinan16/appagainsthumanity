@@ -138,7 +138,12 @@ public class XMLRPCServerProxy extends ServerProxy{
         }
 
         protected Boolean doInBackground(HashMap<String,Object>... data) {
+			response = false;
+
             try {
+            	
+            	if (!checkConnection())
+            		return false;
             	
             	HashMap<String,Object> payload = data[0];
         		System.out.println(data);

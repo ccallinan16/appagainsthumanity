@@ -55,14 +55,14 @@ public class ServerConnector {
 		} else {
 			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 			
-			System.out.println("is connected at this point: " + serverProxy.isConnected());
-			
+			/**
+			 * this happens inside the serverProxy, as this needs to be an async task.
+			 
 			//check connection
 			if (!serverProxy.isConnected())
 				return false;
-						
-			System.out.println("is connected at this point: " + proxy.getUserID() + " " + invites + " " + roundCap + " " + scoreCap);
-
+				*/
+			
 			//query server
 			return serverProxy.createGame(proxy.getUserID(), invites, roundCap, scoreCap, responseListener);
 		}

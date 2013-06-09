@@ -49,12 +49,14 @@ class DefaultRulebook extends Rulebook {
         if ($userId != $czarId) {
             $this->dealWhiteCards($userId, $gameId);
             $this->rpc->addNotification(Notification::notification_new_round, $userId, $turnId);
+            //do not gcm-notify these people, as there is nothing to do for them yet.
         }
     }       
     
     //deal black cards and notify czar
     $this->dealBlackCards($czarId, $gameId);
-    $this->rpc->addNotification(Notification::notification_new_round_czar, $czarId, $turnId);    
+    $this->rpc->addNotification(Notification::notification_new_round_czar, $czarId, $turnId);
+    $this->rpc->sendNotification(Notification::notification_new_round_czar, $czarId, $turnId);
   }
   
   public function dealWhiteCards($user_id, $game_id) {
@@ -99,7 +101,7 @@ class DefaultRulebook extends Rulebook {
     public function validateGameData($data) {
       
       //check that at least 2 players were invited
-      if (!array_key_exists('invites', $data) || count($data['invites']) < MIN_PLAYERS)
+      if (!array_key_exists('invites', $data) || count($data['invites']) < DefaultRulebook::MIN_PLAYER)
         throw new \Exception('Insufficient number of players invited');
       
       //either roundcap or scorecap need to be > 0 

@@ -157,6 +157,9 @@ public class NotificationHandler {
 		//query server
 		HashMap<String, Object> result = (HashMap<String, Object>) serverProxy.getUpdate(notificationId);
 		
+		if (result == null)
+			return;
+		
 		//add turn entry
 		HashMap<String, String> turn = (HashMap<String, String>) result.get("turn");
 		dbProxy.getDBSetter().addTurn(Integer.parseInt(turn.get("id")), Integer.parseInt(turn.get("game_id")), Integer.parseInt(turn.get("roundnumber")),
