@@ -103,6 +103,8 @@ public class ServerConnector {
 		} else {
 			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 						
+			System.out.println("NOW DOING STUFF; DAMMNIT");
+			
 			//query server
 			serverProxy.selectWinnerCard(proxy.getUserID(), (int) turn_id, id);
 		}

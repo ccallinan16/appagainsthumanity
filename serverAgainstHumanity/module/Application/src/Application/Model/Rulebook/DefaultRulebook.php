@@ -174,12 +174,32 @@ class DefaultRulebook extends Rulebook {
     //check if score cap or turn cap was reached
     $game = $this->getGameTable()->getGame($turn->game_id);
     if ($participation->score >= $game->scorecap || $turn->roundnumber >= $game->roundcap) {
-      ;//nothing to do here
+      //check if we are in a draw state
+      $participationData = $this->getParticipationTable()->getParticipationOfGame($turn->game_id);
+      //define custom compare function to sort participation by score
+      usort($participationData, function($a, $b) {
+          return $b['score'] - $a['score'];
+      });
+      //if first two entries have the same score we have a draw end need to play another round
+      if ($participationData[0]['score'] == $participationData[1]['score']) {
+        $this->addTurn($game->id);
+      } else {
+        //update game and set winner id to first entry of participationData
+        $game = $this->getGameTable()->getGame($turn->game_id);
+        $game->setWinner($participationData[0]['user_id']);
+        $this->getGameTable()->saveGame($game);
+        
+        //notify users
+        $participants = $this->getParticipationTable()->getParticipants($game->id);
+        $this->rpc->addAndSendNotificationToAll(Notification::notification_end_game, $participants, $game->id);
+      }
     } else {
       //add new turn
       $this->addTurn($game->id);
     }
   }
+  
+
   
   
 

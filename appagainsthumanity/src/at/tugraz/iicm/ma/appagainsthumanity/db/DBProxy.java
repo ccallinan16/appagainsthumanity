@@ -126,7 +126,8 @@ public class DBProxy {
 		    "t1." + DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID,
 		    "COUNT(DISTINCT "+DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard._ID + ") AS numwhitechosen",
 		    "t1." + DBContract.Turn._ID + " AS turn_id",
-		    "playedwhitecard2." + DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID + " AS playedWhiteCard"
+		    "playedwhitecard2." + DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID + " AS playedWhiteCard",
+		    DBContract.Game.COLUMN_NAME_WINNER,
 		};
 
 		// How you want the results sorted in the resulting Cursor

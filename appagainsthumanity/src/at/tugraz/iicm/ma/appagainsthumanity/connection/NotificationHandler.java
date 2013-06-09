@@ -18,6 +18,7 @@ public class NotificationHandler {
     public static final int NOTIFICATION_CHOSEN_BLACK   = 3;
     public static final int NOTIFICATION_CHOSEN_WHITE   = 4;
     public static final int NOTIFICATION_CHOSEN_WINNER  = 5; 
+    public static final int NOTIFICATION_END_GAME	    = 6; 
 	
 	private DBProxy dbProxy;
 
@@ -80,10 +81,28 @@ public class NotificationHandler {
 		case NOTIFICATION_CHOSEN_WINNER:
 			callbackChosenWinner(notificationId);
 			break;
+		case NOTIFICATION_END_GAME:
+			callbackEndGame(notificationId);
+			break;
 		}
 		
 	}
 
+	@SuppressWarnings("unchecked")
+	private void callbackEndGame(int notificationId) {
+		//check if server connection is established, otherwise abort
+		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+		if (!serverProxy.isConnected())
+			return;
+		
+		//query server
+		HashMap<String, String> game = (HashMap<String, String>) serverProxy.getUpdate(notificationId);
+		
+		//add game entry
+		dbProxy.getDBSetter().updateGame(Integer.parseInt(game.get("id")), Integer.parseInt(game.get("roundcap")), 
+									     Integer.parseInt(game.get("scorecap")), Integer.parseInt(game.get("winner")));
+	}
+	
 	@SuppressWarnings("unchecked")
 	private void callbackChosenWinner(int notificationId) {
 		//check if server connection is established, otherwise abort
@@ -216,13 +235,10 @@ public class NotificationHandler {
 		//query server
 		HashMap<String, Object> result = (HashMap<String, Object>) serverProxy.getUpdate(notificationId);
 		
-		System.out.println("-----------------callbackNewGame:");
-		for(String key : result.keySet())
-			System.out.println(key);
-		
 		//add game entry
 		HashMap<String, String> game = (HashMap<String, String>) result.get("game");
-		dbProxy.getDBSetter().addGame(Integer.parseInt(game.get("id")), Integer.parseInt(game.get("roundcap")), Integer.parseInt(game.get("scorecap")));
+		dbProxy.getDBSetter().addGame(Integer.parseInt(game.get("id")), Integer.parseInt(game.get("roundcap")), 
+									  Integer.parseInt(game.get("scorecap")), Integer.parseInt(game.get("winner")));
 		
 		//add user entries
 		Object[] userArray = (Object[]) result.get("user");

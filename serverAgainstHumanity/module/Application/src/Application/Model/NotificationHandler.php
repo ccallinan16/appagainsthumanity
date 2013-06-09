@@ -176,6 +176,14 @@ class NotificationHandler
       return $data;
     }
     
+    private function getEndGameUpdate($user_id, $game_id) {      
+      //fetch updated game data
+      $game = $this->getGameTable()->getGame($game_id);
+      $gameData = $game->toArray();
+      
+      return $gameData;
+    }
+    
     /*
      *  public rpc functions
      */
@@ -188,7 +196,7 @@ class NotificationHandler
   	 */
   	public function getNotifications($user_id)
   	{           
-        $data = $this->getNotificationTable()->getNotificationsOfUser($user_id);    
+        $data = $this->getNotificationTable()->getNotificationsOfUser($user_id);              
         return $data;
   	}
     
@@ -221,7 +229,14 @@ class NotificationHandler
             break;       
           case Notification::notification_chosen_winner :
             $data = $this->getChosenWinnerUpdate($notification->user_id, $notification->content_id);
-            break;        
+            break;         
+          case Notification::notification_end_game :
+            $data = $this->getEndGameUpdate($notification->user_id, $notification->content_id);
+            if ($this->getNotificationTable()->isLastNotificationOfType($notification)) {
+              $this->getGameTable()->deleteGame($notification->content_id);
+            }
+            
+            break;    
             
           default:
             //something went wrong here..

@@ -83,12 +83,24 @@ public class SetterProxy {
 		return insertIgnoreOverwrite(DBContract.Game.TABLE_NAME, DBContract.Game._ID, values);
 	}
 	
-	public long addGame(int id, int roundCap, int scoreCap) {
+	public long addGame(int id, int roundCap, int scoreCap, int winner) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.Game._ID, id);
 		values.put(DBContract.Game.COLUMN_NAME_ROUND_CAP, roundCap);
 		values.put(DBContract.Game.COLUMN_NAME_SCORE_CAP, scoreCap);
+		values.put(DBContract.Game.COLUMN_NAME_WINNER, winner);
 		return insertIgnoreOverwrite(DBContract.Game.TABLE_NAME, DBContract.Game._ID, values);
+	}
+	
+	public void updateGame(int id, int roundCap, int scoreCap, int winner) {
+		ContentValues values = new ContentValues();
+		values.put(DBContract.Game._ID, id);
+		values.put(DBContract.Game.COLUMN_NAME_ROUND_CAP, roundCap);
+		values.put(DBContract.Game.COLUMN_NAME_SCORE_CAP, scoreCap);
+		values.put(DBContract.Game.COLUMN_NAME_WINNER, winner);
+		db.getWritableDatabase().update(DBContract.Game.TABLE_NAME, values, 
+			  	DBContract.Game._ID + " = ?", 
+			  	new String[]{String.valueOf(id)});
 	}
 	
 	public long addParticipation(long game_id, long user_id, int score) {

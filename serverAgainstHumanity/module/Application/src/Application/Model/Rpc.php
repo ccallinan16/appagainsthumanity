@@ -323,7 +323,8 @@ class Rpc
         $game = new Game();
         $game->setId(0);
         $game->setRoundcap($data['roundcap']);
-        $game->setScorecap($data['scorecap']);        
+        $game->setScorecap($data['scorecap']);       
+        $game->setWinner(0); 
         $game_id = $this->getGameTable()->saveGame($game);
         
         //add participation of creating player
@@ -486,13 +487,13 @@ class Rpc
         $card->setWon(true);
         $this->getPlayedWhiteCardTable()->savePlayedWhiteCard($card);
         
-        //call onWhiteCardChosen of rulebook
-        $rulebook = Rulebook::createRulebook($this);
-        $rulebook->onWinnerCardChosen($user_id, $turn_id, $card_id);
-         
         //add notification
         $participants = $this->getParticipationTable()->getParticipants($turn->game_id);
         $this->addAndSendNotificationToAll(Notification::notification_chosen_winner, $participants, $turn_id);
+        
+        //call onWhiteCardChosen of rulebook
+        $rulebook = Rulebook::createRulebook($this);
+        $rulebook->onWinnerCardChosen($user_id, $turn_id, $card_id);
         
         //return true if no exception occured
         return true;

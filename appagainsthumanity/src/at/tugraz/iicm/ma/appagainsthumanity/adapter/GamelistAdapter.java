@@ -52,8 +52,20 @@ public class GamelistAdapter extends CursorAdapter {
 		
 		long turn = c.getLong(10);
 		
-		//case: choose black card
-		if (c.getLong(6) == c.getLong(7) && c.getLong(8) == 0) {
+		if (c.getLong(12) > 0) {
+			round.setText("game over");
+			//game is won
+			if (c.getLong(12) == c.getLong(6)) {
+				thumbnail.setImageResource(R.drawable.star);
+				score.setText("you won!");
+				thumbnail.setEnabled(false);
+			} else {
+				thumbnail.setImageResource(R.drawable.star_empty);
+				score.setText("you lost!");
+				thumbnail.setEnabled(false);
+			}
+		} else if (c.getLong(6) == c.getLong(7) && c.getLong(8) == 0) {
+			//case: choose black card
 			thumbnail.setImageResource(R.drawable.card_black);
 			thumbnail.setOnClickListener(
 					new ChooseViewListener(activity, ViewContext.SELECT_BLACK,turn));

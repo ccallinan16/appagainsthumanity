@@ -7,6 +7,7 @@ class Game
     public $roundcap;
     public $scorecap;
     public $updated;
+    public $winner;
     
     public function exchangeArray($data)
     {
@@ -14,6 +15,7 @@ class Game
         $this->roundcap  = (isset($data['roundcap'])) ? $data['roundcap'] : null;
         $this->scorecap  = (isset($data['scorecap'])) ? $data['scorecap'] : null;
         $this->updated   = (isset($data['updated']))  ? $data['updated']  : null;
+        $this->winner    = (isset($data['winner']))   ? $data['winner']   : null;
     }
     
     public function toArray() {
@@ -22,6 +24,7 @@ class Game
         $data['roundcap'] = $this->roundcap;
         $data['scorecap'] = $this->scorecap;
         $data['updated']  = $this->updated;
+        $data['winner']   = $this->winner;
         return $data;
     }
     
@@ -35,5 +38,9 @@ class Game
     
     public function setScorecap($new_scorecap) {
         $this->scorecap = $new_scorecap;
+    }
+    
+    public function setWinner($new_winner) {
+        $this->winner = $new_winner;
     }
 }

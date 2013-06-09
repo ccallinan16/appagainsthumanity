@@ -34,7 +34,8 @@ class GameTable
         $data = array(
             'roundcap'  => $game->roundcap,
             'scorecap'  => $game->scorecap,
-            'updated'   => $game->updated
+            'updated'   => $game->updated,
+            'winner'    => $game->winner    
         );
 
         $id = (int)$game->id;

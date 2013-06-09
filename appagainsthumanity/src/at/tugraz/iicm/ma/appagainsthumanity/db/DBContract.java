@@ -13,6 +13,7 @@ public abstract class DBContract {
 	    public static final String COLUMN_NAME_ROUND_CAP =	"roundcap";
 	    public static final String COLUMN_NAME_SCORE_CAP =	"scorecap";
 	    public static final String COLUMN_NAME_UPDATED = "updated";
+	    public static final String COLUMN_NAME_WINNER = "winner";
 	}
 	
 	//table describing participating users of a game
@@ -78,10 +79,11 @@ public abstract class DBContract {
 		
 	    //Table Game
 		"CREATE TABLE " + DBContract.Game.TABLE_NAME + " (" +
-	    DBContract.Game._ID + 					TYPE_PRIMARY_KEY + 	COMMA_SEP + 
+	    DBContract.Game._ID + 					TYPE_PRIMARY_KEY + 		COMMA_SEP + 
 		DBContract.Game.COLUMN_NAME_ROUND_CAP + 	TYPE_INTEGER + 		COMMA_SEP + 
 		DBContract.Game.COLUMN_NAME_SCORE_CAP + 	TYPE_INTEGER + 		COMMA_SEP + 
-		DBContract.Game.COLUMN_NAME_UPDATED + 	TYPE_DATETIME + 
+		DBContract.Game.COLUMN_NAME_UPDATED + 		TYPE_DATETIME + 	COMMA_SEP +
+		DBContract.Game.COLUMN_NAME_WINNER + 		TYPE_INTEGER + 		" DEFAULT 0" +
 	    " )",
 	    
 	    //Table Participation
@@ -89,7 +91,7 @@ public abstract class DBContract {
 	    DBContract.Participation._ID + 					TYPE_PRIMARY_KEY + 	COMMA_SEP +
 	    DBContract.Participation.COLUMN_NAME_GAME_ID + 	TYPE_INTEGER + 		COMMA_SEP +
 	    DBContract.Participation.COLUMN_NAME_USER_ID + 	TYPE_INTEGER +		COMMA_SEP +
-	    DBContract.Participation.COLUMN_NAME_SCORE + 	TYPE_INTEGER + " DEFAULT 0" + 
+	    DBContract.Participation.COLUMN_NAME_SCORE + 	TYPE_INTEGER + 		" DEFAULT 0" + 
 	    " )",
 	    
 	    //Table user

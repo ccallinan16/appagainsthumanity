@@ -63,4 +63,11 @@ class NotificationTable
           $data[$notification->id] = $notification->type;
         return $data;
     }
+    
+    public function isLastNotificationOfType($notification) {
+        $result = $this->tableGateway->select(array('type'       => $notification->type,
+                                                    'content_id' => $notification->content_id));
+        return (count($result) == 1);
+    
+    }
 }

@@ -9,6 +9,8 @@ class Notification
     const notification_chosen_black   = 3;
     const notification_chosen_white   = 4;
     const notification_chosen_winner  = 5;
+    const notification_end_game       = 6;
+    
     public $id;
     public $user_id;
     public $type;
