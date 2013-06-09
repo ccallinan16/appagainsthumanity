@@ -1,7 +1,6 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,7 +14,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.connection.OnResponseListener;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 
-public class GameOptionsActivity extends Activity implements OnResponseListener {
+public class GameOptionsActivity extends VisibilityAwareActivity implements OnResponseListener {
 
 	private long[] invites;
 	private TextView textViewRoundcap;

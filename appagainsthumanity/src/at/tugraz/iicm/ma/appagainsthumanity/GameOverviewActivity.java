@@ -182,4 +182,19 @@ public class GameOverviewActivity extends FragmentActivity implements TabHost.On
 		return super.onOptionsItemSelected(item);
 	}
 
+    /**
+     * visibility awareness
+     */
+	@Override
+	protected void onResume() {
+	  super.onResume();
+	  AAHApplication.activityResumed();
+	}
+
+	@Override
+	protected void onPause() {
+	  super.onPause();
+	  AAHApplication.activityPaused();
+	}
+	
 }

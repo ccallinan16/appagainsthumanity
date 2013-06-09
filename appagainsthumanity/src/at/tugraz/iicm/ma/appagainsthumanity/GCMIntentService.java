@@ -59,8 +59,13 @@ public class GCMIntentService extends GCMBaseIntentService {
         String message = intent.getExtras().getString("price");
          
         displayMessageByBroadcast(context, message);
-        // notifies user
-        generateNotification(context, message);
+        
+        if (!AAHApplication.isActivityVisible())
+        {
+            // notifies user
+            generateNotification(context, message);
+        }
+        
     }
  
     /**
@@ -72,7 +77,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         String message = getString(R.string.gcm_deleted, total);
         displayMessageByBroadcast(context, message);
         // notifies user
-        generateNotification(context, message);
+        if (!AAHApplication.isActivityVisible())
+        	generateNotification(context, message);
     }
  
     /**

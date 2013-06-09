@@ -1,15 +1,14 @@
 package at.tugraz.iicm.ma.appagainsthumanity;
 
+import static org.gcm.trials.CommonUtilities.DISPLAY_MESSAGE_ACTION;
+import static org.gcm.trials.CommonUtilities.SENDER_ID;
 import mocks.IDToCardTranslator;
 
 import org.gcm.trials.AlertDialogManager;
 import org.gcm.trials.ConnectionDetector;
-import org.gcm.trials.ServerUtilities;
-import org.gcm.trials.WakeLocker;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +18,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -38,12 +36,9 @@ import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
 
-import static org.gcm.trials.CommonUtilities.*;
-
-import com.google.android.gcm.GCMBroadcastReceiver;
 import com.google.android.gcm.GCMRegistrar;
 
-public class MainActivity extends Activity {
+public class MainActivity extends VisibilityAwareActivity {
 
 	/*
 	 * CONSTANTS
@@ -59,7 +54,6 @@ public class MainActivity extends Activity {
 	public DBProxy dbProxy;
 	public NotificationHandler notificationHandler;
 	public static String username;
-	private String regId;
 	private ProgressBar bar;
 	private static boolean isFirstStart = true; //indicates first start
 	

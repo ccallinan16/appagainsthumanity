@@ -1,5 +1,9 @@
 package org.gcm.trials;
  
+import static org.gcm.trials.CommonUtilities.SERVER_URL;
+import static org.gcm.trials.CommonUtilities.TAG;
+import static org.gcm.trials.CommonUtilities.displayMessageByBroadcast;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -17,10 +21,6 @@ import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 
 import com.google.android.gcm.GCMRegistrar;
-import static org.gcm.trials.CommonUtilities.SENDER_ID;
-import static org.gcm.trials.CommonUtilities.SERVER_URL;
-import static org.gcm.trials.CommonUtilities.TAG;
-import static org.gcm.trials.CommonUtilities.displayMessageByBroadcast;
 
  
  

@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import at.tugraz.iicm.ma.appagainsthumanity.gui.SingleCardFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class CardFragmentAdapter extends FragmentPagerAdapter {
 	  private List<Integer> cardIDs;

@@ -5,14 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import mocks.IDToCardTranslator;
-
-import org.simpleframework.xml.ElementMap;
-import org.simpleframework.xml.Root;
-
-import android.annotation.SuppressLint;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.Card;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
-import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardTypeException;
 
 public class CardCollection {
 

@@ -7,10 +7,6 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
-import at.tugraz.iicm.ma.appagainsthumanity.CreateGameActivity;
-import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
-import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.OnResponseListener;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerProxy;
 

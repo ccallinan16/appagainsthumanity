@@ -257,7 +257,21 @@ public class CardSlideActivity extends FragmentActivity {
 	public Object getViewContext() {
 			return context;
 	}
-    
+	
+    /**
+     * visibility awareness
+     */
+	@Override
+	protected void onResume() {
+	  super.onResume();
+	  AAHApplication.activityResumed();
+	}
+
+	@Override
+	protected void onPause() {
+	  super.onPause();
+	  AAHApplication.activityPaused();
+	}
 }
 
 	
@@ -298,5 +312,6 @@ class ZoomOutPageTransformer implements ViewPager.PageTransformer {
             view.setAlpha(0);
         }
     }
+
 }
 

@@ -1,7 +1,6 @@
 package at.tugraz.iicm.ma.appagainsthumanity.db;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import android.database.Cursor;
