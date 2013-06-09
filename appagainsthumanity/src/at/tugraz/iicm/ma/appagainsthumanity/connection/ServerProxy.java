@@ -49,5 +49,5 @@ public abstract class ServerProxy {
 	public abstract Object getUpdate(int notificationId);
 	public abstract boolean selectBlackCard(int userId, int turnId, int cardId);
 	public abstract boolean selectWhiteCard(int userId, int turnId, int cardId);
-
+	public abstract boolean selectWinnerCard(int userId, int turnId, int cardId);
 }

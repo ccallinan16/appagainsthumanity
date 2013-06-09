@@ -107,14 +107,21 @@ public class ServerConnector {
 		}
 	}
 	
-	public void selectWinner(long turn_id, int id)
+	public boolean selectWinner(long turn_id, int id)
 	{
-		//Czar selects the winning white card
-		
-		//tables affected:
-		//played_white_cards
-		proxy.getDBSetter().updatePlayedWhiteCard(turn_id, id);
-		//TODO: send info to server
+		if (isRobolectricTestrun) {		
+			proxy.getDBSetter().updatePlayedWhiteCard(turn_id, id);
+			return true;
+		} else {
+			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+			
+			//check connection
+			if (!serverProxy.isConnected())
+				return false;
+			
+			//query server
+			return serverProxy.selectWinnerCard(proxy.getUserID(), (int) turn_id, id);
+		}
 	}
 	
 	public void addUsers(GameManager man)
@@ -233,7 +240,7 @@ public class ServerConnector {
 		
 		for (Entry<Integer,Long> entry : preset.getPlayedCards().entrySet())
 		{
-			proxy.getDBSetter().addPlayedWhiteCard(preset.getLastTurnID(), entry.getValue(), entry.getKey(), null);
+			proxy.getDBSetter().addPlayedWhiteCard(0, preset.getLastTurnID(), entry.getValue(), entry.getKey(), null);
 		}
 	}
 	

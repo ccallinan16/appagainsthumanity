@@ -35,7 +35,7 @@ public class NotificationHandler {
 	 * TODO: replace with push notification handling
 	 * queries the server for status updates in existing games or new games
 	 */
-	public void checkAndHandleUpdates() {
+	public synchronized void checkAndHandleUpdates() {
 		
 		//check if server connection is established, otherwise abort
 		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
@@ -84,11 +84,33 @@ public class NotificationHandler {
 		
 	}
 
-	
-	
+	@SuppressWarnings("unchecked")
 	private void callbackChosenWinner(int notificationId) {
-
+		//check if server connection is established, otherwise abort
+		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
+		if (!serverProxy.isConnected())
+			return;
 		
+		//query server
+		HashMap<String, Object> result = (HashMap<String, Object>) serverProxy.getUpdate(notificationId);
+		
+		//update participation entries
+		Object[] participationArray = (Object[]) result.get("participation");
+		for (Object o : participationArray) {
+			HashMap<String, String> participation = (HashMap<String, String>) o;
+			dbProxy.getDBSetter().updateParticipation(Integer.parseInt(participation.get("id")), Integer.parseInt(participation.get("game_id")), 
+												   	  Integer.parseInt(participation.get("user_id")), Integer.parseInt(participation.get("score")));
+		}
+		
+		//update card entries
+		Object[] cardsArray = (Object[]) result.get("cards");
+		for(Object o : cardsArray) {
+			HashMap<String, String> playedWhiteCard = (HashMap<String, String>) o;
+			//update turn entry
+			dbProxy.getDBSetter().updatePlayedWhiteCard(Integer.parseInt(playedWhiteCard.get("id")),
+													    Integer.parseInt(playedWhiteCard.get("turn_id")), Integer.parseInt(playedWhiteCard.get("user_id")), 
+													    Integer.parseInt(playedWhiteCard.get("white_card_id")), Boolean.parseBoolean(playedWhiteCard.get("won")));
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -104,7 +126,8 @@ public class NotificationHandler {
 		for(Object o : result) {
 			HashMap<String, String> playedWhiteCard = (HashMap<String, String>) o;
 			//update turn entry
-			dbProxy.getDBSetter().addPlayedWhiteCard(Integer.parseInt(playedWhiteCard.get("turn_id")), Integer.parseInt(playedWhiteCard.get("user_id")), 
+			dbProxy.getDBSetter().addPlayedWhiteCard(Integer.parseInt(playedWhiteCard.get("id")),
+													 Integer.parseInt(playedWhiteCard.get("turn_id")), Integer.parseInt(playedWhiteCard.get("user_id")), 
 													 Integer.parseInt(playedWhiteCard.get("white_card_id")), Boolean.parseBoolean(playedWhiteCard.get("won")));
 		}
 	}
@@ -189,6 +212,10 @@ public class NotificationHandler {
 		
 		//query server
 		HashMap<String, Object> result = (HashMap<String, Object>) serverProxy.getUpdate(notificationId);
+		
+		System.out.println("-----------------callbackNewGame:");
+		for(String key : result.keySet())
+			System.out.println(key);
 		
 		//add game entry
 		HashMap<String, String> game = (HashMap<String, String>) result.get("game");
