@@ -154,7 +154,7 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new PlayedWhiteCard());
                     return new TableGateway('played_white_card', $dbAdapter, null, $resultSetPrototype);
-                },          
+                },                          
             ),
         );
     }

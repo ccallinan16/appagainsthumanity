@@ -60,7 +60,7 @@ public class GCMIntentService extends GCMBaseIntentService {
          
         displayMessageByBroadcast(context, message);
         
-        if (!AAHApplication.isActivityVisible())
+        //if (!AAHApplication.isActivityVisible())
         {
             // notifies user
             generateNotification(context, message);
@@ -77,7 +77,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         String message = getString(R.string.gcm_deleted, total);
         displayMessageByBroadcast(context, message);
         // notifies user
-        if (!AAHApplication.isActivityVisible())
+       // if (!AAHApplication.isActivityVisible())
         	generateNotification(context, message);
     }
  

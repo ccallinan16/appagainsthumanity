@@ -3,8 +3,6 @@ namespace Application\Model;
 
 use Application\Model\Rulebook\Rulebook;
 
-define("GOOGLE_API_KEY", "AIzaSyClphHWMig6AY_bSun4RuWgVO3tAK5SYTg");
-
 class Rpc
 {
 
@@ -16,6 +14,7 @@ class Rpc
     protected $dealtBlackCardTable;
     protected $dealtWhiteCardTable;
     protected $playedWhiteCardTable;
+    protected $gcm;
     protected $sm; //serviceLocator
     
     public function __construct($serviceLocator) {
@@ -90,6 +89,16 @@ class Rpc
         return $this->playedWhiteCardTable;
     }
     
+    public function addNotification($type, $userIdList, $contentId)
+    {
+    	foreach ($userIdList as $userId)
+    	{
+    		$this->addNotification($type, $userId, contentId);
+    	}
+    	
+    	//and send.
+    }
+    
     public function addNotification($type, $userId, $contentId) {
         $notification = new Notification();
         $notification->setId(0);
@@ -100,6 +109,59 @@ class Rpc
         
         //GCM code: TODO: multiple users!
 		$this->sendNotification($type,$userId,$contentId);        
+    }
+    
+    public function sendNotificationToAll($type, $userids, $contentId)
+    {
+    	$registration_ids = array();
+    	   	
+    	foreach($userids as $id) {
+    		$user = $this->getUserTable()->getUser($id);
+    		 
+    		if ($user->gcm_id != null && $user->gcm_id != "")
+    		{
+    			$registration_ids[] = $user->gcm_id;
+    		}
+    		
+    	}
+    	
+    	$this->buildNotification($registration_ids, $type, $contentId);
+    }
+    
+    private function buildNotification($registration_ids, $type, $contentId)
+    {
+    	    	 
+    	switch($type) {
+    		 
+    		case Notification::notification_new_game :
+    			$submessage = "a new game has been started.";
+    			break;
+    		case Notification::notification_new_round :
+    			$submessage = "a new round has been started.";
+    			break;
+    		case Notification::notification_new_round_czar :
+    			$submessage = "You get to choose a black card!";
+    			break;
+    		case Notification::notification_chosen_black :
+    			$submessage = "Choose a white card.";
+    			break;
+    		case Notification::notification_chosen_white :
+    			$submessage = "white cards have been chosen?.";
+    			break;
+    			 
+    		default:
+    			$submessage = "sendNotification is a success, notification type: ".$type;
+    			break;
+    	}
+    
+    	$message = array("price" => $submessage,
+    			"type" => $type,
+    			"contentId" => $contentId);
+    	 
+    	$gcmhandler = new Gcm();
+    	 
+    	$gcmhandler->send_notification($registration_ids, $message);
+    	 
     }
     
   	/**
@@ -125,39 +187,10 @@ class Rpc
     	else
     		return false; //if we don't have a valid id, there is no point in sending it.
     	    	
-    	$submessage = "sendNotification is a success.";
-    	 
-    	
-    	switch($type) {
-    	
-    		case Notification::notification_new_game :
-    			$submessage = "a new game has been started.";
-    			break;
-    		case Notification::notification_new_round :
-    			$submessage = "a new round has been started.";
-    			break;
-    		case Notification::notification_new_round_czar :
-    			$submessage = "You get to choose a black card!";
-    			break;
-    		case Notification::notification_chosen_black :
-    			$submessage = "Choose a white card.";
-    			break;
-    		case Notification::notification_chosen_white :
-    			$submessage = "white cards have been chosen?.";
-    			break;
-    	
-    		default:
-    			//something went wrong here..
-    			break;
-    	}
-    	 
-    	
-    	
     	$registration_ids = array($regId);
-    	$message = array("price" => $submessage,
-    					"type" => $type,
-    					"contentId" => $contentId);
-    	
+    	 
+    	$this->buildNotification($registration_ids, $type, $contentId);
+    	/*
     	// Set POST variables
     	$url = 'https://android.googleapis.com/gcm/send';
     	
@@ -199,6 +232,7 @@ class Rpc
     	   		
     	// Close connection
     	curl_close($ch);
+    	    	*/
     	return true;
     }
     
@@ -350,11 +384,15 @@ class Rpc
         
         //add game notification
           //game creator
-        $this->addNotification(Notification::notification_new_game, $user_id, $game_id);  
+        $this->addNotification(Notification::notification_new_game, $user_id, $game_id);
+                
           //invited users
         foreach($data['invites'] as $userId)
             $this->addNotification(Notification::notification_new_game, $userId, $game_id);     
 
+        $this->sendNotification(Notification::notification_new_game, $user_id, $game_id);
+        $this->sendNotificationToAll(Notification::notification_new_game, $data['invites'], $game_id);
+        
         //call onCreate of rulebook
         $rulebook = Rulebook::createRulebook($this);
         $rulebook->onCreateGame($game_id, $user_id);

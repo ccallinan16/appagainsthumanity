@@ -11,6 +11,7 @@ class DefaultRulebook extends Rulebook {
   //constants related to this game-type
   const BLACK_HAND_SIZE = 5;
   const WHITE_HAND_SIZE = 10;
+  const MIN_PLAYER = 1;
  
   public function __construct($new_rpc) {
     parent::__construct($new_rpc);
@@ -50,10 +51,13 @@ class DefaultRulebook extends Rulebook {
             $this->rpc->addNotification(Notification::notification_new_round, $userId, $turnId);
         }
     }    
+    //$this->rpc->sendNotificationToAll(Notification::notification_new_round, $participants, $turnId);
+    
     
     //deal black cards and notify czar
     $this->dealBlackCards($czarId, $gameId);
     $this->rpc->addNotification(Notification::notification_new_round_czar, $czarId, $turnId);    
+    //$this->rpc->sendNotification(Notification::notification_new_round_czar, $czarId, $turnId);
   }
   
   public function dealWhiteCards($user_id, $game_id) {
@@ -97,10 +101,9 @@ class DefaultRulebook extends Rulebook {
    */   
     public function validateGameData($data) {
       
-    	//TODO: temporarily set to 1
       //check that at least 2 players were invited
-      if (!array_key_exists('invites', $data) || count($data['invites']) < 1)
-        throw new \Exception('Insuficcient number of players invited');
+      if (!array_key_exists('invites', $data) || count($data['invites']) < MIN_PLAYERS)
+        throw new \Exception('Insufficient number of players invited');
       
       //either roundcap or scorecap need to be > 0 
       //both need to be >= 0
