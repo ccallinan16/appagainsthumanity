@@ -50,14 +50,11 @@ class DefaultRulebook extends Rulebook {
             $this->dealWhiteCards($userId, $gameId);
             $this->rpc->addNotification(Notification::notification_new_round, $userId, $turnId);
         }
-    }    
-    //$this->rpc->sendNotificationToAll(Notification::notification_new_round, $participants, $turnId);
-    
+    }       
     
     //deal black cards and notify czar
     $this->dealBlackCards($czarId, $gameId);
     $this->rpc->addNotification(Notification::notification_new_round_czar, $czarId, $turnId);    
-    //$this->rpc->sendNotification(Notification::notification_new_round_czar, $czarId, $turnId);
   }
   
   public function dealWhiteCards($user_id, $game_id) {
