@@ -30,7 +30,10 @@ public class IDToCardTranslator {
 	public Card getCardFromID(CardType type, int cardID) {
 		String tmp = reader.getText(type, cardID);
 		if (tmp == null)
+		{
 			tmp = "couldn't read from xml";
+			System.err.println("type: " + type + ", id: " + cardID +", " + tmp);
+		}	
 		
 		return Card.makeCard(cardID, tmp, type);
 	}

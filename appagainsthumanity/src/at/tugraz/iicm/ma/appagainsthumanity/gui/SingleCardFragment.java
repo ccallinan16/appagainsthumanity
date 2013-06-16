@@ -17,8 +17,8 @@ import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class SingleCardFragment extends Fragment {
 
-	private static final float MAX_SIZE = 42f;
-	private static final float MIN_SIZE = 25f;
+	private static final float MAX_SIZE = 38f;
+	private static final float MIN_SIZE = 20f;
 
 	
 	 protected static final String ID = "CARD_ID";
@@ -62,6 +62,10 @@ public class SingleCardFragment extends Fragment {
 		 messageTextView.setTextAppearance(v.getContext(), card.getTextAppearance());
 		 //messageTextView.setTextColor(card.getType().getTextColor());
 		 
+		 
+		 //messageTextView.setBackground(getResources().getDrawable(R.drawable.border_white2));
+		 
+		 
 		 if (getArguments().getBoolean(SELECTABLE))
 		 {
 			 v.setOnClickListener(new OnCardSelectionListener(context,turnID));
@@ -69,8 +73,8 @@ public class SingleCardFragment extends Fragment {
 		 
 		 messageTextView.setTextSize(card.getRelativeTextSize(MAX_SIZE, MIN_SIZE));
 		 
-		 v.setBackgroundColor(card.getType().getBGColor());
-
+		// v.setBackgroundColor(card.getType().getBGColor());
+		 //v.setBackground(getResources().getDrawable(R.drawable.gradient_bg_hover));
 		 
 		 return v;
 	 }
@@ -101,8 +105,8 @@ public class SingleCardFragment extends Fragment {
 		        usedWidth = Math.max(usedWidth,(bounds.right - bounds.left)*pix);
 		    }
 		
-		    // same for height, sometimes the calculated height is to less, so use §µ{ instead
-		    p.getTextBounds("§µ{", 0, 3, bounds);
+		    // same for height, sometimes the calculated height is to less, so use ����{ instead
+		    p.getTextBounds("����{", 0, 3, bounds);
 		    float usedHeight = (bounds.bottom - bounds.top)*pix*lines.length;
 		
 		    float scaleX = providedWidth / usedWidth;
