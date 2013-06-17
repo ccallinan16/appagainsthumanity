@@ -208,4 +208,51 @@ public class ServerConnectorTest {
     	
     }
     
+    @Test
+    public void deleteGame()
+    {
+    	connector.startGame(preset);
+    	connector.startRound(preset);
+    	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
+    	connector.getPlayedCards(preset);
+    	connector.selectWinner(preset.getLastTurnID(), preset.getWinnerCard());
+    	connector.updateScore(preset.getLastTurnID(), preset.getWinnerCard());
+    	    	    	
+    	System.out.println("game: " + preset.gameID + ", last turn: " + preset.getLastTurnID());
+    	    	
+    	assertTrue(proxy.getter.checkEntryExistsWhere(
+    			DBContract.Game.TABLE_NAME, 
+    			DBContract.Game._ID+"="+preset.gameID
+				));
+
+    	proxy.printTables();
+
+    	connector.deleteGame(preset.gameID);
+    	
+    	proxy.printTables();
+
+    	assertFalse(proxy.getter.checkEntryExistsWhere(
+    			DBContract.Game.TABLE_NAME, 
+    			DBContract.Game._ID+"="+preset.gameID
+				));
+    	
+    	assertFalse(proxy.getter.checkEntryExistsWhere(
+    			DBContract.Turn.TABLE_NAME, 
+    			DBContract.Turn.COLUMN_NAME_GAME_ID+"="+preset.gameID
+				));
+    	
+    	assertFalse(proxy.getter.checkEntryExistsWhere(
+    			DBContract.Participation.TABLE_NAME, 
+    			DBContract.Participation.COLUMN_NAME_GAME_ID+"="+preset.gameID
+				));
+
+    	assertFalse(proxy.getter.checkEntryExistsWhere(
+    			DBContract.PlayedWhiteCard.TABLE_NAME, 
+    			DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID+"="+preset.getLastTurnID()
+				));
+   	
+    }
+    
+    
+   
 }

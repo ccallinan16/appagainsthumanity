@@ -53,6 +53,13 @@ public class SetterProxy {
 										new String[]{String.valueOf(game_id)});
 	}
 	
+	public void dropGame(long gameID) {
+		db.getWritableDatabase().delete(DBContract.Game.TABLE_NAME, 
+				DBContract.Game._ID + " = ?",
+				new String[]{String.valueOf(gameID)});
+		
+	}	
+	
 	public long addDealtBlackCard(long game_id, long player_id, long black_card_id) {
 		ContentValues values = new ContentValues();
 		values.put(DBContract.DealtBlackCard.COLUMN_NAME_GAME_ID, game_id);
@@ -347,5 +354,8 @@ public class SetterProxy {
 		}
 		
 		return id;
-	}	
+	}
+
+
+
 }

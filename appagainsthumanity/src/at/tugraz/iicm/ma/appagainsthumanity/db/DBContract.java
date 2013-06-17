@@ -73,6 +73,15 @@ public abstract class DBContract {
 	private static final String TYPE_BOOLEAN = " BOOLEAN";
 	private static final String TYPE_DATETIME =	 " DATETIME DEFAULT CURRENT_TIMESTAMP";
 	private static final String TYPE_PRIMARY_KEY = " INTEGER PRIMARY KEY";
+	
+	private static final String REF_GAME_ID = " REFERENCES "+
+												DBContract.Game.TABLE_NAME+"("+
+												DBContract.Game._ID+") ON DELETE CASCADE";
+	
+	private static final String REF_TURN_ID = " REFERENCES "+
+												DBContract.Turn.TABLE_NAME+"("+
+												DBContract.Turn._ID+") ON DELETE CASCADE";
+
 	private static final String COMMA_SEP = ",";
 	
 	public static final String[] SQL_CREATE_ENTRIES = new String[]{
@@ -89,7 +98,7 @@ public abstract class DBContract {
 	    //Table Participation
 	    "CREATE TABLE " + DBContract.Participation.TABLE_NAME + " (" +
 	    DBContract.Participation._ID + 					TYPE_PRIMARY_KEY + 	COMMA_SEP +
-	    DBContract.Participation.COLUMN_NAME_GAME_ID + 	TYPE_INTEGER + 		COMMA_SEP +
+	    DBContract.Participation.COLUMN_NAME_GAME_ID + 	TYPE_INTEGER + REF_GAME_ID + COMMA_SEP +
 	    DBContract.Participation.COLUMN_NAME_USER_ID + 	TYPE_INTEGER +		COMMA_SEP +
 	    DBContract.Participation.COLUMN_NAME_SCORE + 	TYPE_INTEGER + 		" DEFAULT 0" + 
 	    " )",
@@ -103,7 +112,7 @@ public abstract class DBContract {
 	    //Table turn
 	    "CREATE TABLE " + DBContract.Turn.TABLE_NAME + " (" +
 	    DBContract.Turn._ID + 						TYPE_PRIMARY_KEY + 	COMMA_SEP +
-	    DBContract.Turn.COLUMN_NAME_GAME_ID + 		TYPE_INTEGER +		COMMA_SEP +
+	    DBContract.Turn.COLUMN_NAME_GAME_ID + 		TYPE_INTEGER +  REF_GAME_ID	+	COMMA_SEP +
 	    DBContract.Turn.COLUMN_NAME_ROUNDNUMBER + 	TYPE_INTEGER + 		COMMA_SEP +
 	    DBContract.Turn.COLUMN_NAME_USER_ID + 		TYPE_INTEGER + 		COMMA_SEP +
 	    DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID + TYPE_INTEGER + 		" DEFAULT 0"  +
@@ -112,7 +121,7 @@ public abstract class DBContract {
 	    //Table played_white_card
 	    "CREATE TABLE " + DBContract.PlayedWhiteCard.TABLE_NAME + " (" +
 	    DBContract.PlayedWhiteCard._ID + 						TYPE_PRIMARY_KEY + 	COMMA_SEP +
-	    DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID + 		TYPE_INTEGER +		COMMA_SEP +
+	    DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID + 		TYPE_INTEGER +	REF_TURN_ID +	COMMA_SEP +
 	    DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID + 		TYPE_INTEGER + 		COMMA_SEP +
 	    DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID + 	TYPE_INTEGER +		COMMA_SEP + 
 	    DBContract.PlayedWhiteCard.COLUMN_NAME_WON + 			TYPE_BOOLEAN + 		" DEFAULT 0" +  
@@ -121,7 +130,7 @@ public abstract class DBContract {
 	    //Table dealt_white_card
 	    "CREATE TABLE " + DBContract.DealtWhiteCard.TABLE_NAME + " (" +
 	    DBContract.DealtWhiteCard._ID + 						TYPE_PRIMARY_KEY + 	COMMA_SEP +
-	    DBContract.DealtWhiteCard.COLUMN_NAME_GAME_ID + 		TYPE_INTEGER +		COMMA_SEP +
+	    DBContract.DealtWhiteCard.COLUMN_NAME_GAME_ID + 		TYPE_INTEGER + REF_GAME_ID + COMMA_SEP +
 	    DBContract.DealtWhiteCard.COLUMN_NAME_WHITE_CARD_ID + 	TYPE_INTEGER + 		COMMA_SEP +
 	    DBContract.DealtWhiteCard.COLUMN_NAME_PLAYER_ID + 		TYPE_INTEGER +
 	    " )",
@@ -129,7 +138,7 @@ public abstract class DBContract {
 	    //Table dealt_black_card
 	    "CREATE TABLE " + DBContract.DealtBlackCard.TABLE_NAME + " (" +
 	    DBContract.DealtBlackCard._ID + 						TYPE_PRIMARY_KEY + 	COMMA_SEP +
-	    DBContract.DealtBlackCard.COLUMN_NAME_GAME_ID + 		TYPE_INTEGER +		COMMA_SEP +
+	    DBContract.DealtBlackCard.COLUMN_NAME_GAME_ID + 		TYPE_INTEGER +	REF_GAME_ID + COMMA_SEP +
 	    DBContract.DealtBlackCard.COLUMN_NAME_BLACK_CARD_ID + 	TYPE_INTEGER + 		COMMA_SEP +
 	    DBContract.DealtBlackCard.COLUMN_NAME_PLAYER_ID + 		TYPE_INTEGER +
 	    " )"

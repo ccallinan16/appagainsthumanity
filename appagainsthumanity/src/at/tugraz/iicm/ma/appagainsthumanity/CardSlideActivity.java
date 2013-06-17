@@ -124,6 +124,9 @@ public class CardSlideActivity extends FragmentActivity {
 						case CONFIRM_WINNER:
 							connector.selectWinner(turnID, id);
 							break;
+						case SHOW_RESULT:
+							intent = new Intent(v.getContext(),GameOverviewActivity.class);
+							break;
 						default:
 							break;
 					}

@@ -18,6 +18,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.GameManager;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.ViewContext;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
@@ -56,7 +57,8 @@ public class ServerConnectionWithGUITest {
     @Test
     public void testTransitionBlackSelectToDisplayMain()
     {
-    	proxy.reinitializeDB();
+    	ServerConnector server = new ServerConnector(proxy);
+    	server.deleteGame(preset.gameID);
 
     	PresetHelper.setPreset(preset, proxy, PresetHelper.SELECT_BLACK);
 

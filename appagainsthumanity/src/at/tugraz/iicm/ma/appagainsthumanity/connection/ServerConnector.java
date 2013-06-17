@@ -163,6 +163,10 @@ public class ServerConnector {
 		
 	}
 	
+	public void deleteGame(long gameID) {
+		proxy.getDBSetter().dropGame(gameID);
+	}
+	
 	public void startRound(GameManager man)
 	{
 		man.addTurnID(proxy.getDBSetter().addTurn(man.gameID, man.getRoundNum(), man.czar, 0));
@@ -294,6 +298,8 @@ public class ServerConnector {
 			return (retid > 0);
 		}
 	}
+
+
 
 
 	
