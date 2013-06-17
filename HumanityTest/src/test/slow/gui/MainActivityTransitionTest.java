@@ -59,6 +59,9 @@ public class MainActivityTransitionTest {
 		thumbnail.performClick();
 		*/
 		GamelistAdapter adapter = (GamelistAdapter) list.getAdapter();
+
+		if (adapter == null)
+			System.err.println("adapter is null");
 		adapter.simulateClick(context);
 
 		CardSlideActivity csa = new CardSlideActivity();
@@ -78,6 +81,8 @@ public class MainActivityTransitionTest {
     	//		activity, newActivity, ViewContext.CONFIRM_SINGLE,true);
 		
 		CardSlideActivity newActivity = new CardSlideActivity();
+		
+		newActivity.onCreate(null);
 		
 		Intent i = createListTransition(ViewContext.SELECT_BLACK);
 		

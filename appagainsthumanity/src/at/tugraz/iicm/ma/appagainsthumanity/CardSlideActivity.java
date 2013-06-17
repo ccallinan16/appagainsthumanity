@@ -137,7 +137,6 @@ public class CardSlideActivity extends FragmentActivity {
 	}     
 
 	protected void createAndStartMainActivity(View v) {
-		System.out.println("back to main");
 		Intent intent = new Intent(v.getContext(),MainActivity.class);
 		//add flag to get back to main activity and clean intermediate activities
     	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -146,7 +145,6 @@ public class CardSlideActivity extends FragmentActivity {
 
 	private void initSlider()
 	{
-		System.out.println("initSlider");
 		  boolean selectable = false;
 		  
 		  if (context == ViewContext.SELECT_BLACK || 
@@ -162,16 +160,14 @@ public class CardSlideActivity extends FragmentActivity {
 		  
 		  List<Integer> cardIDs = new ArrayList<Integer>();
 
-			System.out.println("list: " + cardIDs);
-
 		  //what if server connector returns an empty list?
-		  
+		  int wonCardId = -1;
+		  		  
 		  switch(context)
 		  {
 		  case SELECT_BLACK:
 		  case SELECT_WHITE:
-			  if (turnID > 0)
-				  cardIDs = serverConnector.getDealtCards(dealer,context.getCardType(),turnID);
+			  cardIDs = serverConnector.getDealtCards(dealer,context.getCardType(),turnID);
 
 			  if (cardIDs == null) //obviously, we didn't get cards from the db
 			  {
@@ -179,10 +175,11 @@ public class CardSlideActivity extends FragmentActivity {
 				  cardIDs = CardCollection.instance.getCardsForPager(context);
 			  }
 			  break;
-		  case SELECT_WINNER:
 		  case SHOW_RESULT:
-			  if (turnID > 0)
-				  cardIDs = serverConnector.getPlayedCards(turnID);
+			  wonCardId = serverConnector.getWonCardId(turnID);
+			  //no break, as we need to set the cardIDs as well.
+		  case SELECT_WINNER:
+			  cardIDs = serverConnector.getPlayedCards(turnID);
 			  break;
 		  case CONFIRM_BLACK:
 		  case CONFIRM_WHITE:
@@ -191,9 +188,6 @@ public class CardSlideActivity extends FragmentActivity {
 			  break;
 			  default:
 		  }
-		  
-			System.out.println("list: " + cardIDs);
-
 		  		  
 		  //TODO: do something else for confirm views
 		  CardFragmentAdapter pageAdapter = new CardFragmentAdapter(
@@ -201,7 +195,8 @@ public class CardSlideActivity extends FragmentActivity {
 	    		  cardIDs,
 	    		  selectable,
 	    		  context,
-	    		  turnID
+	    		  turnID,
+	    		  wonCardId
 	    		  );
 	      
 	      ViewPager pager = (ViewPager) findViewById(R.id.cs_card_slider);
@@ -246,7 +241,7 @@ public class CardSlideActivity extends FragmentActivity {
 		topCardId = black.getId();
 		
 		SingleCardFragment scv = SingleCardFragment.newInstance(
-				black.getId(),ViewContext.SELECT_BLACK,false,turnID);
+				black.getId(),ViewContext.SELECT_BLACK,false,turnID, false);
 
 		getSupportFragmentManager()
 		.beginTransaction()

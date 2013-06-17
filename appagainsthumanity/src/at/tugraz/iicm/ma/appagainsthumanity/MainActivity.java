@@ -105,7 +105,8 @@ public class MainActivity extends VisibilityAwareActivity {
 				new IDToCardTranslator(this.getApplicationContext()));
 		
 		//prepare xmlrpc connection
-		XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
+		if (!ServerConnector.isRobolectricTestrun())
+			XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
 		
 		//indicate first start for notification polling
 		if (savedInstanceState == null)
@@ -161,7 +162,8 @@ public class MainActivity extends VisibilityAwareActivity {
 		notificationHandler = new NotificationHandler(dbProxy);
 		
 		//check if device is capable of gcm
-		checkGCMRequirements();
+		if (!ServerConnector.isRobolectricTestrun())
+			checkGCMRequirements();
 		
 		//register the receiver for GCM events
 		OnNotificationListener list = new OnNotificationListener() {
@@ -178,8 +180,11 @@ public class MainActivity extends VisibilityAwareActivity {
 				DISPLAY_MESSAGE_ACTION));
 
 		//check for updates
-        asyncTask = new ProgressTask();
-        asyncTask.execute();
+		//if (!ServerConnector.isRobolectricTestrun())
+		{
+	        asyncTask = new ProgressTask();
+	        asyncTask.execute();
+		}
 	}
 	
     @Override
@@ -246,6 +251,11 @@ public class MainActivity extends VisibilityAwareActivity {
     public void createGame(View view) {
     	Intent intent = new Intent(this, CreateGameActivity.class);
     	startActivity(intent);
+    }
+    
+    public void refresh(View view) {
+    	NotificationUpdateTask task = new NotificationUpdateTask();
+    	task.execute();
     }
     
     public void setPreset(View view) {
@@ -460,6 +470,9 @@ public class MainActivity extends VisibilityAwareActivity {
 	    @Override
 	    protected Void doInBackground(Void... arg0) {   
 	    	
+	    	if (ServerConnector.isRobolectricTestrun())
+	    		return null;
+	    	
 	    	/**
 	    	 * check if device is connected to the internet
 	    	 */
@@ -529,8 +542,10 @@ public class MainActivity extends VisibilityAwareActivity {
 	private class NotificationUpdateTask extends AsyncTask <Void,Void,Void>{
 	    @Override
 	    protected void onPreExecute(){
-	    	gameListView.setVisibility(View.GONE);
-	        bar.setVisibility(View.VISIBLE);
+	    	if (gameListView != null)
+	    		gameListView.setVisibility(View.GONE);
+	        if (bar != null)
+	        	bar.setVisibility(View.VISIBLE);
 	    }
 
 	    @Override
@@ -542,13 +557,19 @@ public class MainActivity extends VisibilityAwareActivity {
 
 	    @Override
 	    protected void onPostExecute(Void result) {
+	    	
 	        //hide progress bar
-	    	bar.setVisibility(View.GONE);
+	    	if (bar != null)
+	    		bar.setVisibility(View.GONE);
+	    	if (gameListView != null)
 	    	gameListView.setVisibility(View.VISIBLE);
 			
 	        //retrieve and show game list
-			gamelistCursor = dbProxy.readGameList(username);
-			displayListView(gamelistCursor);
+	    	if (gamelistCursor != null && dbProxy != null)
+	    	{
+	    		gamelistCursor = dbProxy.readGameList(username);
+	    		displayListView(gamelistCursor);
+	    	}
 	    }
 	}
 

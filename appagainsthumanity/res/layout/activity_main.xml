@@ -11,11 +11,22 @@
 	    <Button
 	        android:id="@+id/button_creategame"
 		    style="@style/button"
-		    android:layout_width="fill_parent"
+      		android:layout_width="0dip"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
 		    android:text="@string/main_text_create_game"
 		    android:onClick="createGame"
 		    android:drawableLeft="@drawable/plus"
 	    />
+
+	    <Button
+	        android:id="@+id/button_refresh"
+	        style="@style/button"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:onClick="refresh"
+	        android:text="@string/main_text_refresh" />
+
     </LinearLayout>
 	<LinearLayout 
     	style="@style/layout_content"
@@ -102,6 +113,7 @@
 	        	android:text="@string/main_button_set" 
 	        	android:onClick="setPreset"
         	/>
+	        	       
 		</LinearLayout>
 	</LinearLayout>
 

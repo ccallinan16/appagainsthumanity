@@ -10,6 +10,9 @@ import org.junit.runner.RunWith;
 import test.util.SQLTestRunner;
 import android.app.Activity;
 import android.content.Context;
+import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.PresetHelper;
@@ -21,7 +24,9 @@ public class DBProxyTest {
 	
 	@Before
 	public void setUp() throws Exception {
-        Context c = new Activity();       
+		
+		
+        Context c = new MainActivity();       
         proxy = new DBProxy(c);
         
         if (proxy == null)

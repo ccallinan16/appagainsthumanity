@@ -13,6 +13,7 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 	  private ViewContext context;
 	  private boolean selectable;
 	  private long turnID;
+	  private int winnerID;
 	  
 	  /*
 	  private CardFragmentAdapter(FragmentManager fm, List<Card> fragments,boolean selectable, long turnID) {
@@ -30,23 +31,28 @@ public class CardFragmentAdapter extends FragmentPagerAdapter {
 	  
 	  public CardFragmentAdapter(FragmentManager supportFragmentManager, 
 			  List<Integer> cardIDs,
-			  boolean selectable, ViewContext type, long turnID) {
+			  boolean selectable, ViewContext type, long turnID, int winnerID) {
 		    super(supportFragmentManager);
 		    
 		    this.context = type;
 		    this.selectable = selectable;
 		    this.turnID = turnID;
 		    this.cardIDs = cardIDs;
+		    this.winnerID = winnerID;
 		    		    
 	}
 
 	@Override 
-	  public Fragment getItem(int position) {		  
+	  public Fragment getItem(int position) {
+		
+		boolean winner = (cardIDs.get(position) == winnerID);
+		
 		  return SingleCardFragment.newInstance(
 				  cardIDs.get(position),
 				  context, 
 				  selectable,
-				  turnID);
+				  turnID, 
+				  winner);
 	  }
 
 	  @Override

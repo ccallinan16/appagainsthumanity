@@ -1,5 +1,6 @@
 package at.tugraz.iicm.ma.appagainsthumanity.connection;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -23,6 +24,10 @@ public class ServerConnector {
 
 	public static void setRobolectricTestrun() {
 		isRobolectricTestrun = true;
+	}
+	
+	public static boolean isRobolectricTestrun() {
+		return isRobolectricTestrun;
 	}
 	
 	public ServerConnector(DBProxy proxy) {
@@ -102,9 +107,7 @@ public class ServerConnector {
 			proxy.getDBSetter().updatePlayedWhiteCard(turn_id, id);
 		} else {
 			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
-						
-			System.out.println("NOW DOING STUFF; DAMMNIT");
-			
+									
 			//query server
 			serverProxy.selectWinnerCard(proxy.getUserID(), (int) turn_id, id);
 		}
@@ -115,20 +118,16 @@ public class ServerConnector {
 		//tables affected:
 		//users
 		
-		
 		long id = 0;
 		if (!isRobolectricTestrun) {
 			id = XMLRPCServerProxy.getInstance().getUserId(proxy.getUsername());
 		}
-		
-		System.out.println("addUser: " + id);
-		
+				
 		if (id > 0)
 			proxy.getDBSetter().addUser(id, proxy.getUsername());
 		else
 			id = proxy.getDBSetter().addUser(proxy.getUsername());
 		
-		System.out.println("addUser: " + id);
 		//our own username
 		man.setCurrentUser(id, proxy.getUsername());
 				
@@ -168,9 +167,16 @@ public class ServerConnector {
 	{
 		man.addTurnID(proxy.getDBSetter().addTurn(man.gameID, man.getRoundNum(), man.czar, 0));
 	}
+		
+	public void dealBlackCards(long game_id, long player_id, Integer[] card_ids)
+	{
+		proxy.getDBSetter().dropDealtBlackCards(game_id);
+
+		for (int card : card_ids)
+			proxy.getDBSetter().addDealtBlackCard(game_id, player_id, card);
+	}
 	
-	
-	public void dealCards(long turn_id, CardType type, Integer[] cardIds)
+	public void dealWhiteCards(long turn_id, CardType type, Integer[] cardIds)
 	{
 
 		//deal BlackCards to person whose turn it is (to be Czar)
@@ -179,10 +185,7 @@ public class ServerConnector {
 		//turn
 		//TODO: right now, this is in startRound... what should we do here?
 		//server action to select cards that have not been played before. 
-		
-		//---------------------------------------------------------------------
-		
-		
+				
 		//deal WhiteCards AFTER the selectCard Action on the Black Card
 		//has happened to deal all white Cards
 				
@@ -234,6 +237,10 @@ public class ServerConnector {
 		return proxy.getter.getPlayedWhiteCards(turnID);
 	}
 	
+	public int getWonCardId(long turnID) {
+		return proxy.getter.getWonCard(turnID);
+	}
+	
 	public void updateScore(long turn_id, int chosen_card)
 	{
 		//tables affected:
@@ -251,9 +258,7 @@ public class ServerConnector {
 	
 			//retrieve id of user from server
 			int id = serverProxy.getUserId(username);
-			
-			System.out.println("retrieveUserID: " + id);
-			
+						
 			//check connection
 			if (!serverProxy.isConnected())
 				return 0;
@@ -289,5 +294,7 @@ public class ServerConnector {
 			return (retid > 0);
 		}
 	}
+
+
 	
 }

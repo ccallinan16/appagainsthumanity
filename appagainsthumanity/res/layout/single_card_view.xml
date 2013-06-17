@@ -19,8 +19,13 @@
          android:layout_height="fill_parent"
          android:maxLines="10"
          android:freezesText="true"
-         android:textColor="@android:color/black"
-         android:background="@drawable/border_black2"
          android:textIsSelectable="false" />
+
+     <ImageView
+         android:id="@+id/winnerImage"
+         android:layout_gravity="bottom|right"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:src="@drawable/winner_big" />
 
 </FrameLayout>

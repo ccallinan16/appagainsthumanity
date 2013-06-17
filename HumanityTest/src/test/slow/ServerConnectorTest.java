@@ -98,7 +98,7 @@ public class ServerConnectorTest {
     	connector.startRound(preset);
     	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
 
-    	connector.dealCards(preset.getLastTurnID(), CardType.WHITE, preset.getDealtCardIDs());
+    	connector.dealWhiteCards(preset.getLastTurnID(), CardType.WHITE, preset.getDealtCardIDs());
     	
     	for (Integer card : preset.getDealtCardIDs())
     	{
@@ -117,7 +117,7 @@ public class ServerConnectorTest {
     	connector.startGame(preset);
     	connector.startRound(preset);
     	connector.selectCardBlack(preset.getLastTurnID(), preset.getSelectedBlack());
-    	connector.dealCards(preset.getLastTurnID(), CardType.WHITE, preset.getDealtCardIDs());
+    	connector.dealWhiteCards(preset.getLastTurnID(), CardType.WHITE, preset.getDealtCardIDs());
     	
     	connector.selectCardWhite(preset.getLastTurnID(), preset.getSelectedWhite());
     	

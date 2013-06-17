@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -59,6 +59,22 @@
     	<item name="android:textStyle">bold</item>
     </style> 
 
+    
+    <style name="blackcard" parent="@style/text.white.large">
+        <item name="android:background">@drawable/border_black_final</item>
+        <item name="android:layout_gravity">center_horizontal</item>     
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        
+    </style>
+    
+    <style name="whitecard" parent="@style/text.black.large">
+        <item name="android:background">@drawable/border_white_final</item>
+        <item name="android:layout_gravity">center_horizontal</item>     
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        
+   	</style>
     
     <style name="button" parent="@style/text.white">
         <item name="android:textSize">26sp</item>

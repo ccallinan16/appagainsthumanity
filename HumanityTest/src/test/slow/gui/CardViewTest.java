@@ -1,5 +1,6 @@
 package test.slow.gui;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import mocks.IDToCardTranslator;
 
@@ -81,6 +82,9 @@ public class CardViewTest {
     	
     	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
     	CardFragmentAdapter cfa = (CardFragmentAdapter) pager.getAdapter();
+    	
+    	assertTrue(cfa.getCount() > 0);
+    	
     	assertEquals(cfa.getItem(0).getClass(),SingleCardFragment.class);
     	
     	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);
@@ -128,6 +132,9 @@ public class CardViewTest {
 
     	ViewPager pager = (ViewPager) csa.findViewById(R.id.cs_card_slider);
     	CardFragmentAdapter cfa = (CardFragmentAdapter) pager.getAdapter();
+    	
+    	assertTrue(cfa.getCount() > 0);
+    	
     	assertEquals(cfa.getItem(0).getClass(),SingleCardFragment.class);
     	
     	FrameLayout frame = (FrameLayout) csa.findViewById(R.id.cs_display_frame);

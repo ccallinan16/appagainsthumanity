@@ -66,7 +66,7 @@ public class GamelistAdapter extends CursorAdapter {
 			}
 		} else if (c.getLong(6) == c.getLong(7) && c.getLong(8) == 0) {
 			//case: choose black card
-			thumbnail.setImageResource(R.drawable.border_black);
+			thumbnail.setImageResource(R.drawable.card_black);
 			thumbnail.setOnClickListener(
 					new ChooseViewListener(activity, ViewContext.SELECT_BLACK,turn));
 		} else if (c.getLong(6) != c.getLong(7) && c.getInt(9) < (c.getInt(5) - 1) && c.getLong(8) != 0 && c.getLong(11) == 0) {

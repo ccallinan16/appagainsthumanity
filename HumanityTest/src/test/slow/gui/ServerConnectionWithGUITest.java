@@ -56,6 +56,8 @@ public class ServerConnectionWithGUITest {
     @Test
     public void testTransitionBlackSelectToDisplayMain()
     {
+    	proxy.reinitializeDB();
+
     	PresetHelper.setPreset(preset, proxy, PresetHelper.SELECT_BLACK);
 
     	assertTrue(proxy.getter.checkEntryExistsWhere(

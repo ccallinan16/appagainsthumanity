@@ -31,6 +31,7 @@ public class PresetHelper {
 			
 			manager.czar = manager.getCurrentUserID();
 			connector.startRound(manager);
+			connector.dealBlackCards(manager.gameID, manager.czar,manager.getDealtCardIDs());
 			break;
 		case SELECT_WHITE:
 			connector.startGame(manager);
@@ -40,7 +41,7 @@ public class PresetHelper {
 			connector.selectWinner(manager.getLastTurnID(), manager.getWinnerCard());
 			connector.updateScore(manager.getLastTurnID(), manager.getWinnerCard());
 			connector.startRound(manager);
-			connector.dealCards(manager.getLastTurnID(), CardType.WHITE, manager.getDealtCardIDs());
+			connector.dealWhiteCards(manager.getLastTurnID(), CardType.WHITE, manager.getDealtCardIDs());
 			break;
 		case SELECT_WINNER:
 			connector.startGame(manager);

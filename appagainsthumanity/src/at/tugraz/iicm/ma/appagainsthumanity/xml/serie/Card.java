@@ -95,9 +95,9 @@ public class Card {
 	
 	public int getTextAppearance() {
 		if (type.equals(CardType.BLACK))
-			return R.style.text_white_large;
+			return R.style.blackcard;
 		else
-			return R.style.text_black_large;
+			return R.style.whitecard;
 	}
 
 	

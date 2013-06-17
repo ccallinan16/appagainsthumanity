@@ -17,8 +17,8 @@ import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 public class SingleCardFragment extends Fragment {
 
-	private static final float MAX_SIZE = 38f;
-	private static final float MIN_SIZE = 20f;
+	private static final float MAX_SIZE = 28f;
+	private static final float MIN_SIZE = 12f;
 
 	
 	 protected static final String ID = "CARD_ID";
@@ -27,12 +27,14 @@ public class SingleCardFragment extends Fragment {
 
 	 protected ViewContext context;
 	 private long turnID;
+	 private boolean isWinner;
 	     
-	public static SingleCardFragment newInstance(int cardID, ViewContext type, boolean selectable, long turnID) {
+	public static SingleCardFragment newInstance(int cardID, ViewContext type, boolean selectable, long turnID, boolean isWinner) {
 		
 		   SingleCardFragment f = new SingleCardFragment();
 		   f.context = type;
 		   f.turnID = turnID;
+		   f.isWinner = isWinner;
 		   Bundle bdl = new Bundle();
 		   bdl.putInt(ID, cardID);
 		   bdl.putBoolean(SELECTABLE,selectable);
@@ -60,10 +62,22 @@ public class SingleCardFragment extends Fragment {
 		 
 		 messageTextView.setText(card.getText());
 		 messageTextView.setTextAppearance(v.getContext(), card.getTextAppearance());
+		 
+		 
+		 if (card.getType().equals(CardType.BLACK))
+			 messageTextView.setBackgroundResource(R.drawable.border_black_final);
+		 else
+			 messageTextView.setBackgroundResource(R.drawable.border_white_final);
+
 		 //messageTextView.setTextColor(card.getType().getTextColor());
-		 
-		 
+		 		 
 		 //messageTextView.setBackground(getResources().getDrawable(R.drawable.border_white2));
+		 
+		 if (!isWinner)
+		 {
+			 View winner = v.findViewById(R.id.winnerImage);
+			 winner.setVisibility(View.INVISIBLE);
+		 }
 		 
 		 
 		 if (getArguments().getBoolean(SELECTABLE))

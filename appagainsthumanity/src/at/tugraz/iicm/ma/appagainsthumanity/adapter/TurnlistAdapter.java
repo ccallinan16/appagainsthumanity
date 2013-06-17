@@ -55,7 +55,7 @@ public class TurnlistAdapter extends CursorAdapter {
 		
 		if (username.equals(c.getString(3)) && c.getLong(4) == 0) {
 			//case: choose black card
-			thumbnail.setImageResource(R.drawable.border_black);
+			thumbnail.setImageResource(R.drawable.card_black);
 			status.setText(context.getString(R.string.game_overview_turns_text_chooseblack));
 			view.setOnClickListener(
 					new ChooseViewListener(activity, ViewContext.SELECT_BLACK,c.getLong(0)));

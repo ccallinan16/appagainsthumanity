@@ -53,9 +53,8 @@ public class SetterProxy {
 										new String[]{String.valueOf(game_id)});
 	}
 	
-	public long addDealtBlackCard(long id, long game_id, long player_id, long black_card_id) {
+	public long addDealtBlackCard(long game_id, long player_id, long black_card_id) {
 		ContentValues values = new ContentValues();
-		values.put(DBContract.DealtBlackCard._ID, id);
 		values.put(DBContract.DealtBlackCard.COLUMN_NAME_GAME_ID, game_id);
 		values.put(DBContract.DealtBlackCard.COLUMN_NAME_PLAYER_ID, player_id);
 		values.put(DBContract.DealtBlackCard.COLUMN_NAME_BLACK_CARD_ID, black_card_id);
@@ -179,15 +178,22 @@ public class SetterProxy {
 		return insertIgnoreOverwrite(DBContract.PlayedWhiteCard.TABLE_NAME, DBContract.PlayedWhiteCard._ID, values);
 	}
 	
-	public void updatePlayedWhiteCard(long id, long turn_id, long user_id, long white_card_id, Boolean won) {
+	public void updatePlayedWhiteCard(long id, long turn_id, long user_id, long white_card_id, boolean won) {
+		
+		System.out.println("won: " + won);
+		
 		ContentValues values = new ContentValues();
 		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID, turn_id);
 		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID, user_id);
 		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_WHITE_CARD_ID, white_card_id);
 		values.put(DBContract.PlayedWhiteCard.COLUMN_NAME_WON, won);
-		db.getWritableDatabase().update(DBContract.PlayedWhiteCard.TABLE_NAME, values, 
+		
+		System.out.println(values);
+		int i = db.getWritableDatabase().update(DBContract.PlayedWhiteCard.TABLE_NAME, values, 
 									  	DBContract.PlayedWhiteCard._ID + " = ?", 
 									  	new String[]{String.valueOf(id)});
+		
+		System.out.println("num rows: "+i);
 	}
 	
 	public boolean setBlackCardID(long turn_id, int cardIndex) {

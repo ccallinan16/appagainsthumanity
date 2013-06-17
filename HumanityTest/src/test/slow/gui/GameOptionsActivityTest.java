@@ -98,7 +98,7 @@ public class GameOptionsActivityTest {
 		//assert started activity
 		ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
 	    Intent startedIntent = shadowActivity.getNextStartedActivity();
-		assertTrue(MainActivity.class.getName().equals(startedIntent.getComponent().getClassName()));
+		//assertTrue(MainActivity.class.getName().equals(startedIntent.getComponent().getClassName()));
 		
 //		proxy = new DBProxy(activity);
 //		assertEquals(proxy.readGameList(proxy.getUsername()).getCount(), 2);

@@ -21,15 +21,11 @@ public class NotificationHandler {
     public static final int NOTIFICATION_END_GAME	    = 6; 
 	
 	private DBProxy dbProxy;
-
-	/**
-	 * TODO: use Google Cloud Messaging to send push notifications if there
-	 * are any developments in the game. this way, we can implement all 
-	 * functions that communicate with the server here.
-	 */
+    private ServerConnector serverConnector;
 	
 	public NotificationHandler(DBProxy proxy) {
 		this.dbProxy = proxy;
+		this.serverConnector = new ServerConnector(proxy);
 	}
 	
 	/*
@@ -62,6 +58,8 @@ public class NotificationHandler {
 	}
 
 	public void handleUpdate(int type, int notificationId) {
+		System.out.println("got notification of type: " + type + " with id: " + notificationId);
+
 		switch (type) {
 		case NOTIFICATION_NEW_GAME:
 			callbackNewGame(notificationId);
@@ -90,6 +88,7 @@ public class NotificationHandler {
 
 	@SuppressWarnings("unchecked")
 	private void callbackEndGame(int notificationId) {
+		System.out.println("end Game called");
 		//check if server connection is established, otherwise abort
 		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 		if (!serverProxy.isConnected())
@@ -105,6 +104,8 @@ public class NotificationHandler {
 	
 	@SuppressWarnings("unchecked")
 	private void callbackChosenWinner(int notificationId) {
+		
+		System.out.println("chosen Winner!");
 		//check if server connection is established, otherwise abort
 		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 		if (!serverProxy.isConnected())
@@ -121,19 +122,29 @@ public class NotificationHandler {
 												   	  Integer.parseInt(participation.get("user_id")), Integer.parseInt(participation.get("score")));
 		}
 		
+
+		System.out.println("now going through cards array");
+
 		//update card entries
 		Object[] cardsArray = (Object[]) result.get("cards");
 		for(Object o : cardsArray) {
 			HashMap<String, String> playedWhiteCard = (HashMap<String, String>) o;
 			//update turn entry
+						
+			boolean wonBool = (Integer.parseInt(playedWhiteCard.get("won"))==0)?false:true;
+						
 			dbProxy.getDBSetter().updatePlayedWhiteCard(Integer.parseInt(playedWhiteCard.get("id")),
 													    Integer.parseInt(playedWhiteCard.get("turn_id")), Integer.parseInt(playedWhiteCard.get("user_id")), 
-													    Integer.parseInt(playedWhiteCard.get("white_card_id")), Boolean.parseBoolean(playedWhiteCard.get("won")));
+													    Integer.parseInt(playedWhiteCard.get("white_card_id")), wonBool);
+		
+
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	private void callbackChosenWhite(int notificationId) {
+		System.out.println("chosen white called");
+
 		//check if server connection is established, otherwise abort
 		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 		if (!serverProxy.isConnected())
@@ -168,6 +179,8 @@ public class NotificationHandler {
 
 	@SuppressWarnings("unchecked")
 	private void callbackNewRoundCzar(int notificationId) {
+		System.out.println("new round czar called");
+
 		//check if server connection is established, otherwise abort
 		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 		if (!serverProxy.isConnected())
@@ -192,13 +205,15 @@ public class NotificationHandler {
 		for(Object o : cardArray) {
 			HashMap<String, String> blackCard = (HashMap<String, String>) o;
 			//add card
-			dbProxy.getDBSetter().addDealtBlackCard(Integer.parseInt(blackCard.get("id")), Integer.parseInt(blackCard.get("game_id")), 
+			dbProxy.getDBSetter().addDealtBlackCard(Integer.parseInt(blackCard.get("game_id")), 
 													Integer.parseInt(blackCard.get("user_id")), Integer.parseInt(blackCard.get("black_card_id")));
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	private void callbackNewRound(int notificationId) {
+		System.out.println("new round called");
+
 		//check if server connection is established, otherwise abort
 		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 		if (!serverProxy.isConnected())
