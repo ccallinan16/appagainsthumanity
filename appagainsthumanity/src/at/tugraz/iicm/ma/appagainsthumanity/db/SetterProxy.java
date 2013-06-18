@@ -135,24 +135,14 @@ public class SetterProxy {
 			  	DBContract.Participation._ID + " = ?", 
 			  	new String[]{String.valueOf(id)});
 	}
-	
-	public long addTurn(long game_id, int roundnumber, long user_id, Integer black_id) {
-		ContentValues values = new ContentValues();
-		values.put(DBContract.Turn.COLUMN_NAME_GAME_ID, game_id);
-		values.put(DBContract.Turn.COLUMN_NAME_ROUNDNUMBER, roundnumber);
-		values.put(DBContract.Turn.COLUMN_NAME_USER_ID, user_id);
-		if (black_id != null)
-			values.put(DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID, black_id);
 		
-		//as card IDs start with 1, we can set 0 instead of null. this allows us
-		//to check the values with =? syntax, instead of IS NULL. 
-		
-		return insertIgnoreOverwrite(DBContract.Turn.TABLE_NAME, DBContract.Turn._ID, values);
-	}
-	
 	public long addTurn(long id, long game_id, int roundnumber, long user_id, Integer black_id) {
 		ContentValues values = new ContentValues();
-		values.put(DBContract.Turn._ID, id);
+		if (id != 0)		
+			values.put(DBContract.Turn._ID, id);
+		
+		System.err.println("id: " + id);
+		
 		values.put(DBContract.Turn.COLUMN_NAME_GAME_ID, game_id);
 		values.put(DBContract.Turn.COLUMN_NAME_ROUNDNUMBER, roundnumber);
 		values.put(DBContract.Turn.COLUMN_NAME_USER_ID, user_id);
@@ -321,9 +311,10 @@ public class SetterProxy {
 		try {			
 			id = db.getWritableDatabase().insertOrThrow(tblName, null, values);
 
-		} catch (android.database.SQLException exception)
+			System.out.println("succeeded, id: " + id);
+		} 
+		catch (android.database.SQLException exception)
 		{
-			
 			String query = "";
 			String[] args = new String[values.size()];
 						
@@ -338,8 +329,11 @@ public class SetterProxy {
 				args[count++] = String.valueOf(e.getValue());
 			}
 
+			System.err.println(values);
 			//if at all possible, update the values to the new (FOR TESTING; TODO)
-			db.getWritableDatabase().update(tblName, values, query, args);
+			int rows_affected = db.getWritableDatabase().update(tblName, values, query, args);
+			
+			System.err.println("rows affected: " + rows_affected);
 			
 			Cursor c = db.getWritableDatabase().query(tblName, new String[] { idCol }, 
 					query, args, null,null,null);
@@ -351,6 +345,18 @@ public class SetterProxy {
 		    	
 			    c.close();    
 		    }
+		    
+		    if (id == -1)
+		    {
+				{
+//					ex.printStackTrace();
+					System.err.println("ConstraintException");
+					System.out.println("tbl: " + tblName + ", " + values);
+					db.dumpTables();
+				}
+		    }
+			System.out.println("succeeded 2., id: " + id);
+
 		}
 		
 		return id;

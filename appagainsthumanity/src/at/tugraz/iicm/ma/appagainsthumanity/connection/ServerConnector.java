@@ -54,7 +54,7 @@ public class ServerConnector {
 			proxy.getDBSetter().addParticipation(gameId,  userId, 0);
 			
 			//add turn
-			proxy.getDBSetter().addTurn(gameId, 1, userId, null);
+			proxy.getDBSetter().addTurn(0,gameId, 1, userId, 0);
 			
 		} else {
 			XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
@@ -169,7 +169,7 @@ public class ServerConnector {
 	
 	public void startRound(GameManager man)
 	{
-		man.addTurnID(proxy.getDBSetter().addTurn(man.gameID, man.getRoundNum(), man.czar, 0));
+		man.addTurnID(proxy.getDBSetter().addTurn(0,man.gameID, man.getRoundNum(), man.czar, 0));
 	}
 		
 	public void dealBlackCards(long game_id, long player_id, Integer[] card_ids)

@@ -108,6 +108,9 @@ public class MainActivity extends VisibilityAwareActivity {
 		if (!ServerConnector.isRobolectricTestrun())
 			XMLRPCServerProxy.createInstance(getString(R.string.xmlrpc_hostname));
 		
+		if (ServerConnector.isRobolectricTestrun())
+			throw new RuntimeException();
+		
 		//indicate first start for notification polling
 		if (savedInstanceState == null)
 			isFirstStart = true;
@@ -179,6 +182,11 @@ public class MainActivity extends VisibilityAwareActivity {
 		registerReceiver(mHandleMessageReceiver, new IntentFilter(
 				DISPLAY_MESSAGE_ACTION));
 
+		
+		if (ServerConnector.isRobolectricTestrun())
+			throw new RuntimeException();
+
+		
 		//check for updates
 		//if (!ServerConnector.isRobolectricTestrun())
 		{
@@ -494,7 +502,7 @@ public class MainActivity extends VisibilityAwareActivity {
 
 		    	//register gcm
 			    gcmRegistrationProcess();
-		    	notificationHandler.checkAndHandleUpdates();
+		    	//notificationHandler.checkAndHandleUpdates();
 		    }
 
 	    	return null;
