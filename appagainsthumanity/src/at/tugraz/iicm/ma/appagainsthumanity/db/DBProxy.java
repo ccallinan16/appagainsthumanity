@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBContract.PlayedWhiteCard;
 import at.tugraz.iicm.ma.appagainsthumanity.db.util.DebugPrinter;
 
 
@@ -194,6 +195,7 @@ public class DBProxy {
 		    DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_BLACK_CARD_ID,
 		    "COUNT(DISTINCT "+DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard._ID + ") AS numwhitechosen",
 		    DBContract.User.TABLE_NAME + "2" + "." + DBContract.User.COLUMN_NAME_USERNAME + " AS winner",
+		    "playedbase." + DBContract.PlayedWhiteCard.COLUMN_NAME_WON,
 		};
 
 		// How you want the results sorted in the resulting Cursor
@@ -209,15 +211,20 @@ public class DBProxy {
 			" ON " + DBContract.User.TABLE_NAME + "1" + "." + DBContract.User._ID + " = " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn.COLUMN_NAME_USER_ID + 
 			" LEFT JOIN " + DBContract.PlayedWhiteCard.TABLE_NAME + 
 			" ON " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID + " = " + DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID + 
+			" LEFT JOIN " + DBContract.PlayedWhiteCard.TABLE_NAME + " AS playedbase " +
+			" ON " + DBContract.Turn.TABLE_NAME + "." + DBContract.Turn._ID + " = playedbase." + DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID + 
+			" LEFT OUTER JOIN " + DBContract.PlayedWhiteCard.TABLE_NAME + " AS playedwon " +
+			" ON playedbase.turn_id = playedwon.turn_id AND playedbase.won = 0 AND playedwon.won = 1" +
 			" LEFT JOIN " + DBContract.User.TABLE_NAME + " AS " + DBContract.User.TABLE_NAME + "2" +  
-			" ON " + DBContract.User.TABLE_NAME + "2" + "." + DBContract.User._ID + " = " + DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID,
+			" ON " + DBContract.User.TABLE_NAME + "2" + "." + DBContract.User._ID + " = " + "playedbase." + DBContract.PlayedWhiteCard.COLUMN_NAME_USER_ID,
 			
 			// The table to query
 		    projection,                               // The columns to return
-		    DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID + " = ? ",
+		    DBContract.Game.TABLE_NAME + "." + DBContract.Game._ID + " = ? " +
+		    "AND playedwon.won IS NULL",
 		    new String[]{String.valueOf(game_id)},    // The values for the WHERE clause
 		    DBContract.PlayedWhiteCard.TABLE_NAME + "." + DBContract.PlayedWhiteCard.COLUMN_NAME_TURN_ID, // don't group the rows
-		    null,                                     // don't filter by row groups
+		    null		,                                     // don't filter by row groups
 		    sortOrder                                 // The sort order
 		    );
 	}
