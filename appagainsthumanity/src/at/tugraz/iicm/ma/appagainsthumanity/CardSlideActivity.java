@@ -40,6 +40,9 @@ public class CardSlideActivity extends FragmentActivity {
 		this.proxy = proxy;
 	}
 	
+	  boolean selectable = false;
+	  
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	
@@ -56,9 +59,13 @@ public class CardSlideActivity extends FragmentActivity {
 	  
 	  turnID = getIntent().getExtras().getLong(BundleCreator.TURN_ID);
 	  	  
-	  if (context == ViewContext.CONFIRM_WHITE 
-			  || context == ViewContext.CONFIRM_BLACK
-			  || context == ViewContext.SHOW_RESULT)
+	  if (context == ViewContext.SELECT_BLACK || 
+			  context == ViewContext.SELECT_WHITE ||
+			  context == ViewContext.SELECT_WINNER)
+			  selectable = true;
+
+	  
+	  if (!selectable)
 	  {
 			TextView lbl = (TextView) findViewById(R.id.cs_label);
 			lbl.setVisibility(View.GONE);
@@ -148,12 +155,6 @@ public class CardSlideActivity extends FragmentActivity {
 
 	private void initSlider()
 	{
-		  boolean selectable = false;
-		  
-		  if (context == ViewContext.SELECT_BLACK || 
-			  context == ViewContext.SELECT_WHITE ||
-			  context == ViewContext.SELECT_WINNER)
-			  selectable = true;
 		  
 		  if (proxy == null)
 			  proxy = new DBProxy(this);

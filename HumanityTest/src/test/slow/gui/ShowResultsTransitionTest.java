@@ -38,7 +38,7 @@ public class ShowResultsTransitionTest {
 	{		
 		CardSlideActivity csa = new CardSlideActivity();
     	Intent i = new Intent(csa, CardSlideActivity.class);
-    	i.putExtras(BundleCreator.createBundle(ViewContext.SHOW_RESULT,PresetHelper.man.getLastTurnID()));
+    	i.putExtras(BundleCreator.createBundle(ViewContext.SHOW_RESULT,PresetHelper.man.getSecondToLastTurnID()));
 
 		csa.setIntent(i);
 				

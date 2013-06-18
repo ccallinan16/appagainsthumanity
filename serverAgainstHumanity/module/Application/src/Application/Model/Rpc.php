@@ -188,7 +188,7 @@ class Rpc
 				$registration_ids[] = $gcm;
 			}
 				
-		}   
+		}
     
     	$this->sendNotificationToRegids($type, $registration_ids, $contentId);
     	return true;

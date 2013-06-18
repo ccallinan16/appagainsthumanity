@@ -90,7 +90,7 @@ public class CreateGameActivity extends VisibilityAwareActivity {
 				//click on existing entry -> edit
 				System.out.println("item selected: " + position);
 				
-				AutocompletePromptDialog dlg = new AutocompletePromptDialog(CreateGameActivity.this, R.string.prompt_new_invite_title, R.string.prompt_new_invite_comment, inviteArrayAdapter.getItem(position), userAdapter) {
+				AutocompletePromptDialog dlg = new AutocompletePromptDialog(CreateGameActivity.this, R.string.prompt_edit_invite_title, R.string.prompt_edit_invite_comment, inviteArrayAdapter.getItem(position), userAdapter) {
 					@Override
 					public boolean onOkClicked(String input) {
 						if (!input.equals(""))
@@ -154,7 +154,7 @@ public class CreateGameActivity extends VisibilityAwareActivity {
 	 */
 	
 	public void addPlayer(View view) {
-		AutocompletePromptDialog dlg = new AutocompletePromptDialog(CreateGameActivity.this, R.string.prompt_new_invite_title, R.string.prompt_new_invite_comment, userAdapter) {
+		AutocompletePromptDialog dlg = new AutocompletePromptDialog(CreateGameActivity.this, R.string.prompt_edit_invite_title, R.string.prompt_edit_invite_comment, userAdapter) {
 			@Override
 			public boolean onOkClicked(String input) {
 				if (!input.equals("")) {

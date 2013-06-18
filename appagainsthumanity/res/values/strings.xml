@@ -33,10 +33,8 @@
     <string name="game_overview_turns_text_wait">waiting for other player</string>
     <string name="card_slide_toast_connectionerror">ERROR: connection to server failed</string>
     
-    <string name="prompt_new_invite_title">Invite player</string>
-    <string name="prompt_new_invite_comment">Player-ID</string>
     <string name="prompt_edit_invite_title">Invite player</string>
-    <string name="prompt_edit_invite_comment">Player-ID</string>
+    <string name="prompt_edit_invite_comment">Google username:</string>
     
     <string name="cs_label_select_black">Tap on a Card to select it.</string>
     <string name="confirmation_dialog">confirm to select current card</string>

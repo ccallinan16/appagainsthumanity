@@ -71,6 +71,14 @@ public class GameManager {
 		return turnIDs.get(turnIDs.size()-1);
 	}
 
+	public long getSecondToLastTurnID()
+	{
+		if (turnIDs.size() > 1)
+			return turnIDs.get(turnIDs.size()-2);
+		else return 0;
+		
+	}
+	
 	public int getSelectedBlack() {
 		return 13;
 	}
