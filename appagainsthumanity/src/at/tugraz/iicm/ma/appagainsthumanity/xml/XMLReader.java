@@ -72,7 +72,7 @@ public class XMLReader {
 				
 		try {
 			//as indizes here start with 1, well add 1
-			String expr = "/cardCollection/"+type.toString()+"/entry["+(id+1)+"]/card/text";
+			String expr = "/cardCollection/"+type.toString()+"/entry["+(id)+"]/card/text";
 			
 		      XPathExpression xPathExpression = xPath.compile(expr);
 		      if (xPathExpression == null)

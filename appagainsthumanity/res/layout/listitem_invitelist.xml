@@ -4,7 +4,7 @@
 	style="@style/text.white"
     android:background="@drawable/list_selector"
     android:layout_width="match_parent"
-	android:layout_height="32dp"
+	android:layout_height="42dip"
 	android:gravity="center_vertical"
 	android:paddingLeft="10dp"
 	/>

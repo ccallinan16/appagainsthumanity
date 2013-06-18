@@ -45,7 +45,7 @@ public class F_XMLTests {
 	@Test
 	public void testQuery() {
 		
-		int id = 0;
+		int id = 1;
 		XMLReader reader = new XMLReader(subPath+"example.xml");
 		assertEquals("Hello",reader.getText(CardType.WHITE,id));
 	}
@@ -78,7 +78,7 @@ public class F_XMLTests {
         XMLCreator.createXMLFromString(FILENAME,array,null);
 		
 		XMLReader reader = new XMLReader(FILENAME);
-		assertEquals(array[2],reader.getText(CardType.WHITE,2));
+		assertEquals(array[2],reader.getText(CardType.WHITE,3));
 	}
 	
 	@Test
@@ -91,8 +91,8 @@ public class F_XMLTests {
         XMLCreator.createXMLFromString(FILENAME,white,black);
 		
 		XMLReader reader = new XMLReader(FILENAME);
-		assertEquals(white[2],reader.getText(CardType.WHITE,2));
-		assertEquals(black[1],reader.getText(CardType.BLACK,1));		
+		assertEquals(white[2],reader.getText(CardType.WHITE,3));
+		assertEquals(black[1],reader.getText(CardType.BLACK,2));		
 	}
 	
 

@@ -51,7 +51,7 @@ public class TurnlistAdapter extends CursorAdapter {
 		round.setText("Round " + c.getString(1));
 		
 		//set arrow to visible if it was hidden before
-		arrow.setVisibility(View.VISIBLE);
+		//arrow.setVisibility(View.VISIBLE);
 		
 		if (username.equals(c.getString(3)) && c.getLong(4) == 0) {
 			//case: choose black card
@@ -74,11 +74,11 @@ public class TurnlistAdapter extends CursorAdapter {
 		} else if (c.getInt(7) != 0) {
 			//show result
 			if (c.getString(6).equals(username)) {
-				thumbnail.setImageResource(R.drawable.star);
+				thumbnail.setImageResource(R.drawable.star_new);
 				status.setText(context.getString(R.string.game_overview_turns_text_youwon));
 			}
 			else {
-				thumbnail.setImageResource(R.drawable.star_empty);
+				thumbnail.setImageResource(R.drawable.star_new_empty);
 				status.setText(context.getString(R.string.game_overview_turns_text_winner) + ": " + c.getString(6));
 			}
 			view.setOnClickListener(

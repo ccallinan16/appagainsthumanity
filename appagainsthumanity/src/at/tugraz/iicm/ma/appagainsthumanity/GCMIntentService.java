@@ -75,7 +75,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onDeletedMessages(Context context, int total) {
         Log.i(TAG, "Received deleted messages notification");
         String message = getString(R.string.gcm_deleted, total);
-        displayMessageByBroadcast(context, message);
+        //displayMessageByBroadcast(context, message);
         // notifies user
         if (!AAHApplication.isActivityVisible())
         	generateNotification(context, message);

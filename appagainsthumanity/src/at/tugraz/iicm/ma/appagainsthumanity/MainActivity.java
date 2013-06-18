@@ -550,7 +550,8 @@ public class MainActivity extends VisibilityAwareActivity {
 	    @Override
 	    protected Void doInBackground(Void... arg0) {   
 			//check and process notifications only on first start
-	    	notificationHandler.checkAndHandleUpdates();
+	    	if (notificationHandler != null)
+	    		notificationHandler.checkAndHandleUpdates();
 		    return null;
 	    }
 

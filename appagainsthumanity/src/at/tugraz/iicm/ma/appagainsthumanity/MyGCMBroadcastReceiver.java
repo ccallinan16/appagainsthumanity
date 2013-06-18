@@ -45,7 +45,7 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 		
 		// Showing received message
 //		lblMessage.append(newMessage + "\n");			
-		Toast.makeText(context.getApplicationContext(), "New Message: " + newMessage, Toast.LENGTH_LONG).show();
+		Toast.makeText(context.getApplicationContext(), "User Action Required", Toast.LENGTH_SHORT).show();
 		
 		// Releasing wake lock
 		WakeLocker.release();

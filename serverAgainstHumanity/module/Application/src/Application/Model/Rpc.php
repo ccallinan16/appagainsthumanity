@@ -116,10 +116,10 @@ class Rpc
     	switch($type) {
     		 
     		case Notification::notification_new_game :
-    			$submessage = "a new game has been started.";
+    			$submessage = "A new game has started.";
     			break;
     		case Notification::notification_new_round :
-    			$submessage = "a new round has been started.";
+    			$submessage = "A new round has started.";
     			break;
     		case Notification::notification_new_round_czar :
     			$submessage = "You get to choose a black card!";
@@ -128,11 +128,16 @@ class Rpc
     			$submessage = "Choose a white card.";
     			break;
     		case Notification::notification_chosen_white :
-    			$submessage = "white cards have been chosen?.";
+    			$submessage = "All white cards have been chosen.";
     			break;
-    	
+    		case Notification::notification_chosen_winner :
+    			$submessage = "A winner has been selected!";
+    			break;
+    		case Notification::notification_end_game :
+    			$submessage = "A game has finished. Go to the options to delete.";
+    			break;    	
     		default:
-    			$submessage = "sendNotification is a success, notification type: ".$type;
+    			$submessage = "User Interaction Required.";
     			break;
     	}
     	
