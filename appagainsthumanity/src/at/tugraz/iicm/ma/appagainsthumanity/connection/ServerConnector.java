@@ -11,6 +11,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.GameOptionsActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.adapter.CardCollection;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.xmlrpc.XMLRPCServerProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.fragments.Game;
 import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 
 /*
@@ -200,6 +201,14 @@ public class ServerConnector {
 
 		//get a list of cardNums from Server
 	}
+	
+	public Game getGame(long game_id) {
+
+		return proxy.getter.getGame(game_id);
+	}
+
+
+	
 	
 	public List<Integer> getDealtCards(IDToCardTranslator dealer, CardType cardType, long turnID) {
 

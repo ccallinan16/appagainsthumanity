@@ -12,7 +12,7 @@ public abstract class MessageDialog extends AlertDialog.Builder implements OnCli
 		setTitle(title);
 		setMessage(message);
 		
-      setPositiveButton(R.string.menu_ok, this);  
+		setPositiveButton(R.string.menu_ok, this);  
 
 	}
 

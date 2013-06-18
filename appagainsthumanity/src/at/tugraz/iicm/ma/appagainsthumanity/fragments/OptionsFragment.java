@@ -1,5 +1,6 @@
 package at.tugraz.iicm.ma.appagainsthumanity.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,10 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import at.tugraz.iicm.ma.appagainsthumanity.MainActivity;
 import at.tugraz.iicm.ma.appagainsthumanity.R;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
 import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
+import at.tugraz.iicm.ma.appagainsthumanity.util.MessageDialog;
+import at.tugraz.iicm.ma.appagainsthumanity.util.PromptDialog;
 
 public class OptionsFragment extends Fragment {
 	
@@ -50,25 +54,56 @@ public class OptionsFragment extends Fragment {
 
 		ImageButton delete =  (ImageButton) getActivity().findViewById(R.id.BtnDeleteGame);
 		
+		Game g = conn.getGame(game_id);
+		
+		if (g != null)
+		{
+			delete.setEnabled(g.isFinished);
+			
+			TextView view = (TextView) getActivity().findViewById(R.id.textMaxScore);
+			view.setText(String.valueOf(g.maxScore));
+			
+			view = (TextView) getActivity().findViewById(R.id.textMaxRound);
+			view.setText(String.valueOf(g.maxRounds));
+		}
+					
+		
 		delete.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				conn.deleteGame(game_id);
 				
-				//TODO: dialog
-				//TODO: check if game currently running, then don't delete. 
+				MessageDialog msg = new MessageDialog(v.getContext(),
+						R.string.action_settings, R.string.already_registered) {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						conn.deleteGame(game_id);
+						changeActivity();						
+					}
+
+				};
 				
-				//go back to main, nothing here to see. //TODO: possible dialog
-				Intent intent = new Intent(v.getContext(),MainActivity.class);
-		    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			  	v.getContext().startActivity(intent);									
+				msg.setNeutralButton(R.string.menu_cancel, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+					      dialog.dismiss();  						
+					}
+				});
+				
+				msg.show();
 			}
 		});
-		
-		
 		//get other infos about game.
 		
+	}
+	
+	private void changeActivity() {
+		Intent intent = new Intent(this.getActivity(),MainActivity.class);
+    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    	this.getActivity().startActivity(intent);	
+
 	}
 	
     @Override

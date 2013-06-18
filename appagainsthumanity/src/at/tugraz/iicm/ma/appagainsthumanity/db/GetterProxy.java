@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.database.Cursor;
+import at.tugraz.iicm.ma.appagainsthumanity.fragments.Game;
 
 public class GetterProxy {
 	
@@ -100,6 +101,36 @@ public class GetterProxy {
 	    return gameID;
 
 	}
+	
+	public Game getGame(long game_id) {
+	    Cursor cursor = db.getReadableDatabase().query(
+	    		DBContract.Game.TABLE_NAME, 
+	    		new String[] { DBContract.Game.COLUMN_NAME_ROUND_CAP, DBContract.Game.COLUMN_NAME_SCORE_CAP, DBContract.Game.COLUMN_NAME_WINNER }, 
+	    		DBContract.Game._ID + "=? ", 
+	    		new String[] { String.valueOf(game_id) } , 
+	    		null, null, null);
+	    
+	    Game game = null;
+	    	    
+	    if (cursor != null && cursor.getColumnCount() > 2)
+	    {
+	    	
+	    	if (cursor.moveToFirst())
+	    	{
+		    	System.out.println("getgame: " + cursor.getString(2) + " (len: " + cursor.getString(2).length() + ")");
+		    	game = new Game(
+		    			(cursor.getInt(0)),
+		    			(cursor.getInt(1)),
+		    			(!cursor.getString(2).equals("0")));
+
+	    	}
+	    	
+	    	cursor.close();
+	    }
+	    return game;
+	}
+
+	
 	
 	public long getScore(long game_id, long user_id) {
 
@@ -274,6 +305,7 @@ public class GetterProxy {
 	    }    
 	    return (numRows > 0);
 	}
+
 
 }
 	
