@@ -254,7 +254,7 @@ public class CreateGameActivity extends VisibilityAwareActivity {
 		
 		//check if entry exists in userlist
 		long found = -1;
-		if (userCursor.moveToFirst())
+		if (userCursor != null && userCursor.moveToFirst())
 		{
 			do { 
 				if(input.equals(userCursor.getString(1)))

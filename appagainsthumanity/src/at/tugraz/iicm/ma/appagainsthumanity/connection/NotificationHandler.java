@@ -46,15 +46,21 @@ public class NotificationHandler {
 		if (result == null)
 			return;
 		
+		for(String notificationIdString: new TreeSet<String>(result.keySet())) {
+			int notificationId = Integer.parseInt(notificationIdString);
+			System.out.println("id: " + notificationId);
+		}
+		
 		//otherwise iterate through notifications and invoke necessary callbacks
 		for(String notificationIdString: new TreeSet<String>(result.keySet())) {
 			int notificationId = Integer.parseInt(notificationIdString);
 			int type = Integer.parseInt(result.get(notificationIdString));
-			
-			System.out.println("got notification of type: " + type + " with id: " + notificationId);
-			
+						
 			handleUpdate(type,notificationId);
 		}
+		
+		//dbProxy.printTables();
+		dbProxy.dumpTables();
 	}
 
 	public void handleUpdate(int type, int notificationId) {
@@ -224,8 +230,11 @@ public class NotificationHandler {
 		
 		//add turn entry
 		HashMap<String, String> turn = (HashMap<String, String>) result.get("turn");
-		dbProxy.getDBSetter().addTurn(Integer.parseInt(turn.get("id")), Integer.parseInt(turn.get("game_id")), Integer.parseInt(turn.get("roundnumber")),
+		long ret = dbProxy.getDBSetter().addTurn(Integer.parseInt(turn.get("id")), Integer.parseInt(turn.get("game_id")), Integer.parseInt(turn.get("roundnumber")),
 				  Integer.parseInt(turn.get("user_id")), Integer.parseInt(turn.get("black_card_id")));
+		
+		
+		System.out.println("ret:  " + ret);
 		
 		//update white cards
 			//remove remaining cards
@@ -242,6 +251,9 @@ public class NotificationHandler {
 
 	@SuppressWarnings("unchecked")
 	private void callbackNewGame(int notificationId) {
+		
+		System.out.println("new game called");
+
 		//check if server connection is established, otherwise abort
 		XMLRPCServerProxy serverProxy = XMLRPCServerProxy.getInstance();
 		if (!serverProxy.isConnected())
