@@ -60,6 +60,25 @@
 			    android:hint="@string/game_options_hint_roundcap"
 			    android:inputType="number" />
 		</RelativeLayout>
+		
+		<LinearLayout 
+	    	style="@style/layout_content"
+	    	android:orientation="vertical"
+	    	android:layout_width="match_parent"
+	    	android:layout_height="0dp"
+	    	android:layout_weight="1"
+	    	android:gravity="center"
+	    	>
+			<ProgressBar
+	            android:id="@+id/progressBar"
+	            style="?android:attr/progressBarStyleLarge"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:visibility="gone"
+	            android:layout_gravity="center"
+	            android:indeterminateDrawable="@drawable/progress" >
+	        </ProgressBar>
+        </LinearLayout>
 
 	</LinearLayout>
 	
