@@ -140,9 +140,7 @@ public class SetterProxy {
 		ContentValues values = new ContentValues();
 		if (id != 0)		
 			values.put(DBContract.Turn._ID, id);
-		
-		System.err.println("id: " + id);
-		
+				
 		values.put(DBContract.Turn.COLUMN_NAME_GAME_ID, game_id);
 		values.put(DBContract.Turn.COLUMN_NAME_ROUNDNUMBER, roundnumber);
 		values.put(DBContract.Turn.COLUMN_NAME_USER_ID, user_id);
@@ -311,7 +309,6 @@ public class SetterProxy {
 		try {			
 			id = db.getWritableDatabase().insertOrThrow(tblName, null, values);
 
-			System.out.println("succeeded, id: " + id);
 		} 
 		catch (android.database.SQLException exception)
 		{
@@ -329,12 +326,10 @@ public class SetterProxy {
 				args[count++] = String.valueOf(e.getValue());
 			}
 
-			System.err.println(values);
 			//if at all possible, update the values to the new (FOR TESTING; TODO)
 			int rows_affected = db.getWritableDatabase().update(tblName, values, query, args);
 			
-			System.err.println("rows affected: " + rows_affected);
-			
+		
 			Cursor c = db.getWritableDatabase().query(tblName, new String[] { idCol }, 
 					query, args, null,null,null);
 			
@@ -355,8 +350,6 @@ public class SetterProxy {
 					db.dumpTables();
 				}
 		    }
-			System.out.println("succeeded 2., id: " + id);
-
 		}
 		
 		return id;

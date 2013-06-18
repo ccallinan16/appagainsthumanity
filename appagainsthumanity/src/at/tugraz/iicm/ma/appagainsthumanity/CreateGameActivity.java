@@ -63,8 +63,6 @@ public class CreateGameActivity extends VisibilityAwareActivity {
 		//add adaper to listview
 		inviteListView.setAdapter(inviteArrayAdapter);
 		
-		// Show the Up button in the action bar.
-		setupActionBar();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -366,17 +364,6 @@ public class CreateGameActivity extends VisibilityAwareActivity {
 	/*
 	 * DEFAULT METHODS
 	 */
-
-	/**
-	 * Set up the {@link android.app.ActionBar}, if the API is available.
-	 */
-	@SuppressLint("NewApi")
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setupActionBar() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

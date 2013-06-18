@@ -25,8 +25,6 @@ public class GameOptionsActivity extends VisibilityAwareActivity implements OnRe
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game_options);
-		// Show the Up button in the action bar.
-		setupActionBar();
 		
 		//receive invite array from intent
 		Intent intent = getIntent();
@@ -113,15 +111,6 @@ public class GameOptionsActivity extends VisibilityAwareActivity implements OnRe
 	 * DEFAULT METHODS
 	 */
 	
-	/**
-	 * Set up the {@link android.app.ActionBar}, if the API is available.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setupActionBar() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -45,6 +46,8 @@ public class MainActivity extends VisibilityAwareActivity {
 	 */
 	public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
 	public static final String EXTRA_GAMEID = "EXTRA_GAMEID";
+	
+	private static final boolean RELEASE = true;
 	
 	/*
 	 * PRIVATE MEMBER VARIABLES
@@ -95,10 +98,20 @@ public class MainActivity extends VisibilityAwareActivity {
 		//get username
 		getUsernameFromShared();
 		
-		//populate database presets
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, DBProxy.PRESETS);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
+		if (RELEASE)
+		{
+			spinner.setVisibility(View.INVISIBLE);
+			Button btn = (Button) findViewById(R.id.btn_setpreset);
+			btn.setVisibility(View.INVISIBLE);
+		}
+		else
+		{
+			//populate database presets
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, DBProxy.PRESETS);
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			spinner.setAdapter(adapter);
+		}
+		
 		
 		//set the translator in the Singleton
 		CardCollection.instance.setTranslator(

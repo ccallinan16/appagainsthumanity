@@ -283,7 +283,7 @@ public class DBProxy {
 	}
 	
 	public void dumpTables() {
-		new DebugPrinter(this.getReadableDatabase()).dumpTables();
+		//new DebugPrinter(this.getReadableDatabase()).dumpTables();
 	}
 
 	public SetterProxy getDBSetter() {
