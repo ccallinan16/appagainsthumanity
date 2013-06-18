@@ -74,7 +74,7 @@ public class OptionsFragment extends Fragment {
 			public void onClick(View v) {
 				
 				MessageDialog msg = new MessageDialog(v.getContext(),
-						R.string.action_settings, R.string.already_registered) {
+						R.string.delete_title, R.string.delete_text) {
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {

@@ -340,23 +340,14 @@ class Rpc
             $participation->setUserId($userId);
             $this->getParticipationTable()->saveParticipation($participation);
         }
-         
-        /*
-        //add game notification
-          //game creator
-        $this->addNotification(Notification::notification_new_game, $user_id, $game_id);
-          //invited users
-        foreach($data['invites'] as $userId)
-            $this->addNotification(Notification::notification_new_game, $userId, $game_id);     
-        */
-        
-        //call onCreate of rulebook
-        $rulebook = Rulebook::createRulebook($this);
-        $rulebook->onCreateGame($game_id, $user_id);
-                
+                 
         $userList = $data['invites'];
         $userList[] = $user_id;
         $this->addAndSendNotificationToAll(Notification::notification_new_game, $userList, $game_id);
+                
+        //call onCreate of rulebook
+        $rulebook = Rulebook::createRulebook($this);
+        $rulebook->onCreateGame($game_id, $user_id);        
         
         //return true if no exception occured
         return true;

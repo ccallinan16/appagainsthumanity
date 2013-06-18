@@ -93,5 +93,8 @@
     <string name="title_activity_register">RegisterActivity</string>
 
     <string name="draw_exp">If the maximum number of rounds is reached and no clear winner exists (i.e. a draw), new rounds will be created until a winner can be determined.</string>
+    <string name="delete_title">Delete Game</string>
+    <string name="delete_text">Are you sure you want to delete this game?</string>
+    
     
 </resources>

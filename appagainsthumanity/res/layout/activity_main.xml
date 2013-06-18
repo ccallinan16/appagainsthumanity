@@ -19,12 +19,13 @@
 		    android:drawableLeft="@drawable/plus"
 	    />
 
-	    <Button
+	    <ImageButton
 	        android:id="@+id/button_refresh"
 	        style="@style/button"
 	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_height="fill_parent"
 	        android:onClick="refresh"
+	        android:src="@drawable/ic_action_refresh"
 	        android:text="@string/main_text_refresh" />
 
     </LinearLayout>
