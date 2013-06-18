@@ -56,11 +56,11 @@ public class GamelistAdapter extends CursorAdapter {
 			round.setText("game over");
 			//game is won
 			if (c.getLong(12) == c.getLong(6)) {
-				thumbnail.setImageResource(R.drawable.star);
+				thumbnail.setImageResource(R.drawable.star_new);
 				score.setText("you won!");
 				thumbnail.setEnabled(false);
 			} else {
-				thumbnail.setImageResource(R.drawable.star_empty);
+				thumbnail.setImageResource(R.drawable.star_new_empty);
 				score.setText("you lost!");
 				thumbnail.setEnabled(false);
 			}

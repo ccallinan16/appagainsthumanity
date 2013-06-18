@@ -5,7 +5,7 @@ abstract class Rulebook {
 
   //constants independant of gametype
   const BLACK_MAX_ID = 75;
-  const WHITE_MAX_ID = 459;
+  const WHITE_MAX_ID = 460;
 
   //rpc instance for table- and other callbacks
   protected $rpc;

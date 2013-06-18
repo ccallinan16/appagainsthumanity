@@ -18,7 +18,7 @@ import at.tugraz.iicm.ma.appagainsthumanity.xml.serie.CardType;
 public class SingleCardFragment extends Fragment {
 
 	private static final float MAX_SIZE = 28f;
-	private static final float MIN_SIZE = 12f;
+	private static final float MIN_SIZE = 16f;
 
 	
 	 protected static final String ID = "CARD_ID";

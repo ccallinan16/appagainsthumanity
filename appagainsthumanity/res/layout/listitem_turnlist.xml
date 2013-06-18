@@ -6,15 +6,16 @@
     android:padding="5dp" 
     android:paddingLeft="10dp"
 	>
+
     <ImageView
         android:id="@+id/arrow"
-        android:contentDescription="@string/app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/arrow" 
-	 />
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/arrow"
+        android:visibility="invisible" />
     
     <LinearLayout
         android:id="@+id/layout_thumbnail"
@@ -32,7 +33,7 @@
 	        android:id="@+id/thumbnail"
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
-	   		android:src="@drawable/star"
+	   		android:src="@drawable/star_new"
 	   		 />
     </LinearLayout>
     
