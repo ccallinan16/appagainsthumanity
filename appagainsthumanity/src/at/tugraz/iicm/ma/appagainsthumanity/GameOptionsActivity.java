@@ -8,6 +8,7 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.tugraz.iicm.ma.appagainsthumanity.connection.OnResponseListener;
@@ -20,6 +21,7 @@ public class GameOptionsActivity extends VisibilityAwareActivity implements OnRe
 	private TextView textViewRoundcap;
 	private TextView textViewScorecap;
 	private DBProxy proxy;
+	private ProgressBar bar;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class GameOptionsActivity extends VisibilityAwareActivity implements OnRe
 	    //define views
 	    textViewRoundcap = (TextView) findViewById(R.id.input_roundcap);
 	    textViewScorecap = (TextView) findViewById(R.id.input_scorecap);
+	    bar = (ProgressBar) findViewById(R.id.progressBar);
 	}
 
 	/*
@@ -76,10 +79,12 @@ public class GameOptionsActivity extends VisibilityAwareActivity implements OnRe
 		//update server information
 		proxy = new DBProxy(this);
 		ServerConnector connector = new ServerConnector(proxy);
+		bar.setVisibility(View.VISIBLE);
 		connector.initializeGame(invites, roundcap, scorecap, this);
 	}
 	
 	public void onResponse(Object response) {
+		bar.setVisibility(View.GONE);
 		Boolean success = false;
 		if (response != null)
 			success = (Boolean) response;
