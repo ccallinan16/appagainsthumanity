@@ -125,8 +125,8 @@ public class CardSlideActivity extends FragmentActivity {
 							connector.selectWinner(turnID, id);
 							break;
 						case SHOW_RESULT:
-							intent = new Intent(v.getContext(),GameOverviewActivity.class);
-							break;
+							onBackPressed();
+							return;
 						default:
 							break;
 					}

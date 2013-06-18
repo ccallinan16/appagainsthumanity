@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
+import at.tugraz.iicm.ma.appagainsthumanity.connection.ServerConnector;
+import at.tugraz.iicm.ma.appagainsthumanity.db.DBProxy;
 import at.tugraz.iicm.ma.appagainsthumanity.fragments.OptionsFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.fragments.PlayersFragment;
 import at.tugraz.iicm.ma.appagainsthumanity.fragments.TurnsFragment;
@@ -197,4 +199,6 @@ public class GameOverviewActivity extends FragmentActivity implements TabHost.On
 	  AAHApplication.activityPaused();
 	}
 	
+	
+
 }

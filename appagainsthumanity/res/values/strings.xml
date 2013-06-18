@@ -92,4 +92,6 @@
     <string name="options_exit">Exit</string>
     <string name="title_activity_register">RegisterActivity</string>
 
+    <string name="draw_exp">If the maximum number of rounds is reached and no clear winner exists (i.e. a draw), new rounds will be created until a winner exists.</string>
+    
 </resources>
