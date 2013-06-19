@@ -56,9 +56,10 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onMessage(Context context, Intent intent) {
         Log.i(TAG, "Received message");
+        String type = intent.getExtras().getString("type");
         String message = intent.getExtras().getString("price");
-         
-        displayMessageByBroadcast(context, message);
+
+        displayMessageByBroadcast(context, type);
         
         if (!AAHApplication.isActivityVisible())
         {

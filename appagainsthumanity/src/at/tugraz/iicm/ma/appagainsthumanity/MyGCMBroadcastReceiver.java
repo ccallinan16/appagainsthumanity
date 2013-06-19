@@ -28,7 +28,7 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		
 		System.err.println("BroadcastReceiver CALLED!!");
-		String newMessage = intent.getExtras().getString(CommonUtilities.KEY_MESSAGE);
+		String type = intent.getExtras().getString(CommonUtilities.KEY_MESSAGE);
 		//String notificationid = intent.getExtras().getString(KEY_NOTIFICATION_ID);
 		//String type = intent.getExtras().getString(KEY_NOTIFICATION_TYPE);
 
@@ -36,7 +36,6 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 			listener.onResponse(1, 1, "hello!");
 		else
 			new UpdateTask(proxy).execute();
-
 		
 		// Waking up mobile if it is sleeping
 		WakeLocker.acquire(context.getApplicationContext());
@@ -44,9 +43,25 @@ public class MyGCMBroadcastReceiver extends BroadcastReceiver {
 		//TODO: possibly just do a background thread!
 		
 		// Showing received message
-//		lblMessage.append(newMessage + "\n");			
-		Toast.makeText(context.getApplicationContext(), "User Action Required", Toast.LENGTH_SHORT).show();
+//		lblMessage.append(newMessage + "\n");	
+				
 		
+		switch (Integer.parseInt(type))
+		{
+		case NotificationHandler.NOTIFICATION_CHOSEN_WINNER:
+		case NotificationHandler.NOTIFICATION_END_GAME:
+		case NotificationHandler.NOTIFICATION_NEW_GAME:
+		case NotificationHandler.NOTIFICATION_NEW_ROUND:
+		case NotificationHandler.NOTIFICATION_CHOSEN_WHITE:
+		case NotificationHandler.NOTIFICATION_CHOSEN_BLACK:
+
+			break;
+			
+		case NotificationHandler.NOTIFICATION_NEW_ROUND_CZAR:
+			Toast.makeText(context.getApplicationContext(), "User Action Required", Toast.LENGTH_SHORT).show();
+			break;
+		}
+				
 		// Releasing wake lock
 		WakeLocker.release();
 	}

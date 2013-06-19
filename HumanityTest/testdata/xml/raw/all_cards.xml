@@ -129,7 +129,7 @@
       <entry>
          <integer>23</integer>
          <card id="23">
-            <text>The Tempur-Pedic(r) Swedish Sleep System(tm).</text>
+            <text>The Tempur-Pedic&#174; Swedish Sleep System&#8482;.</text>
          </card>
       </entry>
       <entry>
@@ -183,7 +183,7 @@
       <entry>
          <integer>30</integer>
          <card id="30">
-            <text>Five-Dollar Footlongs(tm).</text>
+            <text>Five-Dollar Footlongs&#8482;.</text>
          </card>
       </entry>
       <entry>
@@ -483,7 +483,7 @@
       <entry>
          <integer>84</integer>
          <card id="84">
-            <text>Hot Pockets(r).</text>
+            <text>Hot Pockets&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -933,7 +933,7 @@
       <entry>
          <integer>148</integer>
          <card id="148">
-            <text>GoGurt(r).</text>
+            <text>GoGurt&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -1659,7 +1659,7 @@
       <entry>
          <integer>263</integer>
          <card id="263">
-            <text>Lunchables(tm).</text>
+            <text>Lunchables&#8482;.</text>
          </card>
       </entry>
       <entry>
@@ -1791,7 +1791,7 @@
       <entry>
          <integer>314</integer>
          <card id="314">
-            <text>Adderall(tm).</text>
+            <text>Adderall&#8482;.</text>
          </card>
       </entry>
       <entry>
@@ -1893,7 +1893,7 @@
       <entry>
          <integer>300</integer>
          <card id="300">
-            <text>Swithing to Geico(r).</text>
+            <text>Swithing to Geico&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -2025,7 +2025,7 @@
       <entry>
          <integer>324</integer>
          <card id="324">
-            <text>Home video of Oprah sobbing into a Lean Cuisine(r).</text>
+            <text>Home video of Oprah sobbing into a Lean Cuisine&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -2037,7 +2037,7 @@
       <entry>
          <integer>322</integer>
          <card id="322">
-            <text>A SuperSoaker(tm) full of cat pee.</text>
+            <text>A SuperSoaker&#8482; full of cat pee.</text>
          </card>
       </entry>
       <entry>
@@ -2121,7 +2121,7 @@
       <entry>
          <integer>375</integer>
          <card id="375">
-            <text>The Make-A-Wich(r) Foundation.</text>
+            <text>The Make-A-Wich&#174; Foundation.</text>
          </card>
       </entry>
       <entry>
@@ -2151,7 +2151,7 @@
       <entry>
          <integer>370</integer>
          <card id="370">
-            <text>A Bop It(tm).</text>
+            <text>A Bop It&#8482;.</text>
          </card>
       </entry>
       <entry>
@@ -2349,7 +2349,7 @@
       <entry>
          <integer>402</integer>
          <card id="402">
-            <text>Fancy Feast(r).</text>
+            <text>Fancy Feast&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -2505,7 +2505,7 @@
       <entry>
          <integer>442</integer>
          <card id="442">
-            <text>Domino&apos;s(tm) Oreo(tm) Dessert Pizza.</text>
+            <text>Domino&apos;s&#8482; Oreo&#8482; Dessert Pizza.</text>
          </card>
       </entry>
       <entry>
@@ -2715,7 +2715,7 @@
       <entry>
          <integer>455</integer>
          <card id="455">
-            <text>Viagra(r).</text>
+            <text>Viagra&#174;.</text>
          </card>
       </entry>
       <entry>
@@ -2795,7 +2795,7 @@
       <entry>
          <integer>6</integer>
          <card id="6">
-            <text>What&apos;s the next Happy Meal(r) toy?</text>
+            <text>What&apos;s the next Happy Meal&#174; toy?</text>
          </card>
       </entry>
       <entry>
