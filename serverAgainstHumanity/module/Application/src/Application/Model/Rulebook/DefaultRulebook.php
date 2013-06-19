@@ -173,7 +173,7 @@ class DefaultRulebook extends Rulebook {
     
     //check if score cap or turn cap was reached
     $game = $this->getGameTable()->getGame($turn->game_id);
-    if ($participation->score >= $game->scorecap || $turn->roundnumber >= $game->roundcap) {
+    if (($game->scorecap != 0 && $participation->score >= $game->scorecap) || ($game->roundcap != 0 && $turn->roundnumber >= $game->roundcap)) {
       //check if we are in a draw state
       $participationData = $this->getParticipationTable()->getParticipationOfGame($turn->game_id);
       //define custom compare function to sort participation by score
