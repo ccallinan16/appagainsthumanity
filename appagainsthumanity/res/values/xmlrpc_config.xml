@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-   <!-- Time Vortex 
-   -->
+    <!--  THE INTERNET!!!!! -->
     <string name="xmlrpc_hostname">http://failure.monoceres.uberspace.de/serverAgainstHumanity/public/</string>
+    
     
     <!-- Uni tug netz 
    	<string name="xmlrpc_hostname">http://129.27.22.52/serverAgainstHumanity/public/</string>
